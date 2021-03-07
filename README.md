@@ -44,10 +44,16 @@ $ kkpctl get project testproject --cloud imke_prod
 
 5. Create your first cluster
 ```
-$ kkpctl add cluster testcluster --cloud imke_prod --project abc123de45 --version '1.18.13' --labels 'stage=dev' --features 'AuditLogging' --provider 'optimist_prod' --datacenter 'es1' --node-name 'test' --node-flavor 'm1.small' --node-replica 3 --os-flavor 'flatcar'
+$ kkpctl add cluster testcluster --cloud imke_prod --project testproject --version '1.18.13' --labels 'stage=dev' --features 'AuditLogging' --provider 'optimist_prod' --datacenter 'es1' --node-name 'test' --node-flavor 'm1.small' --node-replica 3 --os-flavor 'flatcar'
 ```
 
 6. Describe your first cluster
 ```
 $ kkpctl describe cluster testcluster
+```
+
+7. Connect to your cluster, once it's ready
+```
+$ kkpctl kubeconfig testcluster --cloud imke_prod --project testproject --set-kubectl
+$ kubectl get pods -A
 ```
