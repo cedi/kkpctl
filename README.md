@@ -54,6 +54,6 @@ $ kkpctl describe cluster testcluster
 
 7. Connect to your cluster, once it's ready
 ```
-$ kkpctl kubeconfig testcluster --cloud imke_prod --project testproject --set-kubectl
+$ kkpctl get kubeconfig testcluster --cloud imke_prod --project testproject --set-kubectl
 $ kubectl get pods -A
 ```

@@ -25,6 +25,29 @@ kkpctl get cloud $cloudname # list a configured cloud
 kkpctl delete cloud get $cloudname # delete a cloud
 ```
 
+### Provider Type
+
+Retreive Information about the providers supported by the KKP instalation
+
+```
+kkpctl get providertype
+
+# cmdline options:
+# 	--cloud $cloudname	# uses the specified cloud (Default: uses the cloud defined in ctx.cloud
+
+```
+
+### Datacenter
+
+Retrieve Information about which Datacenters are supported by any given providertype in the KKP instance
+
+```
+kkpctl get datacenter $providertype
+
+# cmdline options:
+# 	--cloud $cloudname	# uses the specified cloud (Default: uses the cloud defined in ctx.cloud
+```
+
 ### Provider
 
 Define a KKP Provider
@@ -224,7 +247,7 @@ kkpctl describe cluster $cluster_id
 To retreive the kube-config of a KKP cluster.
 
 ```
-kkpctl kubeconfig $clusterid
+kkpctl get kubeconfig $clusterid
 
 # cmdline options:
 # 	--cloud $cloudname		# logs in to the specified cloud (Default: uses the cloud defined in ctx.cloud
