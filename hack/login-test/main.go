@@ -20,6 +20,8 @@ func main() {
 	var kkpPassword string
 	flag.StringVar(&kkpPassword, "password", "", "Username")
 
+	flag.Parse()
+
 	fmt.Println("\n## Get request parameter\n")
 	requestURL := fmt.Sprintf("%s/dex/auth?response_type=id_token&client_id=kubermatic&redirect_uri=%s&scope=openid%%20email%%20profile%%20groups&nonce=7vfLk-QoigcosbZe79qvxPOX9gqLL3CS",
 		kkpURL,
