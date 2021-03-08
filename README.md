@@ -8,20 +8,24 @@
 
 # kkpctl
 
-This tool aims to implement the [KKP](github.com/kubermatic/kubermatic) API as a useful CLI tool.
+This tool aims to implement the [KKP](https://github.com/kubermatic/kubermatic) API as a useful CLI tool.
 The usage should remind of kubectl.
-
-kkpctl is written in Go and uses the [cobra](github.com/spf13/cobra) framework.
 
 ## Status
 
 This is currently WIP
 
+## Development
+
+### Acknowledgements
+
+This project proudly uses [cobra](https://github.com/spf13/cobra) framework to handle the CLI parsing and [viper](https://github.com/spf13/viper) to read from environment variables
+
 ## Usage
 
 For the full usage documentation, see the [docs](docs/commandline-usage.md)
 
-## Quick-Start
+### Quick-Start
 
 1. Setup `kkpctl`
 ```

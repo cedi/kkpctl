@@ -17,6 +17,14 @@ This is similar to use `kubens $namespace` with `kubectl`
 
 ## Basic Configuration
 
+### Authentication
+
+Since there is no OIDC-Auth (yet) we have to do authentication with a dirty hack
+
+```
+kkpctl ctx set bearer [bearertoken]
+```
+
 ### Cloud
 
 ```
