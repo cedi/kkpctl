@@ -1,0 +1,7 @@
+clouds:
+- name: test
+  url: imke.cloud
+context:
+  cloud: test
+  projectID: x12vas
+bearer: test123

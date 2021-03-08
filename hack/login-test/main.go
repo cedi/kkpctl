@@ -139,4 +139,9 @@ func main() {
 	}
 
 	// fmt.Println("BODY: " + string(body))
+
+	bearer := res.Header.Get("location")
+	bearer = strings.Replace(bearer, kkpURL+"/projects#access_token=", "", -1)
+	bearer = strings.Replace(bearer, "state=&token_type=bearer", "", -1)
+	fmt.Println("Bearer: " + bearer)
 }
