@@ -22,7 +22,7 @@ func main() {
 
 	flag.Parse()
 
-	fmt.Println("\n## Get request parameter\n")
+	fmt.Printf("\n## Get request parameter\n\n")
 	requestURL := fmt.Sprintf("%s/dex/auth?response_type=id_token&client_id=kubermatic&redirect_uri=%s&scope=openid%%20email%%20profile%%20groups&nonce=7vfLk-QoigcosbZe79qvxPOX9gqLL3CS",
 		kkpURL,
 		kkpURL,
@@ -65,7 +65,7 @@ func main() {
 	requestToken = strings.TrimSpace(requestToken)
 	fmt.Printf("* REQUEST_TOKEN: %s\n", requestToken)
 
-	fmt.Println("\n## Authenticate\n")
+	fmt.Printf("\n## Authenticate\n\n")
 	authUrl := fmt.Sprintf("%s/dex/auth/keystone?req=%s",
 		kkpURL,
 		requestToken,
@@ -101,7 +101,7 @@ func main() {
 
 	// fmt.Println("BODY: " + string(body))
 
-	fmt.Println("\n## Get Bearer Token\n")
+	fmt.Printf("\n## Get Bearer Token\n\n")
 	approvalUrl := fmt.Sprintf("%s/dex/approval?req=%s",
 		kkpURL,
 		requestToken,
