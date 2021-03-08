@@ -1,27 +1,26 @@
-package main
+package config
 
 import (
 	"testing"
 
-	kkpconfig "github.com/cedi/kkpctl/pkg/config"
 	"github.com/go-test/deep"
 )
 
 func TestConfigParsing(t *testing.T) {
-	config := kkpconfig.New()
-	config.Clouds = append(config.Clouds, kkpconfig.Cloud{
+	config := New()
+	config.Clouds = append(config.Clouds, Cloud{
 		Name: "test",
 		URL:  "imke.cloud",
 	})
 
 	config.BearerToken = "test123"
-	config.Context = kkpconfig.Context{
+	config.Context = Context{
 		Cloud:     "test",
 		ProjectID: "x12vas",
 	}
-	config.ConfigPath = "testfiles/config"
+	config.ConfigPath = "../../tests/config/testfiles/config"
 
-	config2, err := kkpconfig.ReadFromConfig("testfiles/config")
+	config2, err := ReadFromConfig("../../tests/config/testfiles/config")
 	if err != nil {
 		t.Fatal(err.Error())
 	}
