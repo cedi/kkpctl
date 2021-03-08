@@ -1,11 +1,9 @@
 [![GitHub license](https://img.shields.io/github/license/cedi/kkpctl.svg)](https://github.com/cedi/kkpctl/blob/main/LICENSE)
-
 [![made-with-Go](https://img.shields.io/badge/Made%20with-Go-1f425f.svg)](http://golang.org)
 [![GitHub go.mod Go version of a Go module](https://img.shields.io/github/go-mod/go-version/cedi/kkpctl.svg)](https://github.com/cedi/kkpctl)
 [![GoDoc reference example](https://img.shields.io/badge/godoc-reference-blue.svg)](https://pkg.go.dev/github.com/cedi/kkpctl/hack/login-test)
 [![GoReportCard example](https://goreportcard.com/badge/github.com/cedi/kkpctl)](https://goreportcard.com/report/github.com/cedi/kkpctl)
 ![workflow status](https://github.com/cedi/kkpctl/actions/workflows/go.yml/badge.svg)
-
 [![GitHub issues](https://img.shields.io/github/issues/cedi/kkpctl.svg)](https://GitHub.com/cedi/kkpctl/issues/)
 [![GitHub pull-requests](https://img.shields.io/github/issues-pr/cedi/kkpctl.svg)](https://GitHub.com/cedi/kkpctl/pull/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
