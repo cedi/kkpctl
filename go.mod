@@ -1,6 +1,6 @@
 module github.com/cedi/kkpctl
 
-go 1.15
+go 1.16
 
 require (
 	github.com/go-test/deep v1.0.7
