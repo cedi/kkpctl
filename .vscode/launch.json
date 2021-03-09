@@ -11,6 +11,7 @@
             "mode": "debug",
             "program": "${workspaceFolder}/main.go",
             "args": [
+                //"add", "project", "kkpctltest", "--labels", "stage=dev",
                 "get", "project", "--all",
                 "-o", "text"
             ]

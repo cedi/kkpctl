@@ -6,6 +6,7 @@ import (
 	"errors"
 	"io"
 	"io/ioutil"
+	"sort"
 
 	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/lensesio/tableprinter"
@@ -14,12 +15,11 @@ import (
 
 // projectRender is a intermediate struct to make use of lensesio/tableprinter, which relies on the header anotation
 type projectRender struct {
-	ID                string            `header:"ProjectID"`
-	Name              string            `header:"Name"`
-	CreationTimestamp string            `header:"Created"`
-	Status            string            `header:"Status"`
-	Labels            map[string]string `header:"Labels"`
-	Clusters          int64             `header:"Clusters"`
+	ID                string `header:"ProjectID"`
+	Name              string `header:"Name"`
+	CreationTimestamp string `header:"Created"`
+	Status            string `header:"Status"`
+	Clusters          int64  `header:"Clusters"`
 }
 
 func parseProjects(objects []models.Project, output string) (string, error) {
@@ -32,9 +32,13 @@ func parseProjects(objects []models.Project, output string) (string, error) {
 				Name:              object.Name,
 				CreationTimestamp: object.CreationTimestamp.String(),
 				Status:            object.Status,
-				Labels:            object.Labels,
+				Clusters:          object.ClustersNumber,
 			}
 		}
+
+		sort.Slice(rendered, func(i, j int) bool {
+			return rendered[j].CreationTimestamp < rendered[i].CreationTimestamp
+		})
 
 		var bodyBuf io.ReadWriter
 		bodyBuf = new(bytes.Buffer)
@@ -68,7 +72,6 @@ func parseProject(object models.Project, output string) (string, error) {
 			Name:              object.Name,
 			CreationTimestamp: object.CreationTimestamp.String(),
 			Status:            object.Status,
-			Labels:            object.Labels,
 			Clusters:          object.ClustersNumber,
 		}
 
