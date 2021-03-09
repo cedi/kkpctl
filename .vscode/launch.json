@@ -11,7 +11,8 @@
             "mode": "debug",
             "program": "${workspaceFolder}/main.go",
             "args": [
-                "get", "cluster"
+                "get", "project", "--all",
+                "-o", "text"
             ]
         }
     ]

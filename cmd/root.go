@@ -12,10 +12,16 @@ import (
 	"github.com/spf13/viper"
 )
 
-const envPrefix = "KKPCTL"
+const (
+	envPrefix = "KKPCTL"
+)
 
-var apiToken string
-var baseURL string
+var (
+	apiToken   string
+	baseURL    string
+	outputType string
+	snail      *viper.Viper
+)
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -43,13 +49,16 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVarP(&baseURL, "url", "u", "", "The KKP URL to use")
 	viper.BindPFlag("url", rootCmd.PersistentFlags().Lookup("url"))
+
+	rootCmd.PersistentFlags().StringVarP(&outputType, "output", "o", "text", "The output type to use")
+	viper.BindPFlag("output", rootCmd.PersistentFlags().Lookup("output"))
 }
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig(cmd *cobra.Command) error {
-	v := viper.New()
+	snail = viper.New()
 
-	v.SetConfigType("yaml")
+	snail.SetConfigType("yaml")
 
 	// Find home directory.
 	home, err := homedir.Dir()
@@ -57,11 +66,11 @@ func initConfig(cmd *cobra.Command) error {
 		return errors.Wrap(err, "Failed to find home directory")
 	}
 
-	v.AddConfigPath(home + "/.config/kkpctl")
-	v.SetConfigName("config.yaml")
+	snail.AddConfigPath(home + "/.config/kkpctl")
+	snail.SetConfigName("config.yaml")
 
 	// If a config file is found, read it in.
-	err = v.ReadInConfig()
+	err = snail.ReadInConfig()
 	if err != nil {
 		// It's okay if there isn't a config file
 		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
@@ -74,15 +83,15 @@ func initConfig(cmd *cobra.Command) error {
 	// environment variables are prefixed, e.g. a flag like --url
 	// binds to an environment variable KKP_URL. This helps
 	// avoid conflicts.
-	v.SetEnvPrefix(envPrefix)
+	snail.SetEnvPrefix(envPrefix)
 
 	// Bind to environment variables
 	// Works great for simple config names, but needs help for names
 	// like --favorite-color which we fix in the bindFlags function
-	v.AutomaticEnv()
+	snail.AutomaticEnv()
 
 	// Bind the current command's flags to viper
-	bindFlags(cmd, v)
+	bindFlags(cmd, snail)
 
 	return nil
 }
