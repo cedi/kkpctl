@@ -19,13 +19,16 @@
 		"terminal.integrated.shell.linux": "/bin/bash",
 		"go.toolsManagement.checkForUpdates": "off",
 		"go.gopath": "/go",
-		"go.useLanguageServer": true
+		"go.useLanguageServer": true,
+		"codeQL.runningQueries.memory": 2048,
+        "codeQL.runningQueries.debug": true
 	},
 
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
 		"golang.Go",
-		"ms-azuretools.vscode-docker"
+		"ms-azuretools.vscode-docker",
+		"github.vscode-codeql"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
