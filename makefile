@@ -2,7 +2,7 @@
 
 all: build
 
-build:
+build: fmt
 	go build -o build/kkpctl ./main.go
 
 test:
@@ -13,3 +13,6 @@ install: build
 
 clean:
 	rm -rf ./build
+
+fmt:
+	go fmt ./...
