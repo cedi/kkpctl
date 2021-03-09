@@ -11,9 +11,10 @@
             "mode": "debug",
             "program": "${workspaceFolder}/main.go",
             "args": [
-                //"add", "project", "kkpctltest", "--labels", "stage=dev",
-                "describe", "project", "vhkbdlstlt",
-                "-o", "text"
+                "get", "project", "--all"
+                //"add", "project", "kkpctltest", "--labels", "stage=dev"
+                //"describe", "project", "vhkbdlstlt"
+                //"delete", "project", "r64pgz4cbw"
             ]
         }
     ]
