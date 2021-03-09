@@ -35,18 +35,16 @@ var getProjectsCmd = &cobra.Command{
 			}
 			fmt.Println(parsed)
 		} else {
-			for _, arg := range args {
-				project, err := kkp.GetProject(arg)
-				if err != nil {
-					return errors.Wrap(err, "Error fetching project")
-				}
-
-				parsed, err := output.ParseOutput(project, outputType)
-				if err != nil {
-					return errors.Wrap(err, "Error parsing project")
-				}
-				fmt.Println(parsed)
+			project, err := kkp.GetProject(args[0])
+			if err != nil {
+				return errors.Wrap(err, "Error fetching project")
 			}
+
+			parsed, err := output.ParseOutput(project, outputType)
+			if err != nil {
+				return errors.Wrap(err, "Error parsing project")
+			}
+			fmt.Println(parsed)
 		}
 
 		return nil
