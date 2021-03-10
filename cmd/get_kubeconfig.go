@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 
 	"github.com/cedi/kkpctl/pkg/client"
+	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
@@ -28,7 +29,14 @@ var getKubeconfigCmd = &cobra.Command{
 			return errors.Wrap(err, "Could not initialize Kubermatic API client")
 		}
 
-		result, err := kkp.GetKubeConfig(args[0], projectID, datacenter)
+		var cluster models.Cluster
+		if datacenter == "" {
+			cluster, err = kkp.GetClusterProject(args[0], projectID)
+		} else {
+			cluster, err = kkp.GetCluster(args[0], projectID, datacenter)
+		}
+
+		result, err := kkp.GetKubeConfig(cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
 		if err != nil {
 			return errors.Wrap(err, "Error fetching kubeconfig")
 		}
@@ -53,7 +61,6 @@ func init() {
 	getKubeconfigCmd.MarkFlagRequired("project")
 
 	getKubeconfigCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter.")
-	getKubeconfigCmd.MarkFlagRequired("datacenter")
 
 	getKubeconfigCmd.Flags().BoolVarP(&writeConfig, "write", "w", false, "write the kubeconfig to the local directory")
 }

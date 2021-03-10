@@ -81,6 +81,17 @@ func parseOutput(object interface{}, output string, sortBy string) (string, erro
 		return parseNodeDeployment(nodeDeployment, output)
 	}
 
+	// Datacenter
+	datacenters, ok := object.([]models.Datacenter)
+	if ok {
+		return parseDatacenters(datacenters, output, sortBy)
+	}
+
+	datacenter, ok := object.(models.Datacenter)
+	if ok {
+		return parseDatacenter(datacenter, output)
+	}
+
 	return fmt.Sprintf("%v\n", object), errors.New("Unable to parse proper type of object")
 }
 

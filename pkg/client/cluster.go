@@ -1,13 +1,13 @@
 package client
 
 import (
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 
 	"github.com/kubermatic/go-kubermatic/models"
+	"github.com/pkg/errors"
 )
 
 const (
@@ -48,6 +48,29 @@ func (c *Client) ListClustersInDC(projectID string, dc string) ([]models.Cluster
 	}
 
 	return result, nil
+}
+
+// GetClusterProject gets a clusters in a given Project
+func (c *Client) GetClusterProject(clusterID string, projectID string) (models.Cluster, error) {
+	result := models.Cluster{}
+
+	clusters, err := c.ListClusters(projectID)
+	if err != nil {
+		return result, errors.Wrap(err, "Failed to determine the correct datacenter for a cluster in a given project")
+	}
+
+	datacenter := ""
+	for _, cluster := range clusters {
+		if cluster.ID == clusterID {
+			datacenter = cluster.Spec.Cloud.DatacenterName
+		}
+	}
+
+	if datacenter == "" {
+		return result, errors.Wrap(err, "Failed to determine the correct datacenter for a cluster in a given project")
+	}
+
+	return c.GetCluster(clusterID, projectID, datacenter)
 }
 
 // GetCluster gets a clusters in a given Project in a given datacenter
