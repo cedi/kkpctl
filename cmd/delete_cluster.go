@@ -31,7 +31,7 @@ var delClusterCmd = &cobra.Command{
 			return errors.Wrap(err, "Error deleting cluster")
 		}
 
-		fmt.Printf("Successfully deleted Cluster %s (ClusterId: %s, ProjectId %s, Datacenter %s)",
+		fmt.Printf("Successfully deleted Cluster %s (ClusterId: %s, ProjectId %s, Datacenter %s)\n",
 			cluster.Name,
 			args[0],
 			projectID,

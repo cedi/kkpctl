@@ -31,7 +31,7 @@ var delProjectsCmd = &cobra.Command{
 			return errors.Wrap(err, "Error deleting project")
 		}
 
-		fmt.Printf("Successfully deleted Project %s (%s)", project.Name, args[0])
+		fmt.Printf("Successfully deleted Project %s (%s)\n", project.Name, args[0])
 		return nil
 	},
 }

@@ -39,7 +39,7 @@ var getDatacenterCmd = &cobra.Command{
 			return errors.Wrap(err, "Error parsing datacenters")
 		}
 
-		fmt.Println(parsed)
+		fmt.Print(parsed)
 		return nil
 	},
 }

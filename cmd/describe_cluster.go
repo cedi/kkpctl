@@ -47,7 +47,7 @@ var describeClusterCmd = &cobra.Command{
 		if err != nil {
 			return errors.Wrap(err, "Error describing cluster")
 		}
-		fmt.Println(parsed)
+		fmt.Print(parsed)
 
 		return nil
 	},

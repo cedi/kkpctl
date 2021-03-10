@@ -51,7 +51,7 @@ var getClustersCmd = &cobra.Command{
 		if err != nil {
 			return errors.Wrap(err, "Error parsing clusters")
 		}
-		fmt.Println(parsed)
+		fmt.Print(parsed)
 
 		return nil
 	},

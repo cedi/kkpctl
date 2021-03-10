@@ -43,7 +43,7 @@ var createProjectCmd = &cobra.Command{
 		if err != nil {
 			return errors.Wrap(err, "Error parsing projects")
 		}
-		fmt.Println(parsed)
+		fmt.Print(parsed)
 		return nil
 	},
 }

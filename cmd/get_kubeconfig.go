@@ -23,7 +23,6 @@ var getKubeconfigCmd = &cobra.Command{
 	Args:              cobra.MaximumNArgs(1),
 	ValidArgsFunction: getValidClusterArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		//fmt.Println("clusters called")
 		kkp, err := client.NewClient(baseURL, apiToken)
 		if err != nil {
 			return errors.Wrap(err, "Could not initialize Kubermatic API client")
@@ -42,7 +41,7 @@ var getKubeconfigCmd = &cobra.Command{
 		}
 
 		if writeConfig == false {
-			fmt.Println(result)
+			fmt.Print(result)
 		} else {
 			err := ioutil.WriteFile(fmt.Sprintf("kubeconfig-admin-%s", args[0]), []byte(result), 0644)
 			if err != nil {
@@ -59,8 +58,6 @@ func init() {
 
 	getKubeconfigCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project.")
 	getKubeconfigCmd.MarkFlagRequired("project")
-
 	getKubeconfigCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter.")
-
 	getKubeconfigCmd.Flags().BoolVarP(&writeConfig, "write", "w", false, "write the kubeconfig to the local directory")
 }

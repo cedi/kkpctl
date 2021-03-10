@@ -31,7 +31,7 @@ var describeProjectsCmd = &cobra.Command{
 		if err != nil {
 			return errors.Wrap(err, "Error describing project")
 		}
-		fmt.Println(parsed)
+		fmt.Print(parsed)
 
 		return nil
 	},
