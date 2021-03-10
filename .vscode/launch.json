@@ -13,9 +13,13 @@
             "args": [
                 //"get", "project", "--all"
                 //"add", "project", "kkpctltest", "--labels", "stage=dev"
-                //"describe", "project", "vhkbdlstlt"
+                //"describe", "project", "dw2s9jk28z"
                 //"delete", "project", "r64pgz4cbw"
-                "get", "cluster", "--project", "dw2s9jk28z"
+                //"get", "cluster", "--project", "9mt8bvhkkf"
+                //"get", "cluster", "--project", "dw2s9jk28z", "--datacenter", "ix1"
+                //"get", "cluster", "rbw47nm2h8", "--project", "dw2s9jk28z", "--datacenter", "ix1"
+                //"delete", "cluster", "srf8p7m67r", "--project", "9mt8bvhkkf", "--datacenter", "ix1"
+                "describe", "cluster", "22x5xvgs5p", "--project", "68s9vbpslg", "--datacenter", "ix1"
             ]
         }
     ]

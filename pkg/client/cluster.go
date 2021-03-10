@@ -35,82 +35,42 @@ func (c *Client) ListClusters(projectID string) ([]models.Cluster, error) {
 	return result, nil
 }
 
-// ListClustersForProjectAndDatacenter lists all clusters for a given Project
-// (identified by ID) and Seed (identified by name)
-//func (c *Client) ListClustersForProjectAndDatacenter(projectID string, seed string) ([]models.Cluster, error) {
-//	req, err := c.newRequest("GET", projectPath+"/"+projectID+datacenterSubPath+"/"+seed+clustersSubPath, nil)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	result := make([]models.Cluster, 0)
-//
-//	resp, err := c.do(req, &result)
-//	if err != nil {
-//		return nil, err
-//	}
-//
-//	// StatusCodes 401 and 403 mean empty response and should be treated as such
-//	if resp.StatusCode == 401 || resp.StatusCode == 403 {
-//		return nil, nil
-//	}
-//
-//	if resp.StatusCode >= 299 {
-//		return nil, errors.New("Got non-2xx return code: " + strconv.Itoa(resp.StatusCode))
-//	}
-//
-//	return result, nil
-//}
+// ListClustersInDC lists all clusters for a given Project in a given datacenter
+func (c *Client) ListClustersInDC(projectID string, dc string) ([]models.Cluster, error) {
+	result := make([]models.Cluster, 0)
 
-// GetCluster fetches cluster
-//func (c *Client) GetCluster(projectID string, seed string, clusterID string) (models.Cluster, error) {
-//	req, err := c.newRequest("GET", projectPath+"/"+projectID+datacenterSubPath+"/"+seed+clustersSubPath+"/"+clusterID, nil)
-//	if err != nil {
-//		return models.Cluster{}, err
-//	}
-//
-//	result := models.Cluster{}
-//
-//	resp, err := c.do(req, &result)
-//	if err != nil {
-//		return models.Cluster{}, err
-//	}
-//
-//	// StatusCodes 401 and 403 mean empty response and should be treated as such
-//	if resp.StatusCode == 401 || resp.StatusCode == 403 {
-//		return models.Cluster{}, nil
-//	}
-//
-//	if resp.StatusCode >= 299 {
-//		return models.Cluster{}, errors.New("Got non-2xx return code: " + strconv.Itoa(resp.StatusCode))
-//	}
-//
-//	return result, nil
-//}
+	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s", projectPath, projectID, datacenterPath, dc, clusterPath)
+	_, err := c.Get(requestURL, &result)
+	if err != nil {
+		return result, err
+	}
 
-// DeleteCluster deletes a given cluster
-//func (c *Client) DeleteCluster(projectID string, seed string, clusterID string) error {
-//	req, err := c.newRequest("DELETE", projectPath+"/"+projectID+datacenterSubPath+"/"+seed+clustersSubPath+"/"+clusterID, nil)
-//	if err != nil {
-//		return err
-//	}
-//
-//	resp, err := c.do(req, nil)
-//	if err != nil {
-//		return err
-//	}
-//
-//	// StatusCodes 401 and 403 mean empty response and should be treated as such
-//	if resp.StatusCode == 401 || resp.StatusCode == 403 {
-//		return nil
-//	}
-//
-//	if resp.StatusCode >= 299 {
-//		return errors.New("Got non-2xx return code: " + strconv.Itoa(resp.StatusCode))
-//	}
-//
-//	return nil
-//}
+	return result, nil
+}
+
+// GetCluster gets a clusters in a given Project in a given datacenter
+func (c *Client) GetCluster(clusterID string, projectID string, dc string) (models.Cluster, error) {
+	result := models.Cluster{}
+
+	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s", projectPath, projectID, datacenterPath, dc, clusterPath, clusterID)
+	_, err := c.Get(requestURL, &result)
+	if err != nil {
+		return result, err
+	}
+
+	return result, nil
+}
+
+// DeleteCluster deletes a cluster identified by id
+func (c *Client) DeleteCluster(clusterID string, projectID string, dc string) error {
+	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s", projectPath, projectID, datacenterPath, dc, clusterPath, clusterID)
+	_, err := c.Delete(requestURL)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
 
 // GetClusterKubeconfig fetches kubeconfig for a given cluster
 //func (c *Client) GetClusterKubeconfig(projectID string, seed string, clusterID string) (clientcmdapi.Config, error) {

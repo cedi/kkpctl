@@ -15,7 +15,7 @@ import (
 
 // clusterRender is a intermediate struct to make use of lensesio/tableprinter, which relies on the header anotation
 type clusterRender struct {
-	ID                string `header:"ProjectID"`
+	ID                string `header:"ClusterID"`
 	Name              string `header:"Name"`
 	Version           string `header:"Version"`
 	CreationTimestamp string `header:"Created"`

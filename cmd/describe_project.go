@@ -11,9 +11,11 @@ import (
 
 // projectsCmd represents the projects command
 var describeProjectsCmd = &cobra.Command{
-	Use:   "project projectid",
-	Short: "Describe a project.",
-	Args:  cobra.ExactArgs(1),
+	Use:               "project projectid",
+	Short:             "Describe a project.",
+	Example:           "kkpctl describe project dw2s9jk28z",
+	Args:              cobra.ExactArgs(1),
+	ValidArgsFunction: getValidProjectArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		kkp, err := client.NewClient(baseURL, apiToken)
 		if err != nil {
@@ -25,7 +27,7 @@ var describeProjectsCmd = &cobra.Command{
 			return errors.Wrap(err, "Error fetching project")
 		}
 
-		parsed, err := describe.Object(project)
+		parsed, err := describe.Object(&project)
 		if err != nil {
 			return errors.Wrap(err, "Error describing project")
 		}

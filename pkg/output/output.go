@@ -60,6 +60,27 @@ func parseOutput(object interface{}, output string, sortBy string) (string, erro
 		return parseClusters(clusters, output, sortBy)
 	}
 
+	cluster, ok := object.(models.Cluster)
+	if ok {
+		return parseCluster(cluster, output)
+	}
+
+	clusterP, ok := object.(*models.Cluster)
+	if ok {
+		return parseCluster(*clusterP, output)
+	}
+
+	// Node Deployments
+	nodeDeployments, ok := object.([]models.NodeDeployment)
+	if ok {
+		return parseNodeDeployments(nodeDeployments, output, sortBy)
+	}
+
+	nodeDeployment, ok := object.(models.NodeDeployment)
+	if ok {
+		return parseNodeDeployment(nodeDeployment, output)
+	}
+
 	return fmt.Sprintf("%v\n", object), errors.New("Unable to parse proper type of object")
 }
 

@@ -16,9 +16,10 @@ var (
 
 // projectCmd represents the project command
 var createProjectCmd = &cobra.Command{
-	Use:   "project [name]",
-	Short: "Lets you create a new project",
-	Args:  cobra.ExactArgs(1),
+	Use:     "project name",
+	Short:   "Lets you create a new project",
+	Example: "kkpctl create project test --labels=\"stage=dev,costcentre=123456\"",
+	Args:    cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		kkp, err := client.NewClient(baseURL, apiToken)
 		if err != nil {

@@ -27,7 +27,7 @@ type ownerStruct struct {
 }
 
 // describeProject takes any KKP Project and describes it
-func describeProject(project models.Project) (string, error) {
+func describeProject(project *models.Project) (string, error) {
 	projectMeta := projectMetaStruct{
 		ID:                project.ID,
 		Name:              project.Name,

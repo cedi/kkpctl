@@ -54,14 +54,8 @@ func (c *Client) Do(req *http.Request, out interface{}) (*http.Response, error) 
 		return resp, err
 	}
 
-	// StatusCodes 401 means unauthorized
-	if resp.StatusCode == 401 {
-		return resp, errors.New("Unauthorized")
-	}
-
-	// StatusCodes 409 means conflict
-	if resp.StatusCode == 409 {
-		return resp, errors.New("Conflict")
+	if resp.StatusCode >= 299 {
+		return resp, errors.New(resp.Status)
 	}
 
 	defer resp.Body.Close()
