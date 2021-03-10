@@ -56,16 +56,6 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVar(&sortBy, "sort", "name", "Sort text output by which attribute (\"name\" or \"date\")")
 	viper.BindPFlag("sort", rootCmd.PersistentFlags().Lookup("sort"))
-
-	rootCmd.AddCommand(
-		&cobra.Command{
-			Use: "testvalidargs",
-			Run: func(cmd *cobra.Command, args []string) {
-				projectIds, _ := getValidProjectArgs(nil, nil, "")
-				fmt.Println(projectIds)
-			},
-		},
-	)
 }
 
 // initConfig reads in config file and ENV variables if set.
