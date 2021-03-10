@@ -15,7 +15,7 @@ import (
 
 // nodeDeploymentRender is a intermediate struct to make use of lensesio/tableprinter, which relies on the header anotation
 type nodeDeploymentRender struct {
-	ID                string `header:"ClusterID"`
+	ID                string `header:"NodeDeploymentID"`
 	Name              string `header:"Name"`
 	Version           string `header:"Version"`
 	Replicas          int32  `header:"Replicas"`

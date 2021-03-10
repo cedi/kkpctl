@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"strings"
 
+	"github.com/cedi/kkpctl/pkg/output"
 	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/lensesio/tableprinter"
 )
@@ -28,17 +29,7 @@ type ownerStruct struct {
 
 // describeProject takes any KKP Project and describes it
 func describeProject(project *models.Project) (string, error) {
-	projectMeta := projectMetaStruct{
-		ID:                project.ID,
-		Name:              project.Name,
-		CreationTimestamp: project.CreationTimestamp.String(),
-		Status:            project.Status,
-	}
-
-	var projectRenderBuf io.ReadWriter
-	projectRenderBuf = new(bytes.Buffer)
-	tableprinter.Print(projectRenderBuf, projectMeta)
-	projectRenderBytes, err := ioutil.ReadAll(projectRenderBuf)
+	projectTable, err := output.ParseOutput(*project, output.Text, output.Name)
 	if err != nil {
 		return "", err
 	}
@@ -67,7 +58,7 @@ func describeProject(project *models.Project) (string, error) {
 	}
 
 	result := fmt.Sprintf("Project:\n%s\n\nOwners:\n%s\n\nLabels:\n%s\n\nClusters in this Project: %d",
-		string(projectRenderBytes),
+		string(projectTable),
 		string(ownerRenderBytes),
 		strings.Join(labels, "; "),
 		project.ClustersNumber,
