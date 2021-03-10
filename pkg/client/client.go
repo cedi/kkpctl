@@ -58,6 +58,10 @@ func (c *Client) Do(req *http.Request, out interface{}) (*http.Response, error) 
 		return resp, errors.New(resp.Status)
 	}
 
+	if resp.Header.Get("content-type") != "application/json" {
+		return resp, nil
+	}
+
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)

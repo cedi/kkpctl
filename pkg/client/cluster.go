@@ -3,6 +3,7 @@ package client
 import (
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"strconv"
 
@@ -12,6 +13,7 @@ import (
 const (
 	clusterPath    string = "clusters"
 	datacenterPath string = "dc"
+	kubeconfigPath string = "kubeconfig"
 )
 
 // ListClusters lists all clusters for a given Project (identified by ID)
@@ -72,28 +74,18 @@ func (c *Client) DeleteCluster(clusterID string, projectID string, dc string) er
 	return nil
 }
 
-// GetClusterKubeconfig fetches kubeconfig for a given cluster
-//func (c *Client) GetClusterKubeconfig(projectID string, seed string, clusterID string) (clientcmdapi.Config, error) {
-//	req, err := c.newRequest("GET", projectPath+"/"+projectID+datacenterSubPath+"/"+seed+clustersSubPath+"/"+clusterID+kubeconfigSubPath, nil)
-//	if err != nil {
-//		return clientcmdapi.Config{}, err
-//	}
-//
-//	result := clientcmdapi.Config{}
-//
-//	resp, err := c.do(req, &result)
-//	if err != nil {
-//		return clientcmdapi.Config{}, err
-//	}
-//
-//	// StatusCodes 401 and 403 mean empty response and should be treated as such
-//	if resp.StatusCode == 401 || resp.StatusCode == 403 {
-//		return clientcmdapi.Config{}, nil
-//	}
-//
-//	if resp.StatusCode >= 299 {
-//		return clientcmdapi.Config{}, errors.New("Got non-2xx return code: " + strconv.Itoa(resp.StatusCode))
-//	}
-//
-//	return result, nil
-//}
+// GetKubeConfig gets a clusters Kubeconfig
+func (c *Client) GetKubeConfig(clusterID string, projectID string, dc string) (string, error) {
+	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s", projectPath, projectID, datacenterPath, dc, clusterPath, clusterID, kubeconfigPath)
+	resp, err := c.Get(requestURL, nil)
+	if err != nil {
+		return "", err
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	return string(body), nil
+}

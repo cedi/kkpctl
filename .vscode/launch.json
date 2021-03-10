@@ -19,7 +19,8 @@
                 //"get", "cluster", "--project", "dw2s9jk28z", "--datacenter", "ix1"
                 //"get", "cluster", "rbw47nm2h8", "--project", "dw2s9jk28z", "--datacenter", "ix1"
                 //"delete", "cluster", "srf8p7m67r", "--project", "9mt8bvhkkf", "--datacenter", "ix1"
-                "describe", "cluster", "22x5xvgs5p", "--project", "68s9vbpslg", "--datacenter", "ix1"
+                //"describe", "cluster", "22x5xvgs5p", "--project", "68s9vbpslg", "--datacenter", "ix1"
+                "get", "kubeconfig", "f7pv2w49mk", "--project", "x5zvx9bcx6", "--datacenter", "es1"
             ]
         }
     ]
