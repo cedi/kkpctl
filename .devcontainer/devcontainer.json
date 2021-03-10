@@ -6,7 +6,7 @@
 		"dockerfile": "Dockerfile",
 		"args": {
 			// Update the VARIANT arg to pick a version of Go: 1, 1.15, 1.14
-			"VARIANT": "1.15",
+			"VARIANT": "1.16",
 			// Options
 			"INSTALL_NODE": "false",
 			"NODE_VERSION": "lts/*",
@@ -19,7 +19,40 @@
 		"terminal.integrated.shell.linux": "/bin/bash",
 		"go.toolsManagement.checkForUpdates": "off",
 		"go.gopath": "/go",
+		"go.lintOnSave": "package",
+		"go.formatTool": "goimports",
 		"go.useLanguageServer": true,
+		"go.autocompleteUnimportedPackages": true,
+		"go.vetOnSave": "package",
+		"go.editorContextMenuCommands": {
+			"toggleTestFile": true,
+			"addTags": true,
+			"removeTags": false,
+			"fillStruct": true,
+			"testAtCursor": true,
+			"testFile": false,
+			"testPackage": false,
+			"generateTestForFunction": true,
+			"generateTestForFile": false,
+			"generateTestForPackage": false,
+			"addImport": true,
+			"testCoverage": true,
+			"playground": true,
+			"debugTestAtCursor": true,
+			"benchmarkAtCursor": false
+		},
+		"go.toolsManagement.autoUpdate": true,
+		"go.enableCodeLens": {
+			"references": true,
+			"runtest": true
+		},
+		"[go]":{
+			"editor.insertSpaces": false,
+			"editor.formatOnSave": true,
+			"editor.codeActionsOnSave": {
+				"source.organizeImports": true
+			}
+		},
 		"codeQL.runningQueries.memory": 2048,
         "codeQL.runningQueries.debug": true
 	},

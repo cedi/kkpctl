@@ -20,6 +20,7 @@ var (
 	apiToken   string
 	baseURL    string
 	outputType string
+	sortBy     string
 	snail      *viper.Viper
 )
 
@@ -52,6 +53,10 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVarP(&outputType, "output", "o", "text", "The output type to use")
 	viper.BindPFlag("output", rootCmd.PersistentFlags().Lookup("output"))
+
+	rootCmd.PersistentFlags().StringVar(&sortBy, "sort", "name", "Sort text output by which attribute (\"name\" or \"date\"")
+	viper.BindPFlag("sort", rootCmd.PersistentFlags().Lookup("sort"))
+
 }
 
 // initConfig reads in config file and ENV variables if set.

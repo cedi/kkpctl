@@ -23,29 +23,22 @@ var getProjectsCmd = &cobra.Command{
 			return errors.New("Could not initialize Kubermatic API client")
 		}
 
+		var result interface{}
 		if len(args) == 0 || listAll {
-			projects, err := kkp.ListProjects(listAll)
-			if err != nil {
-				return errors.Wrap(err, "Error fetching projects")
-			}
-
-			parsed, err := output.ParseOutput(projects, outputType)
-			if err != nil {
-				return errors.Wrap(err, "Error parsing projects")
-			}
-			fmt.Println(parsed)
+			result, err = kkp.ListProjects(listAll)
 		} else {
-			project, err := kkp.GetProject(args[0])
-			if err != nil {
-				return errors.Wrap(err, "Error fetching project")
-			}
-
-			parsed, err := output.ParseOutput(project, outputType)
-			if err != nil {
-				return errors.Wrap(err, "Error parsing project")
-			}
-			fmt.Println(parsed)
+			result, err = kkp.GetProject(args[0])
 		}
+
+		if err != nil {
+			return errors.Wrap(err, "Error fetching project")
+		}
+
+		parsed, err := output.ParseOutput(result, outputType, sortBy)
+		if err != nil {
+			return errors.Wrap(err, "Error parsing project")
+		}
+		fmt.Println(parsed)
 
 		return nil
 	},

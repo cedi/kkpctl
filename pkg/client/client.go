@@ -12,7 +12,8 @@ import (
 )
 
 const (
-	apiV1Path string = "/api/v1"
+	apiV1Path       string = "/api/v1"
+	contentTypeJSON string = "application/json"
 )
 
 // URLParams is a map of strings which can be added to a Get request
@@ -51,6 +52,16 @@ func (c *Client) Do(req *http.Request, out interface{}) (*http.Response, error) 
 	resp, err := c.httpClient.Do(req)
 	if err != nil || out == nil {
 		return resp, err
+	}
+
+	// StatusCodes 401 means unauthorized
+	if resp.StatusCode == 401 {
+		return resp, errors.New("Unauthorized")
+	}
+
+	// StatusCodes 409 means conflict
+	if resp.StatusCode == 409 {
+		return resp, errors.New("Conflict")
 	}
 
 	defer resp.Body.Close()

@@ -11,7 +11,7 @@ import (
 
 // projectsCmd represents the projects command
 var describeProjectsCmd = &cobra.Command{
-	Use:   "project [projectid]",
+	Use:   "project projectid",
 	Short: "Describe a project.",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {

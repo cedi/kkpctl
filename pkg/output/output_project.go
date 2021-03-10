@@ -22,7 +22,11 @@ type projectRender struct {
 	Clusters          int64  `header:"Clusters"`
 }
 
-func parseProjects(objects []models.Project, output string) (string, error) {
+func parseProject(object models.Project, output string) (string, error) {
+	return parseProjects([]models.Project{object}, output, Name)
+}
+
+func parseProjects(objects []models.Project, output string, sortBy string) (string, error) {
 	switch output {
 	case Text:
 		rendered := make([]projectRender, len(objects))
@@ -37,7 +41,11 @@ func parseProjects(objects []models.Project, output string) (string, error) {
 		}
 
 		sort.Slice(rendered, func(i, j int) bool {
-			return rendered[j].CreationTimestamp < rendered[i].CreationTimestamp
+			if sortBy == Date {
+				return rendered[j].CreationTimestamp < rendered[i].CreationTimestamp
+			}
+
+			return rendered[j].Name > rendered[i].Name
 		})
 
 		var bodyBuf io.ReadWriter
@@ -61,40 +69,5 @@ func parseProjects(objects []models.Project, output string) (string, error) {
 
 	default:
 		return "", errors.New("Unable to parse objects")
-	}
-}
-
-func parseProject(object models.Project, output string) (string, error) {
-	switch output {
-	case Text:
-		rendered := projectRender{
-			ID:                object.ID,
-			Name:              object.Name,
-			CreationTimestamp: object.CreationTimestamp.String(),
-			Status:            object.Status,
-			Clusters:          object.ClustersNumber,
-		}
-
-		var bodyBuf io.ReadWriter
-		bodyBuf = new(bytes.Buffer)
-
-		tableprinter.Print(bodyBuf, rendered)
-		bodyBytes, err := ioutil.ReadAll(bodyBuf)
-		return string(bodyBytes), err
-
-	case JSON:
-		buf, err := json.MarshalIndent(object, "", "  ")
-		if err != nil {
-			return "", err
-		}
-
-		return string(buf), nil
-
-	case YAML:
-		buf, err := yaml.Marshal(object)
-		return string(buf), err
-
-	default:
-		return "", errors.New("Unable to parse object")
 	}
 }

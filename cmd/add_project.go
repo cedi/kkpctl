@@ -38,7 +38,7 @@ var createProjectCmd = &cobra.Command{
 			return errors.Wrap(err, "Error fetching projects")
 		}
 
-		parsed, err := output.ParseOutput(project, outputType)
+		parsed, err := output.ParseOutput(project, outputType, sortBy)
 		if err != nil {
 			return errors.Wrap(err, "Error parsing projects")
 		}

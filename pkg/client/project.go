@@ -10,8 +10,7 @@ import (
 )
 
 const (
-	projectPath     = "/projects"
-	contentTypeJSON = "application/json"
+	projectPath string = "/projects"
 )
 
 // ListProjects lists all projects a user has permission to see
@@ -30,11 +29,6 @@ func (c *Client) ListProjects(all bool) ([]models.Project, error) {
 
 	if err != nil {
 		return result, err
-	}
-
-	// StatusCodes 401 and 409 mean empty response and should be treated as such
-	if resp.StatusCode == 401 || resp.StatusCode == 409 {
-		return nil, nil
 	}
 
 	// Something non-2xx - not good...
