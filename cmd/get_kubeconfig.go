@@ -29,10 +29,19 @@ var getKubeconfigCmd = &cobra.Command{
 		}
 
 		var cluster models.Cluster
-		if datacenter == "" {
-			cluster, err = kkp.GetClusterProject(args[0], projectID)
-		} else {
-			cluster, err = kkp.GetCluster(args[0], projectID, datacenter)
+		if datacenter == "" && projectID == "" {
+			cluster, err = kkp.GetCluster(args[0], false)
+
+			projectID, err = kkp.GetProjectIDForCluster(cluster.ID)
+			if err != nil {
+				return err
+			}
+		} else if datacenter == "" && projectID != "" {
+			cluster, err = kkp.GetClusterInProject(args[0], projectID)
+		} else if datacenter != "" && projectID == "" {
+			cluster, err = kkp.GetClusterInDC(args[0], datacenter, false)
+		} else if datacenter != "" && projectID != "" {
+			cluster, err = kkp.GetClusterInProjectInDC(args[0], projectID, datacenter)
 		}
 
 		result, err := kkp.GetKubeConfig(cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
@@ -55,9 +64,8 @@ var getKubeconfigCmd = &cobra.Command{
 
 func init() {
 	getCmd.AddCommand(getKubeconfigCmd)
-
 	getKubeconfigCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project.")
-	getKubeconfigCmd.MarkFlagRequired("project")
 	getKubeconfigCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter.")
+	getKubeconfigCmd.Flags().BoolVarP(&listAll, "all", "a", false, "To list all clusters in all projects if the users is allowed to see.")
 	getKubeconfigCmd.Flags().BoolVarP(&writeConfig, "write", "w", false, "write the kubeconfig to the local directory")
 }

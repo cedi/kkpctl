@@ -23,10 +23,14 @@ var describeClusterCmd = &cobra.Command{
 		}
 
 		var cluster models.Cluster
-		if datacenter == "" {
-			cluster, err = kkp.GetClusterProject(args[0], projectID)
-		} else {
-			cluster, err = kkp.GetCluster(args[0], projectID, datacenter)
+		if datacenter == "" && projectID == "" {
+			cluster, err = kkp.GetCluster(args[0], listAll)
+		} else if datacenter == "" && projectID != "" {
+			cluster, err = kkp.GetClusterInProject(args[0], projectID)
+		} else if datacenter != "" && projectID == "" {
+			cluster, err = kkp.GetClusterInDC(args[0], datacenter, listAll)
+		} else if datacenter != "" && projectID != "" {
+			cluster, err = kkp.GetClusterInProjectInDC(args[0], projectID, datacenter)
 		}
 
 		if err != nil {
@@ -58,6 +62,6 @@ func init() {
 
 	describeClusterCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project to list clusters for.")
 	describeClusterCmd.MarkFlagRequired("project")
-
 	describeClusterCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter to list clusters for.")
+	describeClusterCmd.Flags().BoolVarP(&listAll, "all", "a", false, "To list all clusters in all projects if the users is allowed to see.")
 }

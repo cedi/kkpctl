@@ -21,7 +21,8 @@ var delClusterCmd = &cobra.Command{
 			return errors.New("Could not initialize Kubermatic API client")
 		}
 
-		cluster, err := kkp.GetCluster(args[0], projectID, datacenter)
+		cluster, err := kkp.GetClusterInProjectInDC(args[0], projectID, datacenter)
+
 		if err != nil {
 			return errors.Wrap(err, "Error finding cluster")
 		}

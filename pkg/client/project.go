@@ -66,3 +66,26 @@ func (c *Client) DeleteProject(projectID string) error {
 
 	return nil
 }
+
+// GetProjectIDForCluster deletes a project identified by id
+func (c *Client) GetProjectIDForCluster(clusterID string) (string, error) {
+	projects, err := c.ListProjects(true)
+	if err != nil {
+		return "", err
+	}
+
+	for _, project := range projects {
+		clusters, err := c.ListClustersInProject(project.ID)
+		if err != nil {
+			return "", err
+		}
+
+		for _, cluster := range clusters {
+			if cluster.ID == clusterID {
+				return project.ID, nil
+			}
+		}
+	}
+
+	return "", fmt.Errorf("No Project for ClusterID %s found", clusterID)
+}

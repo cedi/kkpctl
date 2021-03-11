@@ -16,8 +16,51 @@ const (
 	kubeconfigPath string = "kubeconfig"
 )
 
-// ListClusters lists all clusters for a given Project (identified by ID)
-func (c *Client) ListClusters(projectID string) ([]models.Cluster, error) {
+// ListClusters lists all clusters
+//	all lists all clusters in all projects
+func (c *Client) ListClusters(all bool) ([]models.Cluster, error) {
+	result := make([]models.Cluster, 0)
+
+	projects, err := c.ListProjects(all)
+	if err != nil {
+		return result, err
+	}
+
+	for _, project := range projects {
+		clusters, err := c.ListClustersInProject(project.ID)
+		if err != nil {
+			return result, err
+		}
+
+		result = append(result, clusters...)
+	}
+
+	return result, nil
+}
+
+// ListClustersInDC lists all clusters for a given Project in a given datacenter
+//	all lists all clusters in all projects
+func (c *Client) ListClustersInDC(dc string, all bool) ([]models.Cluster, error) {
+	result := make([]models.Cluster, 0)
+
+	projects, err := c.ListProjects(all)
+	if err != nil {
+		return result, err
+	}
+	for _, project := range projects {
+		clusters, err := c.ListClustersInProjectInDC(project.ID, dc)
+		if err != nil {
+			return result, err
+		}
+
+		result = append(result, clusters...)
+	}
+
+	return result, nil
+}
+
+// ListClustersInProject lists all clusters for a given Project (identified by ID)
+func (c *Client) ListClustersInProject(projectID string) ([]models.Cluster, error) {
 	var resp *http.Response
 	var err error
 	result := make([]models.Cluster, 0)
@@ -37,8 +80,8 @@ func (c *Client) ListClusters(projectID string) ([]models.Cluster, error) {
 	return result, nil
 }
 
-// ListClustersInDC lists all clusters for a given Project in a given datacenter
-func (c *Client) ListClustersInDC(projectID string, dc string) ([]models.Cluster, error) {
+// ListClustersInProjectInDC lists all clusters for a given Project in a given datacenter
+func (c *Client) ListClustersInProjectInDC(projectID string, dc string) ([]models.Cluster, error) {
 	result := make([]models.Cluster, 0)
 
 	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s", projectPath, projectID, datacenterPath, dc, clusterPath)
@@ -50,11 +93,59 @@ func (c *Client) ListClustersInDC(projectID string, dc string) ([]models.Cluster
 	return result, nil
 }
 
-// GetClusterProject gets a clusters in a given Project
-func (c *Client) GetClusterProject(clusterID string, projectID string) (models.Cluster, error) {
+// GetCluster gets a clusters in a given Project
+func (c *Client) GetCluster(clusterID string, listAll bool) (models.Cluster, error) {
+	var result *models.Cluster
+	result = nil
+
+	clusters, err := c.ListClusters(listAll)
+	if err != nil {
+		return *result, errors.Wrap(err, "Failed to determine the correct datacenter for a cluster in a given project")
+	}
+
+	for _, cluster := range clusters {
+		if cluster.ID == clusterID {
+			result = &cluster
+			break
+		}
+	}
+
+	if result == nil {
+		return *result, errors.Wrap(err, "Failed to find a cluster with this clusterID")
+	}
+
+	return *result, nil
+}
+
+// GetClusterInDC gets a clusters in a given Project
+func (c *Client) GetClusterInDC(clusterID string, datacenter string, listAll bool) (models.Cluster, error) {
+	var result *models.Cluster
+	result = nil
+
+	clusters, err := c.ListClustersInDC(datacenter, listAll)
+	if err != nil {
+		return *result, errors.Wrap(err, "Failed to determine the correct datacenter for a cluster in a given project")
+	}
+
+	for _, cluster := range clusters {
+		if cluster.ID == clusterID && cluster.Spec.Cloud.DatacenterName == datacenter {
+			result = &cluster
+			break
+		}
+	}
+
+	if result == nil {
+		return *result, errors.Wrap(err, "Failed to find a project with this clusterID")
+	}
+
+	return *result, nil
+}
+
+// GetClusterInProject gets a clusters in a given Project
+func (c *Client) GetClusterInProject(clusterID string, projectID string) (models.Cluster, error) {
 	result := models.Cluster{}
 
-	clusters, err := c.ListClusters(projectID)
+	clusters, err := c.ListClustersInProject(projectID)
 	if err != nil {
 		return result, errors.Wrap(err, "Failed to determine the correct datacenter for a cluster in a given project")
 	}
@@ -70,11 +161,11 @@ func (c *Client) GetClusterProject(clusterID string, projectID string) (models.C
 		return result, errors.Wrap(err, "Failed to determine the correct datacenter for a cluster in a given project")
 	}
 
-	return c.GetCluster(clusterID, projectID, datacenter)
+	return c.GetClusterInProjectInDC(clusterID, projectID, datacenter)
 }
 
-// GetCluster gets a clusters in a given Project in a given datacenter
-func (c *Client) GetCluster(clusterID string, projectID string, dc string) (models.Cluster, error) {
+// GetClusterInProjectInDC gets a clusters in a given Project in a given datacenter
+func (c *Client) GetClusterInProjectInDC(clusterID string, projectID string, dc string) (models.Cluster, error) {
 	result := models.Cluster{}
 
 	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s", projectPath, projectID, datacenterPath, dc, clusterPath, clusterID)

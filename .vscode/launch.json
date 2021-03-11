@@ -12,9 +12,17 @@
             "program": "${workspaceFolder}/main.go",
             "args": [
                 //"get", "project", "--all"
+                //"get", "project"
+                //"get", "project", "x5zvx9bcx6"
                 //"add", "project", "kkpctltest", "--labels", "stage=dev"
                 //"describe", "project", "dw2s9jk28z"
                 //"delete", "project", "r64pgz4cbw"
+                //"get", "cluster", "--all"
+                //"get", "cluster"
+                //"get", "cluster", "--project", "x5zvx9bcx6"
+                //"get", "cluster", "--datacenter", "es1"
+                //"get", "cluster", "--datacenter", "es1", "--all"
+                "get", "cluster", "phql4zfj77"
                 //"get", "cluster", "--project", "dw2s9jk28z"
                 //"get", "cluster", "--project", "dw2s9jk28z", "--datacenter", "ix1"
                 //"get", "cluster", "rbw47nm2h8", "--project", "dw2s9jk28z"
@@ -24,8 +32,10 @@
                 //"describe", "cluster", "rbw47nm2h8", "--project", "dw2s9jk28z"
                 //"get", "kubeconfig", "f7pv2w49mk", "--project", "x5zvx9bcx6", "--datacenter", "es1"
                 //"get", "kubeconfig", "rbw47nm2h8", "--project", "dw2s9jk28z"
+                //"get", "kubeconfig", "phql4zfj77", "--project", "z7qbzk5mn4"
+                //"get", "kubeconfig", "phql4zfj77"
                 //"get", "datacenter"
-                "get", "datacenter", "ix1"
+                //"get", "datacenter", "ix1"
             ]
         }
     ]

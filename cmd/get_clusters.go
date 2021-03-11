@@ -29,17 +29,25 @@ var getClustersCmd = &cobra.Command{
 		}
 
 		var result interface{}
-		if len(args) == 0 {
-			if datacenter == "" {
-				result, err = kkp.ListClusters(projectID)
-			} else {
-				result, err = kkp.ListClustersInDC(projectID, datacenter)
+		if len(args) == 0 || listAll {
+			if datacenter == "" && projectID == "" {
+				result, err = kkp.ListClusters(listAll)
+			} else if datacenter == "" && projectID != "" {
+				result, err = kkp.ListClustersInProject(projectID)
+			} else if datacenter != "" && projectID == "" {
+				result, err = kkp.ListClustersInDC(datacenter, listAll)
+			} else if datacenter != "" && projectID != "" {
+				result, err = kkp.ListClustersInProjectInDC(projectID, datacenter)
 			}
 		} else {
-			if datacenter == "" {
-				result, err = kkp.GetClusterProject(args[0], projectID)
-			} else {
-				result, err = kkp.GetCluster(args[0], projectID, datacenter)
+			if datacenter == "" && projectID == "" {
+				result, err = kkp.GetCluster(args[0], listAll)
+			} else if datacenter == "" && projectID != "" {
+				result, err = kkp.GetClusterInProject(args[0], projectID)
+			} else if datacenter != "" && projectID == "" {
+				result, err = kkp.GetClusterInDC(args[0], datacenter, listAll)
+			} else if datacenter != "" && projectID != "" {
+				result, err = kkp.GetClusterInProjectInDC(args[0], projectID, datacenter)
 			}
 		}
 
@@ -60,7 +68,6 @@ var getClustersCmd = &cobra.Command{
 func init() {
 	getCmd.AddCommand(getClustersCmd)
 	getClustersCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project.")
-	getClustersCmd.MarkFlagRequired("project")
-
 	getClustersCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter.")
+	getClustersCmd.Flags().BoolVarP(&listAll, "all", "a", false, "To list all clusters in all projects if the users is allowed to see.")
 }
