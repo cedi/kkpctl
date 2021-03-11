@@ -11,7 +11,7 @@ import (
 // delProjectsCmd represents the projects command
 var delProjectsCmd = &cobra.Command{
 	Use:               "project projectid",
-	Short:             "Delete a project.",
+	Short:             "Delete a project",
 	Example:           "kkpctl delete project dw2s9jk28z",
 	Args:              cobra.ExactArgs(1),
 	ValidArgsFunction: getValidProjectArgs,

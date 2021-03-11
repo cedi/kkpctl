@@ -12,8 +12,8 @@ import (
 
 var describeClusterCmd = &cobra.Command{
 	Use:               "cluster clusterid",
-	Short:             "Describe a cluster.",
-	Example:           "kkpctl describe cluster rbw47nm2h8 --project dw2s9jk28z --datacenter ix1",
+	Short:             "Describe a cluster",
+	Example:           "kkpctl describe cluster rbw47nm2h8 --project dw2s9jk28z",
 	Args:              cobra.ExactArgs(1),
 	ValidArgsFunction: getValidClusterArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {

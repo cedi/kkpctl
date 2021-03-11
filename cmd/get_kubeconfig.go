@@ -16,10 +16,9 @@ var (
 
 // clustersCmd represents the clusters command
 var getKubeconfigCmd = &cobra.Command{
-	Use:               "kubeconfig [clusterid]",
-	Short:             "Lists clusters for a given project (and optional seed datacenter) or fetch a named cluster.",
-	Long:              `If no clusterid is specified, all clusters of an project are listed. If a clusterid is specified only this cluster is shown`,
-	Example:           "kkpctl get kubeconfig --project x5zvx9bcx6 --datacenter es1",
+	Use:               "kubeconfig clusterid",
+	Short:             "Gets the kubeconfig of a cluster",
+	Example:           "kkpctl get kubeconfig --project x5zvx9bcx6 -w",
 	Args:              cobra.MaximumNArgs(1),
 	ValidArgsFunction: getValidClusterArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -65,7 +64,7 @@ var getKubeconfigCmd = &cobra.Command{
 func init() {
 	getCmd.AddCommand(getKubeconfigCmd)
 	getKubeconfigCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project.")
+	describeClusterCmd.MarkFlagRequired("project")
 	getKubeconfigCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter.")
-	getKubeconfigCmd.Flags().BoolVarP(&listAll, "all", "a", false, "To list all clusters in all projects if the users is allowed to see.")
 	getKubeconfigCmd.Flags().BoolVarP(&writeConfig, "write", "w", false, "write the kubeconfig to the local directory")
 }

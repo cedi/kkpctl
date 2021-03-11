@@ -12,11 +12,10 @@ import (
 // clustersCmd represents the clusters command
 var getDatacenterCmd = &cobra.Command{
 	Use:               "datacenter [name]",
-	Short:             "Lists clusters for a given project (and optional seed datacenter) or fetch a named cluster.",
-	Long:              `If no clusterid is specified, all clusters of an project are listed. If a clusterid is specified only this cluster is shown`,
-	Example:           "kkpctl get datacenter ix1",
+	Short:             "Lists all available datacenters",
+	Example:           "kkpctl get datacenter",
 	Args:              cobra.MaximumNArgs(1),
-	ValidArgsFunction: getValidClusterArgs,
+	ValidArgsFunction: getValidDatacenterArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		kkp, err := client.NewClient(baseURL, apiToken)
 		if err != nil {

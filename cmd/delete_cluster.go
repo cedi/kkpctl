@@ -11,8 +11,8 @@ import (
 // delProjectsCmd represents the projects command
 var delClusterCmd = &cobra.Command{
 	Use:               "cluster clusterid",
-	Short:             "Delete a cluster.",
-	Example:           "kkpctl delete cluster rbw47nm2h8 --project dw2s9jk28z --datacenter ix1",
+	Short:             "Delete a cluster",
+	Example:           "kkpctl delete cluster rbw47nm2h8 --project dw2s9jk28z",
 	Args:              cobra.ExactArgs(1),
 	ValidArgsFunction: getValidClusterArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -21,13 +21,12 @@ var delClusterCmd = &cobra.Command{
 			return errors.New("Could not initialize Kubermatic API client")
 		}
 
-		cluster, err := kkp.GetClusterInProjectInDC(args[0], projectID, datacenter)
-
+		cluster, err := kkp.GetClusterInProject(args[0], projectID)
 		if err != nil {
 			return errors.Wrap(err, "Error finding cluster")
 		}
 
-		err = kkp.DeleteCluster(args[0], projectID, datacenter)
+		err = kkp.DeleteCluster(args[0], projectID, cluster.Spec.Cloud.DatacenterName)
 		if err != nil {
 			return errors.Wrap(err, "Error deleting cluster")
 		}
@@ -48,7 +47,4 @@ func init() {
 
 	delClusterCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project to list clusters for.")
 	delClusterCmd.MarkFlagRequired("project")
-
-	delClusterCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter to list clusters for.")
-	delClusterCmd.MarkFlagRequired("datacenter")
 }

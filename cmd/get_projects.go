@@ -14,9 +14,8 @@ var listAll bool
 // projectsCmd represents the projects command
 var getProjectsCmd = &cobra.Command{
 	Use:               "project [projectid]",
-	Short:             "List a project.",
-	Long:              `If no projectid is specified, all projects of an account are listed. If a projectid is specified only this project is shown`,
-	Example:           "kkpctl get project --all",
+	Short:             "List a project",
+	Example:           "kkpctl get project",
 	Args:              cobra.MaximumNArgs(1),
 	ValidArgsFunction: getValidProjectArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {

@@ -17,9 +17,8 @@ var (
 // clustersCmd represents the clusters command
 var getClustersCmd = &cobra.Command{
 	Use:               "cluster [clusterid]",
-	Short:             "Lists clusters for a given project (and optional seed datacenter) or fetch a named cluster.",
-	Long:              `If no clusterid is specified, all clusters of an project are listed. If a clusterid is specified only this cluster is shown`,
-	Example:           "kkpctl get clusterr --project dw2s9jk28z",
+	Short:             "Lists clusters for a given project or datacenter",
+	Example:           "kkpctl get cluster --project dw2s9jk28z",
 	Args:              cobra.MaximumNArgs(1),
 	ValidArgsFunction: getValidClusterArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -68,6 +67,7 @@ var getClustersCmd = &cobra.Command{
 func init() {
 	getCmd.AddCommand(getClustersCmd)
 	getClustersCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project.")
+	describeClusterCmd.MarkFlagRequired("project")
 	getClustersCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter.")
 	getClustersCmd.Flags().BoolVarP(&listAll, "all", "a", false, "To list all clusters in all projects if the users is allowed to see.")
 }
