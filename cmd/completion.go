@@ -90,7 +90,7 @@ func getValidProjectArgs(cmd *cobra.Command, args []string, toComplete string) (
 		}
 	}
 
-	return completions, cobra.ShellCompDirectiveDefault
+	return completions, cobra.ShellCompDirectiveNoFileComp
 }
 
 func getValidClusterArgs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
@@ -106,7 +106,7 @@ func getValidClusterArgs(cmd *cobra.Command, args []string, toComplete string) (
 
 	projectStr, err := cmd.Flags().GetString("project")
 	if err != nil {
-		return completions, cobra.ShellCompDirectiveDefault
+		return completions, cobra.ShellCompDirectiveNoFileComp
 	}
 
 	if projectStr == "" {
@@ -135,7 +135,7 @@ func getValidClusterArgs(cmd *cobra.Command, args []string, toComplete string) (
 		}
 	}
 
-	return completions, cobra.ShellCompDirectiveDefault
+	return completions, cobra.ShellCompDirectiveNoFileComp
 }
 
 func getValidDatacenterArgs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
@@ -158,5 +158,5 @@ func getValidDatacenterArgs(cmd *cobra.Command, args []string, toComplete string
 		}
 	}
 
-	return completions, cobra.ShellCompDirectiveDefault
+	return completions, cobra.ShellCompDirectiveNoFileComp
 }
