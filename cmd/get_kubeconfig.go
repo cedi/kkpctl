@@ -65,6 +65,10 @@ func init() {
 	getCmd.AddCommand(getKubeconfigCmd)
 	getKubeconfigCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project.")
 	describeClusterCmd.MarkFlagRequired("project")
+	getClustersCmd.RegisterFlagCompletionFunc("project", getValidProjectArgs)
+
 	getKubeconfigCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter.")
+	getClustersCmd.RegisterFlagCompletionFunc("datacenter", getValidDatacenterArgs)
+
 	getKubeconfigCmd.Flags().BoolVarP(&writeConfig, "write", "w", false, "write the kubeconfig to the local directory")
 }

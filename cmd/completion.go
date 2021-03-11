@@ -6,6 +6,7 @@ import (
 	"regexp"
 
 	"github.com/cedi/kkpctl/pkg/client"
+	"github.com/cedi/kkpctl/pkg/utils"
 	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/spf13/cobra"
 )
@@ -146,7 +147,20 @@ func getValidDatacenterArgs(cmd *cobra.Command, args []string, toComplete string
 		return completions, cobra.ShellCompDirectiveError
 	}
 
-	datacenters, err := kkp.ListDatacenter()
+	var datacenters []models.Datacenter
+
+	if utils.IsOneOf(cmd.Name(), getClustersCmd.Name(), describeClusterCmd.Name(), delClusterCmd.Name()) {
+		projectStr, _ := cmd.Flags().GetString("project")
+		if projectStr == "" {
+			datacenters, _ = kkp.ListDatacenter()
+		} else {
+			cluster, err := kkp.GetClusterInProject(args[0], projectStr)
+			if err == nil {
+				datacenter, _ := kkp.GetDatacenter(cluster.Spec.Cloud.DatacenterName)
+				datacenters = append(datacenters, datacenter)
+			}
+		}
+	}
 
 	toCompleteRegexp := regexp.MustCompile(fmt.Sprintf("^%s.*$", toComplete))
 	for _, dc := range datacenters {
