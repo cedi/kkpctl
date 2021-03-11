@@ -57,7 +57,7 @@ func describeProject(project *models.Project) (string, error) {
 		labels = append(labels, "[None]")
 	}
 
-	result := fmt.Sprintf("Project:\n%s\n\nOwners:\n%s\n\nLabels:\n%s\n\nClusters in this Project: %d",
+	result := fmt.Sprintf("Project:\n%s\n\nOwners:\n%s\n\nLabels:\n%s\n\nClusters in this Project: %d\n",
 		string(projectTable),
 		string(ownerRenderBytes),
 		strings.Join(labels, "; "),

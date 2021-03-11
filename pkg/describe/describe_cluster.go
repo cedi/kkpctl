@@ -45,7 +45,7 @@ func describeCluster(meta *ClusterDescribeMeta) (string, error) {
 		inheritedLabels = append(inheritedLabels, "[None]")
 	}
 
-	result := fmt.Sprintf("Cluster:\n%s\n\nNode Deployments:\n%s\n\nInherited Labels:\n%s\n\nLabels:\n%s",
+	result := fmt.Sprintf("Cluster:\n%s\n\nNode Deployments:\n%s\n\nInherited Labels:\n%s\n\nLabels:\n%s\n",
 		clusterTable,
 		nodeDeploymentTable,
 		strings.Join(inheritedLabels, "; "),
