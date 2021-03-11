@@ -53,9 +53,15 @@ func init() {
 
 	rootCmd.PersistentFlags().StringVarP(&outputType, "output", "o", "text", "The output type to use")
 	viper.BindPFlag("output", rootCmd.PersistentFlags().Lookup("output"))
+	rootCmd.RegisterFlagCompletionFunc("output", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return []string{"text", "json", "yaml"}, cobra.ShellCompDirectiveDefault
+	})
 
 	rootCmd.PersistentFlags().StringVar(&sortBy, "sort", "name", "Sort text output by which attribute (\"name\" or \"date\")")
 	viper.BindPFlag("sort", rootCmd.PersistentFlags().Lookup("sort"))
+	rootCmd.RegisterFlagCompletionFunc("sort", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		return []string{"name", "date"}, cobra.ShellCompDirectiveDefault
+	})
 }
 
 // initConfig reads in config file and ENV variables if set.

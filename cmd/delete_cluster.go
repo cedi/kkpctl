@@ -47,4 +47,5 @@ func init() {
 
 	delClusterCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project to list clusters for.")
 	delClusterCmd.MarkFlagRequired("project")
+	delClusterCmd.RegisterFlagCompletionFunc("project", getValidProjectArgs)
 }
