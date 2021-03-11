@@ -26,7 +26,7 @@ var (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "kkpctl",
+	Use:   "kkpctl [(-o|--output=)text|json|yaml] [(--sort=name|date)]",
 	Short: "A CLI for interacting with Kubermatic Kubernetes Platform.",
 	Long:  `This is a CLI for interacting with the REST API of Kubermatic Kubernetes Platform.`,
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
