@@ -26,12 +26,13 @@ var createProjectCmd = &cobra.Command{
 			return errors.Wrap(err, "Could not initialize Kubermatic API client")
 		}
 
-		slicedLabels := strings.Split(labels, ",")
 		mapLabels := make(map[string]string, 0)
-
-		for _, slicedLabel := range slicedLabels {
-			splitLabel := strings.Split(slicedLabel, "=")
-			mapLabels[splitLabel[0]] = splitLabel[1]
+		if labels != "" {
+			slicedLabels := strings.Split(labels, ",")
+			for _, slicedLabel := range slicedLabels {
+				splitLabel := strings.Split(slicedLabel, "=")
+				mapLabels[splitLabel[0]] = splitLabel[1]
+			}
 		}
 
 		project, err := kkp.CreateProject(args[0], mapLabels)
