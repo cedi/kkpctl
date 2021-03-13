@@ -14,6 +14,7 @@
                 //"get", "project", "--all"
                 //"get", "project"
                 //"get", "project", "x5zvx9bcx6"
+                "add", "project", "kkpctltest"
                 //"add", "project", "kkpctltest", "--labels", "stage=dev"
                 //"describe", "project", "dw2s9jk28z"
                 //"delete", "project", "r64pgz4cbw"
@@ -36,7 +37,6 @@
                 //"get", "kubeconfig", "phql4zfj77"
                 //"get", "datacenter"
                 //"get", "datacenter", "ix1"
-                "complete", "--project", "4hljlj7p9r", "5nwgwgpjz2"
             ]
         }
     ]
