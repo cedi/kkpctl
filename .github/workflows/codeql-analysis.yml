@@ -21,17 +21,6 @@ on:
     - cron: '20 10 * * 4'
 
 jobs:
-  analyze_go_tools:
-    name: Analyze with go vet
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-    
-    - name: make vet 
-      run: make vet
-    
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
