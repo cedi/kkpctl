@@ -16,6 +16,7 @@ var delProjectsCmd = &cobra.Command{
 	Args:              cobra.ExactArgs(1),
 	ValidArgsFunction: getValidProjectArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		baseURL, apiToken := Config.GetCloudFromContext()
 		kkp, err := client.NewClient(baseURL, apiToken)
 		if err != nil {
 			return errors.New("Could not initialize Kubermatic API client")

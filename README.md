@@ -30,13 +30,13 @@ For the full usage documentation, see the [docs](docs/commandline-usage.md)
 1. Setup `kkpctl`
 ```
 # Add your first cloud
-$ kkpctl add cloud imke_prod https://imke.cloud/
+$ kkpctl config add cloud imke_prod https://imke.cloud/
 
 # Add your first cloudprovider
-$ kkpctl add provider optimist_prod --cloud imke_prod --type openstack --username 'cedric.kienzler@innovo-cloud.de' --password 'superSecurePassword!1337'
+$ kkpctl config add provider openstack optimist --username "user@email.de" --password "my-super-secure-password" --tenant "internal-openstack-tenant"
 
-# Add the OSType to OSImage Mapping
-$ kkpctl add osimage flatcar "Flatcar_Production 2020 - Latest" --cloud imke_prod --provider optimist_prod
+# Set your context to use the freshly added cloud
+$ kkpctl ctx set cloud imke_prod
 ```
 
 2. Login to KKP

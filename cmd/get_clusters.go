@@ -22,6 +22,7 @@ var getClustersCmd = &cobra.Command{
 	Args:              cobra.MaximumNArgs(1),
 	ValidArgsFunction: getValidClusterArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		baseURL, apiToken := Config.GetCloudFromContext()
 		kkp, err := client.NewClient(baseURL, apiToken)
 		if err != nil {
 			return errors.Wrap(err, "Could not initialize Kubermatic API client")

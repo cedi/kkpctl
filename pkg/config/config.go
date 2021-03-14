@@ -11,8 +11,9 @@ import (
 
 // Config is the configuration for KKPCTL
 type Config struct {
-	Provider ProviderConfig `yaml:"provider"`
-	Context  Context        `yaml:"ctx"`
+	Provider ProviderConfig    `yaml:"provider"`
+	Context  Context           `yaml:"ctx"`
+	Cloud    map[string]string `yaml:"cloud"`
 }
 
 // NewConfig creates a new, empty, config
@@ -20,6 +21,7 @@ func NewConfig() Config {
 	return Config{
 		Provider: NewProvider(),
 		Context:  NewContext(),
+		Cloud:    make(map[string]string),
 	}
 }
 
@@ -68,4 +70,9 @@ func ensureConfig(filePath string) error {
 	}
 
 	return nil
+}
+
+// GetCloudFromContext returns a touple of cloud-url and bearer
+func (c *Config) GetCloudFromContext() (string, string) {
+	return c.Cloud[c.Context.CloudName], c.Context.Bearer
 }

@@ -20,16 +20,16 @@ var (
 var configAddProviderCmd = &cobra.Command{
 	Use:       "provider {openstack}",
 	Short:     "Lets add a specific provider object",
+	Args:      cobra.ExactArgs(1),
 	ValidArgs: []string{"openstack"},
-	RunE: func(cmd *cobra.Command, args []string) error {
-		return nil
-	},
 }
 
 // adding an PpenStack provider
 var configAddProviderOpenStackCmd = &cobra.Command{
-	Use:   "openstack name",
-	Short: "Lets add a specific openstack provider",
+	Use:     "openstack name",
+	Short:   "Lets add a specific openstack provider",
+	Args:    cobra.ExactArgs(1),
+	Example: "kkpctl config add provider openstack optimist --username \"user@email.de\" --password \"my-super-secure-password\" --tenant \"internal-openstack-tenant\"",
 	RunE: func(cmd *cobra.Command, args []string) error {
 
 		if Config.Provider.Openstack == nil {

@@ -77,6 +77,7 @@ func init() {
 func getValidProjectArgs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 	completions := make([]string, 0)
 
+	baseURL, apiToken := Config.GetCloudFromContext()
 	kkp, err := client.NewClient(baseURL, apiToken)
 	if err != nil {
 		return completions, cobra.ShellCompDirectiveError
@@ -97,6 +98,7 @@ func getValidProjectArgs(cmd *cobra.Command, args []string, toComplete string) (
 func getValidClusterArgs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 	completions := make([]string, 0)
 
+	baseURL, apiToken := Config.GetCloudFromContext()
 	kkp, err := client.NewClient(baseURL, apiToken)
 	if err != nil {
 		fmt.Println(err.Error())
@@ -142,6 +144,7 @@ func getValidClusterArgs(cmd *cobra.Command, args []string, toComplete string) (
 func getValidDatacenterArgs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 	completions := make([]string, 0)
 
+	baseURL, apiToken := Config.GetCloudFromContext()
 	kkp, err := client.NewClient(baseURL, apiToken)
 	if err != nil {
 		return completions, cobra.ShellCompDirectiveError
@@ -169,6 +172,19 @@ func getValidDatacenterArgs(cmd *cobra.Command, args []string, toComplete string
 				continue
 			}
 			completions = append(completions, dc.Metadata.Name)
+		}
+	}
+
+	return completions, cobra.ShellCompDirectiveNoFileComp
+}
+
+func getValidCloudContextArgs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	completions := make([]string, 0)
+
+	toCompleteRegexp := regexp.MustCompile(fmt.Sprintf("^%s.*$", toComplete))
+	for key := range Config.Cloud {
+		if toCompleteRegexp.MatchString(key) {
+			completions = append(completions, key)
 		}
 	}
 
