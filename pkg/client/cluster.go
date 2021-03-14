@@ -187,7 +187,6 @@ func (c *Client) CreateCluster(newCluster *models.Cluster, projectID string, dc 
 		return result, err
 	}
 	return result, fmt.Errorf("Not implemented yet")
-	return result, err
 }
 
 // DeleteCluster deletes a cluster identified by id
