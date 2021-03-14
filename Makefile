@@ -29,7 +29,7 @@ test_all: test
 install: build
 	cp ./build/kkpctl ${GOPATH}/bin
 
-install_beta: beta
+install_release: release
 	cp ./build/kkpctl ${GOPATH}/bin
 
 clean:

@@ -48,13 +48,13 @@ var createClusterCmd = &cobra.Command{
 func init() {
 	addCmd.AddCommand(createClusterCmd)
 
-	getClustersCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project.")
-	getClustersCmd.MarkFlagRequired("project")
-	getClustersCmd.RegisterFlagCompletionFunc("project", getValidProjectArgs)
+	createClusterCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project.")
+	createClusterCmd.MarkFlagRequired("project")
+	createClusterCmd.RegisterFlagCompletionFunc("project", getValidProjectArgs)
 
-	getClustersCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter.")
-	getClustersCmd.MarkFlagRequired("datacenter")
-	getClustersCmd.RegisterFlagCompletionFunc("datacenter", getValidDatacenterArgs)
+	createClusterCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter.")
+	createClusterCmd.MarkFlagRequired("datacenter")
+	createClusterCmd.RegisterFlagCompletionFunc("datacenter", getValidDatacenterArgs)
 
 	createClusterCmd.Flags().StringVarP(&labels, "labels", "l", "", "A comma separated list of labels in the format key=value")
 }

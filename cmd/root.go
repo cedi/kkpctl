@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/cedi/kkpctl/pkg/config"
 	"github.com/mitchellh/go-homedir"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -17,6 +18,12 @@ const (
 )
 
 var (
+	// Config holds the global configuration for kkpctl
+	Config config.Config
+
+	// ConfigPath is the path to our configuration file on disk
+	ConfigPath string
+
 	apiToken   string
 	baseURL    string
 	outputType string
@@ -38,13 +45,30 @@ var rootCmd = &cobra.Command{
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	if err := rootCmd.Execute(); err != nil {
+
+	var err error
+	Config, err = config.Read(ConfigPath)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	err = rootCmd.Execute()
+	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 }
 
 func init() {
+	// Find home directory.
+	home, err := homedir.Dir()
+	if err != nil {
+		fmt.Println("Failed to find home directory: " + err.Error())
+		os.Exit(1)
+	}
+	rootCmd.PersistentFlags().StringVar(&ConfigPath, "config", home+"/.config/kkpctl/config.v2.yaml", "The Path to the configuration file")
+
 	rootCmd.PersistentFlags().StringVarP(&apiToken, "bearer", "t", "", "API token for authenticating with Kubermatic API.")
 	viper.BindPFlag("bearer", rootCmd.PersistentFlags().Lookup("bearer"))
 
