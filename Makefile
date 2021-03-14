@@ -2,10 +2,10 @@
 
 all: build
 
-build: build_dir fmt vet tidy
+build: build_dir fmt tidy
 	go build -race -o build/kkpctl ./main.go
 
-release: build_dir fmt vet tidy
+release: build_dir fmt tidy
 	go build -ldflags "-s -w" -o build/kkpctl ./main.go
 
 test: build_dir
