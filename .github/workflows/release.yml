@@ -15,15 +15,9 @@ jobs:
       uses: actions/setup-go@v2
       with:
         go-version: 1.16
-
-    - name: Install Go tools
-      run: |
-        go get -u golang.org/x/lint/golint
-        go get -u github.com/cweill/gotests/...
-        go get -u golang.org/x/tools/cmd/benchcmp
         
     - uses: actions/checkout@v2
-    
+
     - name: Build
       run: make release
 

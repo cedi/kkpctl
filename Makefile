@@ -5,7 +5,7 @@ all: build
 build: build_dir fmt tidy
 	go build -race -o build/kkpctl ./main.go
 
-release: build_dir fmt tidy
+release: build_dir
 	go build -ldflags "-s -w" -o build/kkpctl ./main.go
 
 test: build_dir
