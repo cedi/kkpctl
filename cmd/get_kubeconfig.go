@@ -31,11 +31,12 @@ var getKubeconfigCmd = &cobra.Command{
 		var cluster models.Cluster
 		if datacenter == "" && projectID == "" {
 			cluster, err = kkp.GetCluster(args[0], false)
-
-			projectID, err = kkp.GetProjectIDForCluster(cluster.ID)
 			if err != nil {
 				return err
 			}
+
+			projectID, err = kkp.GetProjectIDForCluster(cluster.ID)
+
 		} else if datacenter == "" && projectID != "" {
 			cluster, err = kkp.GetClusterInProject(args[0], projectID)
 		} else if datacenter != "" && projectID == "" {
@@ -43,13 +44,16 @@ var getKubeconfigCmd = &cobra.Command{
 		} else if datacenter != "" && projectID != "" {
 			cluster, err = kkp.GetClusterInProjectInDC(args[0], projectID, datacenter)
 		}
+		if err != nil {
+			return err
+		}
 
 		result, err := kkp.GetKubeConfig(cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
 		if err != nil {
 			return errors.Wrap(err, "Error fetching kubeconfig")
 		}
 
-		if writeConfig == false {
+		if !writeConfig {
 			fmt.Print(result)
 		} else {
 			err := ioutil.WriteFile(fmt.Sprintf("kubeconfig-admin-%s", args[0]), []byte(result), 0644)

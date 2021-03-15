@@ -62,7 +62,6 @@
 		"golang.Go",
 		"ms-azuretools.vscode-docker",
 		"github.vscode-codeql",
-		"vscodevim.vim"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

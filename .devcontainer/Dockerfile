@@ -20,3 +20,4 @@ RUN if [ "${INSTALL_NODE}" = "true" ]; then su vscode -c "source /usr/local/shar
 RUN export GO111MODULE=on
 RUN go get -u -v github.com/cweill/gotests/...
 RUN go get -u -v golang.org/x/tools/cmd/benchcmp
+RUN go get -u golang.org/x/lint/golint

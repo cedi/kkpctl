@@ -85,6 +85,9 @@ func getValidProjectArgs(cmd *cobra.Command, args []string, toComplete string) (
 	}
 
 	projects, err := kkp.ListProjects(listAll)
+	if err != nil {
+		return completions, cobra.ShellCompDirectiveError
+	}
 
 	toCompleteRegexp := regexp.MustCompile(fmt.Sprintf("^%s.*$", toComplete))
 	for _, project := range projects {
@@ -218,28 +221,6 @@ func getValidKubernetesVersions(cmd *cobra.Command, args []string, toComplete st
 	}
 
 	return completions, cobra.ShellCompDirectiveNoFileComp
-}
-
-func getDefaultKubernetesVersion() string {
-	baseURL, apiToken := Config.GetCloudFromContext()
-	kkp, err := client.NewClient(baseURL, apiToken)
-	if err != nil {
-		fmt.Println(err.Error())
-		return ""
-	}
-
-	clusterVersions, err := kkp.GetClusterVersions()
-	if err != nil {
-		return ""
-	}
-
-	for _, version := range clusterVersions {
-		if version.Default {
-			return version.Version
-		}
-	}
-
-	return ""
 }
 
 func getValidClusterTypes(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {

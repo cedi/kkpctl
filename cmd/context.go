@@ -32,7 +32,7 @@ var ctxSetCloudCmd = &cobra.Command{
 
 		_, ok := Config.Cloud[cloudName]
 		if !ok {
-			return fmt.Errorf("Cloud '%s' is not configured and therefore cannot be set as context", cloudName)
+			return fmt.Errorf("cloud '%s' is not configured and therefore cannot be set as context", cloudName)
 		}
 
 		Config.Context.CloudName = cloudName
