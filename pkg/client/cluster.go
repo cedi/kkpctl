@@ -190,9 +190,40 @@ func (c *Client) CreateCluster(newCluster *models.CreateClusterSpec, projectID s
 }
 
 // DeleteCluster deletes a cluster identified by id
-func (c *Client) DeleteCluster(clusterID string, projectID string, dc string) error {
+func (c *Client) DeleteCluster(clusterID string, projectID string, deleteVolumes bool, deleteLoadBalancers bool) error {
+	clusters, err := c.ListClustersInProject(projectID)
+	if err != nil {
+		return errors.Wrap(err, "Failed to determine the correct datacenter for a cluster in a given project")
+	}
+
+	datacenter := ""
+	for _, cluster := range clusters {
+		if cluster.ID == clusterID {
+			datacenter = cluster.Spec.Cloud.DatacenterName
+		}
+	}
+
+	if datacenter == "" {
+		return errors.Wrap(err, "Failed to determine the correct datacenter for a cluster in a given project")
+	}
+
+	return c.DeleteClusterInDC(clusterID, projectID, datacenter, deleteVolumes, deleteLoadBalancers)
+}
+
+// DeleteClusterInDC deletes a cluster identified by id
+func (c *Client) DeleteClusterInDC(clusterID string, projectID string, dc string, deleteVolumes bool, deleteLoadBalancers bool) error {
 	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s", projectPath, projectID, datacenterPath, dc, clusterPath, clusterID)
-	_, err := c.Delete(requestURL)
+
+	headers := make(map[string]string)
+	if deleteVolumes {
+		headers["DeleteVolumes"] = "true"
+	}
+
+	if deleteLoadBalancers {
+		headers["DeleteLoadBalancers"] = "true"
+	}
+
+	_, err := c.DeleteWithHeader(requestURL, headers)
 	if err != nil {
 		return err
 	}

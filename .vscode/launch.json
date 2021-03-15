@@ -37,8 +37,10 @@
                 //"get", "kubeconfig", "phql4zfj77"
                 //"get", "datacenter"
                 //"get", "datacenter", "ix1"
-                //"config", "add", "provider", "openstack", "optimist", "--username", "cedric.kienzler@innovo-cloud.de", "--password", "vxWnHM9jkTdRaqTvN4Z4vU4PEQuec9g6rfN4vBFnYGKYryJHjw", "--tenant", "internal-employee-ckienzler"
-                "add", "cluster", "--project", "x5zvx9bcx6", "--datacenter", "ix2", "--provider", "optimist", "--version", "1.18.13", "--labels", "stage=dev", "testcluster3"
+                //"add", "cluster", "--project", "x5zvx9bcx6", "--datacenter", "ix2", "--provider", "optimist", "--version", "1.18.13", "--labels", "stage=dev", "testcluster3"
+                //"delete", "cluster", "--project", "x5zvx9bcx6", "--datacenter", "ix2", "n74hx5fxbx"
+                //"delete", "cluster", "--project", "x5zvx9bcx6", "--datacenter", "ix2", "--delete-volumes", "--delete-loadbalancers", "5688dt4fv4"
+                "delete", "cluster", "--project", "x5zvx9bcx6", "--delete-volumes", "--delete-loadbalancers", "f7pv2w49mk"
            ]
         }
     ]

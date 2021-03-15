@@ -145,10 +145,22 @@ func (c *Client) Put(requestURL string, contentType string, body io.Reader, out 
 
 // Delete functions the same as http.Client.Delete but injects a stored token into ty header
 func (c *Client) Delete(requestURL string) (*http.Response, error) {
+	return c.DeleteWithHeader(requestURL, nil)
+}
+
+// DeleteWithHeader functions the same as http.Client.Delete but injects a stored token into ty header
+func (c *Client) DeleteWithHeader(requestURL string, headers map[string]string) (*http.Response, error) {
 	req, err := http.NewRequest("DELETE", c.formatURL(requestURL), nil)
 	if err != nil {
 		return nil, err
 	}
+
+	if headers != nil {
+		for header, value := range headers {
+			req.Header.Set(header, value)
+		}
+	}
+
 	return c.Do(req, nil)
 }
 
