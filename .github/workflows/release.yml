@@ -10,7 +10,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
 
     - name: Set up Go
       uses: actions/setup-go@v2
@@ -23,6 +22,8 @@ jobs:
         go get -u github.com/cweill/gotests/...
         go get -u golang.org/x/tools/cmd/benchcmp
         
+    - uses: actions/checkout@v2
+    
     - name: Build
       run: make release
 
