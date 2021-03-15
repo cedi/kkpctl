@@ -66,17 +66,17 @@ func main() {
 	fmt.Printf("* REQUEST_TOKEN: %s\n", requestToken)
 
 	fmt.Printf("\n## Authenticate\n\n")
-	authUrl := fmt.Sprintf("%s/dex/auth/keystone?req=%s",
+	authURL := fmt.Sprintf("%s/dex/auth/keystone?req=%s",
 		kkpURL,
 		requestToken,
 	)
-	fmt.Println("* Auth URL: " + authUrl)
+	fmt.Println("* Auth URL: " + authURL)
 
 	form := url.Values{}
 	form.Add("login", kkpUser)
 	form.Add("password", kkpPassword)
 
-	req, err = http.NewRequest("POST", authUrl, strings.NewReader(form.Encode()))
+	req, err = http.NewRequest("POST", authURL, strings.NewReader(form.Encode()))
 	if err != nil {
 		fmt.Print("ERROR: " + err.Error())
 		return
@@ -102,13 +102,13 @@ func main() {
 	// fmt.Println("BODY: " + string(body))
 
 	fmt.Printf("\n## Get Bearer Token\n\n")
-	approvalUrl := fmt.Sprintf("%s/dex/approval?req=%s",
+	approvalURL := fmt.Sprintf("%s/dex/approval?req=%s",
 		kkpURL,
 		requestToken,
 	)
-	fmt.Println("* Approval URL: " + approvalUrl)
+	fmt.Println("* Approval URL: " + approvalURL)
 
-	req, err = http.NewRequest("GET", approvalUrl, nil)
+	req, err = http.NewRequest("GET", approvalURL, nil)
 	if err != nil {
 		fmt.Print("ERROR: " + err.Error())
 		return
@@ -117,7 +117,7 @@ func main() {
 	req.Header.Set("pragma", "no-cache")
 	req.Header.Set("cache-control", "no-cache")
 	req.Header.Set("accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
-	req.Header.Set("referer", authUrl)
+	req.Header.Set("referer", authURL)
 	req.Header.Set("sec-fetch-site", "same-origin")
 	req.Header.Set("sec-fetch-mode", "navigate")
 	req.Header.Set("sec-fetch-user", "?1")
