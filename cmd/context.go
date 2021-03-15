@@ -31,7 +31,7 @@ var ctxSetCloudCmd = &cobra.Command{
 		}
 
 		Config.Context.CloudName = cloudName
-		return Config.Save(ConfigPath)
+		return Config.Save()
 	},
 }
 
@@ -42,7 +42,7 @@ var ctxSetBearerCmd = &cobra.Command{
 	Example: "kkpctl ctx set bearer sdfhjsldkfjsdklfhj...",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		Config.Context.Bearer = args[0]
-		return Config.Save(ConfigPath)
+		return Config.Save()
 	},
 }
 

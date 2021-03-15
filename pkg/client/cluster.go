@@ -178,7 +178,7 @@ func (c *Client) GetClusterInProjectInDC(clusterID string, projectID string, dc 
 }
 
 // CreateCluster creates a new cluster
-func (c *Client) CreateCluster(newCluster *models.Cluster, projectID string, dc string) (models.Cluster, error) {
+func (c *Client) CreateCluster(newCluster *models.CreateClusterSpec, projectID string, dc string) (models.Cluster, error) {
 	result := models.Cluster{}
 
 	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s", projectPath, projectID, datacenterPath, dc, clusterPath)
@@ -186,7 +186,7 @@ func (c *Client) CreateCluster(newCluster *models.Cluster, projectID string, dc 
 	if err != nil {
 		return result, err
 	}
-	return result, fmt.Errorf("Not implemented yet")
+	return result, nil
 }
 
 // DeleteCluster deletes a cluster identified by id

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"sort"
 
 	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/cedi/kkpctl/pkg/utils"
@@ -185,6 +186,73 @@ func getValidCloudContextArgs(cmd *cobra.Command, args []string, toComplete stri
 	for key := range Config.Cloud {
 		if toCompleteRegexp.MatchString(key) {
 			completions = append(completions, key)
+		}
+	}
+
+	return completions, cobra.ShellCompDirectiveNoFileComp
+}
+
+func getValidKubernetesVersions(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	completions := make([]string, 0)
+
+	baseURL, apiToken := Config.GetCloudFromContext()
+	kkp, err := client.NewClient(baseURL, apiToken)
+	if err != nil {
+		fmt.Println(err.Error())
+		return completions, cobra.ShellCompDirectiveError
+	}
+
+	clusterVersions, err := kkp.GetClusterVersions()
+	if err != nil {
+		return completions, cobra.ShellCompDirectiveNoFileComp
+	}
+
+	// Sort first, so the highes K8s version is returned first
+	sort.Sort(clusterVersions)
+
+	toCompleteRegexp := regexp.MustCompile(fmt.Sprintf("^%s.*$", toComplete))
+	for _, version := range clusterVersions {
+		if toCompleteRegexp.MatchString(version.Version) {
+			completions = append(completions, version.Version)
+		}
+	}
+
+	return completions, cobra.ShellCompDirectiveNoFileComp
+}
+
+func getDefaultKubernetesVersion() string {
+	baseURL, apiToken := Config.GetCloudFromContext()
+	kkp, err := client.NewClient(baseURL, apiToken)
+	if err != nil {
+		fmt.Println(err.Error())
+		return ""
+	}
+
+	clusterVersions, err := kkp.GetClusterVersions()
+	if err != nil {
+		return ""
+	}
+
+	for _, version := range clusterVersions {
+		if version.Default {
+			return version.Version
+		}
+	}
+
+	return ""
+}
+
+func getValidClusterTypes(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	return []string{"kubernetes"}, cobra.ShellCompDirectiveNoFileComp
+}
+
+func getValidProvider(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	completions := make([]string, 0)
+
+	toCompleteRegexp := regexp.MustCompile(fmt.Sprintf("^%s.*$", toComplete))
+	for _, name := range Config.Provider.GetAllProviderNames() {
+		if toCompleteRegexp.MatchString(name) {
+			completions = append(completions, name)
 		}
 	}
 

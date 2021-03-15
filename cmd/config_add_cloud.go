@@ -18,7 +18,7 @@ var configAddCloudCmd = &cobra.Command{
 		}
 		Config.Cloud[args[0]] = cloudURL
 
-		return Config.Save(ConfigPath)
+		return Config.Save()
 	},
 }
 

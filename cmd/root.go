@@ -13,9 +13,7 @@ var (
 	// Config holds the global configuration for kkpctl
 	Config config.Config
 
-	// ConfigPath is the path to our configuration file on disk
-	ConfigPath string
-
+	configPath string
 	outputType string
 	sortBy     string
 )
@@ -32,7 +30,8 @@ var rootCmd = &cobra.Command{
 func Execute() {
 
 	var err error
-	Config, err = config.Read(ConfigPath)
+	config.ConfigPath = configPath
+	Config, err = config.Read()
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -52,7 +51,7 @@ func init() {
 		fmt.Println("Failed to find home directory: " + err.Error())
 		os.Exit(1)
 	}
-	rootCmd.PersistentFlags().StringVar(&ConfigPath, "config", home+"/.config/kkpctl/config.yaml", "The Path to the configuration file")
+	rootCmd.PersistentFlags().StringVar(&configPath, "config", home+"/.config/kkpctl/config.yaml", "The Path to the configuration file")
 
 	rootCmd.PersistentFlags().StringVarP(&outputType, "output", "o", "text", "The output type to use")
 	rootCmd.RegisterFlagCompletionFunc("output", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {

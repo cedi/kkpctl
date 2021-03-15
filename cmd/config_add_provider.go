@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/cedi/kkpctl/pkg/config"
 	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/spf13/cobra"
 )
@@ -31,12 +32,7 @@ var configAddProviderOpenStackCmd = &cobra.Command{
 	Args:    cobra.ExactArgs(1),
 	Example: "kkpctl config add provider openstack optimist --username \"user@email.de\" --password \"my-super-secure-password\" --tenant \"internal-openstack-tenant\"",
 	RunE: func(cmd *cobra.Command, args []string) error {
-
-		if Config.Provider.Openstack == nil {
-			Config.Provider.Openstack = make(map[string]models.OpenstackCloudSpec)
-		}
-
-		Config.Provider.Openstack[args[0]] = models.OpenstackCloudSpec{
+		err := Config.Provider.AddProviderConfig(args[0], config.Openstack, models.OpenstackCloudSpec{
 			Username:       username,
 			Password:       password,
 			Domain:         osDomain,
@@ -45,9 +41,12 @@ var configAddProviderOpenStackCmd = &cobra.Command{
 			SecurityGroups: osSecurityGroups,
 			Network:        osNetwork,
 			SubnetID:       osSubnetID,
+		})
+		if err != nil {
+			return err
 		}
 
-		return Config.Save(ConfigPath)
+		return Config.Save()
 	},
 }
 
@@ -56,6 +55,10 @@ func init() {
 
 	// OpenStack
 	configAddProviderCmd.AddCommand(configAddProviderOpenStackCmd)
+	initOpenStackFlags()
+}
+
+func initOpenStackFlags() {
 	configAddProviderOpenStackCmd.Flags().StringVar(&osTenant, "tenant", "", "The OpenStack tenant")
 	configAddProviderOpenStackCmd.MarkFlagRequired("tenant")
 	// TODO: configAddProviderOpenStackCmd.RegisterFlagCompletionFunc("tenant", ...)

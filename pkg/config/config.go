@@ -9,6 +9,9 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// ConfigPath is the path to our configuration file on disk
+var ConfigPath string
+
 // Config is the configuration for KKPCTL
 type Config struct {
 	Provider ProviderConfig    `yaml:"provider"`
@@ -26,13 +29,13 @@ func NewConfig() Config {
 }
 
 // Save saves a configuration
-func (c *Config) Save(path string) error {
+func (c *Config) Save() error {
 	yamlByte, err := yaml.Marshal(c)
 	if err != nil {
 		return errors.Wrap(err, "Unable to serialize configuration")
 	}
 
-	err = ioutil.WriteFile(path, yamlByte, 0600)
+	err = ioutil.WriteFile(ConfigPath, yamlByte, 0600)
 	if err != nil {
 		return errors.Wrap(err, "Failed to write configuration")
 	}
@@ -41,10 +44,13 @@ func (c *Config) Save(path string) error {
 }
 
 // Read reads the config file and creates a empty config file if could not find a config file at the given path
-func Read(path string) (Config, error) {
-	ensureConfig(path)
+func Read() (Config, error) {
+	err := ensureConfig()
+	if err != nil {
+		return NewConfig(), errors.Wrap(err, "Failed to read kkpctl config")
+	}
 
-	data, err := ioutil.ReadFile(path)
+	data, err := ioutil.ReadFile(ConfigPath)
 	if err != nil {
 		return NewConfig(), errors.Wrap(err, "Failed to read kkpctl config")
 	}
@@ -57,13 +63,13 @@ func Read(path string) (Config, error) {
 	return config, nil
 }
 
-func ensureConfig(filePath string) error {
-	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		path, _ := path.Split(filePath)
+func ensureConfig() error {
+	if _, err := os.Stat(ConfigPath); os.IsNotExist(err) {
+		path, _ := path.Split(ConfigPath)
 		os.MkdirAll(path, 0640)
 
 		config := NewConfig()
-		err = config.Save(filePath)
+		err = config.Save()
 		if err != nil {
 			return errors.Wrap(err, "Failed to write empty kkpctl config")
 		}
