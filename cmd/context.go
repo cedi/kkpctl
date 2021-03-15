@@ -16,6 +16,11 @@ var ctxSetCmd = &cobra.Command{
 	Short: "Lets you set the context of an specific type",
 }
 
+var ctxGetCmd = &cobra.Command{
+	Use:   "get",
+	Short: "Lets you get the context of an specific type",
+}
+
 var ctxSetCloudCmd = &cobra.Command{
 	Use:               "cloud name",
 	Short:             "Lets you set the context of which cloud to use",
@@ -35,6 +40,17 @@ var ctxSetCloudCmd = &cobra.Command{
 	},
 }
 
+var ctxGetCloudCmd = &cobra.Command{
+	Use:               "cloud",
+	Short:             "Lets you get the context of which cloud to use",
+	Args:              cobra.ExactArgs(0),
+	Example:           "kkpctl ctx get cloud",
+	ValidArgsFunction: getValidCloudContextArgs,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Println(Config.Context.CloudName)
+	},
+}
+
 var ctxSetBearerCmd = &cobra.Command{
 	Use:     "bearer token",
 	Short:   "Lets you set the context of which bearer token to use",
@@ -49,6 +65,12 @@ var ctxSetBearerCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(ctxCmd)
 	ctxCmd.AddCommand(ctxSetCmd)
+	ctxCmd.AddCommand(ctxGetCmd)
+
+	// Set
 	ctxSetCmd.AddCommand(ctxSetCloudCmd)
 	ctxSetCmd.AddCommand(ctxSetBearerCmd)
+
+	// Get
+	ctxGetCmd.AddCommand(ctxGetCloudCmd)
 }
