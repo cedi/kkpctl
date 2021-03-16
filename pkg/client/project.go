@@ -87,5 +87,5 @@ func (c *Client) GetProjectIDForCluster(clusterID string) (string, error) {
 		}
 	}
 
-	return "", fmt.Errorf("No Project for ClusterID %s found", clusterID)
+	return "", fmt.Errorf("no Project for ClusterID %s found", clusterID)
 }

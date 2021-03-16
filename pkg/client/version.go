@@ -4,7 +4,7 @@ import (
 	"github.com/cedi/kkpctl/pkg/model"
 )
 
-// GetClusterVersions gets a clusters in a given Project in a given datacenter
+// ListClusterVersions gets a clusters in a given Project in a given datacenter
 func (c *Client) ListClusterVersions() (model.VersionList, error) {
 	result := make([]model.Version, 0)
 

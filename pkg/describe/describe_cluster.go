@@ -31,6 +31,10 @@ func describeCluster(meta *ClusterDescribeMeta) (string, error) {
 		return "", err
 	}
 
+	if len(nodeDeploymentTable) == 0 {
+		nodeDeploymentTable = "[None]"
+	}
+
 	clusterHealthTable, err := output.ParseOutput(ch, output.Text, output.Name)
 	if err != nil {
 		return "", err

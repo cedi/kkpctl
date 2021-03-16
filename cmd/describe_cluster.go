@@ -38,9 +38,10 @@ var describeClusterCmd = &cobra.Command{
 			return errors.Wrap(err, "Error fetching cluster")
 		}
 
-		nodeDeployments, err := kkp.ListNodeDeployments(cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
+		nodeDeployments, err := kkp.GetNodeDeployments(cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
 		if err != nil {
-			return errors.Wrap(err, "Error fetching node deployments for cluster")
+			// If we couldn't fetch the NodeDeployments, that doesn't bother me, just use a empty array
+			nodeDeployments = make([]models.NodeDeployment, 0)
 		}
 
 		clusterHealth, err := kkp.GetClusterHealth(cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)

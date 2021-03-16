@@ -45,7 +45,7 @@ var delClusterCmd = &cobra.Command{
 			cluster.Name,
 			args[0],
 			projectID,
-			datacenter,
+			cluster.Spec.Cloud.DatacenterName,
 		)
 
 		return nil

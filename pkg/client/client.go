@@ -47,7 +47,7 @@ func NewClient(baseURL string, bearer string) (*Client, error) {
 // req is the http.Request to execute
 // out can be a pointer to any object to which the result should be de-serialised.
 func (c *Client) Do(req *http.Request, out interface{}) (*http.Response, error) {
-	req.Header.Set("Authorization", "Bearer "+c.bearer)
+	req.Header.Set("Authorization", "Bearer "+c.bearer) // "/api/v1/projects/6tmbnhdl7h/dc/seed-ix2/clusters/h9dzr6x7wk/node...+11 more"
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil || out == nil {
@@ -155,10 +155,8 @@ func (c *Client) DeleteWithHeader(requestURL string, headers map[string]string) 
 		return nil, err
 	}
 
-	if headers != nil {
-		for header, value := range headers {
-			req.Header.Set(header, value)
-		}
+	for header, value := range headers {
+		req.Header.Set(header, value)
 	}
 
 	return c.Do(req, nil)

@@ -10,8 +10,8 @@ const (
 	nodeDeploymentPath string = "nodedeployments"
 )
 
-// ListNodeDeployments lists all node deployments for a cluster
-func (c *Client) ListNodeDeployments(clusterID string, projectID string, dc string) ([]models.NodeDeployment, error) {
+// GetNodeDeployments lists all node deployments for a cluster
+func (c *Client) GetNodeDeployments(clusterID string, projectID string, dc string) ([]models.NodeDeployment, error) {
 	var err error
 	result := make([]models.NodeDeployment, 0)
 
