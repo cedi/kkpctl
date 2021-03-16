@@ -3,7 +3,7 @@ package output
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"sort"
@@ -73,7 +73,7 @@ func parseClusters(objects []models.Cluster, output string, sortBy string) (stri
 		parsedOutput, err = ioutil.ReadAll(bodyBuf)
 
 	default:
-		return "", errors.New("Unable to parse objects")
+		return "", fmt.Errorf("unable to parse objects")
 	}
 
 	return string(parsedOutput), err

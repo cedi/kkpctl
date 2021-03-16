@@ -1,7 +1,6 @@
 package output
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/cedi/kkpctl/pkg/utils"
@@ -92,19 +91,19 @@ func parseOutput(object interface{}, output string, sortBy string) (string, erro
 		return parseDatacenter(datacenter, output)
 	}
 
-	return fmt.Sprintf("%v\n", object), errors.New("Unable to parse proper type of object")
+	return fmt.Sprintf("%v\n", object), fmt.Errorf("unable to parse proper type of object")
 }
 
 func validateOutput(output string) error {
 	if !utils.IsOneOf(output, Text, JSON, YAML) {
-		return fmt.Errorf("The output type '%s' is not a valid output", output)
+		return fmt.Errorf("the output type '%s' is not a valid output", output)
 	}
 	return nil
 }
 
 func validateSorting(sort string) error {
 	if !utils.IsOneOf(sort, Name, Date) {
-		return fmt.Errorf("The sort parameter '%s' is not a valid sorting criteria", sort)
+		return fmt.Errorf("the sort parameter '%s' is not a valid sorting criteria", sort)
 	}
 
 	return nil

@@ -3,10 +3,11 @@ package output
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"sort"
+	"strings"
 
 	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/lensesio/tableprinter"
@@ -17,6 +18,7 @@ import (
 type projectRender struct {
 	ID                string `header:"ProjectID"`
 	Name              string `header:"Name"`
+	Owner             string `header:"Owner"`
 	CreationTimestamp string `header:"Created"`
 	Status            string `header:"Status"`
 	Clusters          int64  `header:"Clusters"`
@@ -38,6 +40,12 @@ func parseProjects(objects []models.Project, output string, sortBy string) (stri
 				Status:            object.Status,
 				Clusters:          object.ClustersNumber,
 			}
+
+			owners := make([]string, len(object.Owners))
+			for idx, owner := range object.Owners {
+				owners[idx] = owner.Name
+			}
+			rendered[idx].Owner = strings.Join(owners, ", ")
 		}
 
 		sort.Slice(rendered, func(i, j int) bool {
@@ -68,6 +76,6 @@ func parseProjects(objects []models.Project, output string, sortBy string) (stri
 		return "---\n" + string(buf), err
 
 	default:
-		return "", errors.New("Unable to parse objects")
+		return "", fmt.Errorf("unable to parse objects")
 	}
 }

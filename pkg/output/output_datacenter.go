@@ -3,7 +3,7 @@ package output
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"sort"
@@ -60,7 +60,7 @@ func parseDatacenters(objects []models.Datacenter, output string, sortBy string)
 		parsedOutput, err = ioutil.ReadAll(bodyBuf)
 
 	default:
-		return "", errors.New("Unable to parse node deployment")
+		return "", fmt.Errorf("unable to parse node deployment")
 	}
 
 	return string(parsedOutput), err
