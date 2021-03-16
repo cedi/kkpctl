@@ -34,7 +34,7 @@ var describeClusterCmd = &cobra.Command{
 			cluster, err = kkp.GetClusterInProjectInDC(args[0], projectID, datacenter)
 		}
 
-		if err != nil {
+		if err != nil || cluster.Spec == nil || cluster.Spec.Cloud == nil {
 			return errors.Wrap(err, "Error fetching cluster")
 		}
 
