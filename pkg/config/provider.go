@@ -189,141 +189,206 @@ func (p *ProviderConfig) GetAllProviderNames() []string {
 //	Returns an error, if the name is already in use to avoid ambigous naming.
 func (p *ProviderConfig) AddProviderConfig(name string, cloudSpecType CloudSpecType, provider interface{}) error {
 	if utils.IsOneOf(name, p.GetAllProviderNames()) {
-		return fmt.Errorf("The provider name '%s' is already used", name)
+		return fmt.Errorf("the provider name '%s' is already used", name)
 	}
 
 	switch cloudSpecType {
-
 	case Alibaba:
-		alibabaCloudSpec, ok := provider.(models.AlibabaCloudSpec)
-		if !ok {
-			return fmt.Errorf("Failed to cast provider into models.AlibabaCloudSpec")
-		}
-		if p.Alibaba == nil {
-			p.Alibaba = make(map[string]models.AlibabaCloudSpec)
-		}
-		p.Alibaba[name] = alibabaCloudSpec
-
+		return p.addProviderConfigAlibaba(name, provider)
 	case Anexia:
-		anexiaCloudSpec, ok := provider.(models.AnexiaCloudSpec)
-		if !ok {
-			return fmt.Errorf("Failed to cast provider into models.AnexiaCloudSpec")
-		}
-		if p.Anexia == nil {
-			p.Anexia = make(map[string]models.AnexiaCloudSpec)
-		}
-		p.Anexia[name] = anexiaCloudSpec
-
+		return p.addProviderConfigAnexia(name, provider)
 	case Aws:
-		awsCloudSpec, ok := provider.(models.AWSCloudSpec)
-		if !ok {
-			return fmt.Errorf("Failed to cast provider into models.AwsCloudSpec")
-		}
-		if p.Aws == nil {
-			p.Aws = make(map[string]models.AWSCloudSpec)
-		}
-		p.Aws[name] = awsCloudSpec
-
+		return p.addProviderConfigAws(name, provider)
 	case Azure:
-		azureCloudSpec, ok := provider.(models.AzureCloudSpec)
-		if !ok {
-			return fmt.Errorf("Failed to cast provider into models.AzureCloudSpec")
-		}
-		if p.Azure == nil {
-			p.Azure = make(map[string]models.AzureCloudSpec)
-		}
-		p.Azure[name] = azureCloudSpec
-
+		return p.addProviderConfigAzure(name, provider)
 	case Bringyourown:
-		bringyourownCloudSpec, ok := provider.(models.BringYourOwnCloudSpec)
-		if !ok {
-			return fmt.Errorf("Failed to cast provider into models.BringyourownCloudSpec")
-		}
-		if p.Bringyourown == nil {
-			p.Bringyourown = make(map[string]models.BringYourOwnCloudSpec)
-		}
-		p.Bringyourown[name] = bringyourownCloudSpec
-
+		return p.addProviderConfigBringyourown(name, provider)
 	case Digitalocean:
-		digitaloceanCloudSpec, ok := provider.(models.DigitaloceanCloudSpec)
-		if !ok {
-			return fmt.Errorf("Failed to cast provider into models.DigitaloceanCloudSpec")
-		}
-		if p.Digitalocean == nil {
-			p.Digitalocean = make(map[string]models.DigitaloceanCloudSpec)
-		}
-		p.Digitalocean[name] = digitaloceanCloudSpec
-
+		return p.addProviderConfigDigitalocean(name, provider)
 	case Fake:
-		fakeCloudSpec, ok := provider.(models.FakeCloudSpec)
-		if !ok {
-			return fmt.Errorf("Failed to cast provider into models.FakeCloudSpec")
-		}
-		if p.Fake == nil {
-			p.Fake = make(map[string]models.FakeCloudSpec)
-		}
-		p.Fake[name] = fakeCloudSpec
-
+		return p.addProviderConfigFake(name, provider)
 	case Gcp:
-		gcpCloudSpec, ok := provider.(models.GCPCloudSpec)
-		if !ok {
-			return fmt.Errorf("Failed to cast provider into models.GcpCloudSpec")
-		}
-		if p.Gcp == nil {
-			p.Gcp = make(map[string]models.GCPCloudSpec)
-		}
-		p.Gcp[name] = gcpCloudSpec
-
+		return p.addProviderConfigGcp(name, provider)
 	case Hetzner:
-		hetznerCloudSpec, ok := provider.(models.HetznerCloudSpec)
-		if !ok {
-			return fmt.Errorf("Failed to cast provider into models.HetznerCloudSpec")
-		}
-		if p.Hetzner == nil {
-			p.Hetzner = make(map[string]models.HetznerCloudSpec)
-		}
-		p.Hetzner[name] = hetznerCloudSpec
-
+		return p.addProviderConfigHetzner(name, provider)
 	case Kubevirt:
-		kubevirtCloudSpec, ok := provider.(models.KubevirtCloudSpec)
-		if !ok {
-			return fmt.Errorf("Failed to cast provider into models.KubevirtCloudSpec")
-		}
-		if p.Kubevirt == nil {
-			p.Kubevirt = make(map[string]models.KubevirtCloudSpec)
-		}
-		p.Kubevirt[name] = kubevirtCloudSpec
-
+		return p.addProviderConfigKubevirt(name, provider)
 	case Openstack:
-		openstackCloudSpec, ok := provider.(models.OpenstackCloudSpec)
-		if !ok {
-			return fmt.Errorf("Failed to cast provider into models.OpenstackCloudSpec")
-		}
-		if p.Openstack == nil {
-			p.Openstack = make(map[string]models.OpenstackCloudSpec)
-		}
-		p.Openstack[name] = openstackCloudSpec
-
+		return p.addProviderConfigOpenstack(name, provider)
 	case Packet:
-		packetCloudSpec, ok := provider.(models.PacketCloudSpec)
-		if !ok {
-			return fmt.Errorf("Failed to cast provider into models.PacketCloudSpec")
-		}
-		if p.Packet == nil {
-			p.Packet = make(map[string]models.PacketCloudSpec)
-		}
-		p.Packet[name] = packetCloudSpec
-
+		return p.addProviderConfigPacket(name, provider)
 	case Vsphere:
-		vsphereCloudSpec, ok := provider.(models.VSphereCloudSpec)
-		if !ok {
-			return fmt.Errorf("Failed to cast provider into models.VsphereCloudSpec")
-		}
-		if p.Vsphere == nil {
-			p.Vsphere = make(map[string]models.VSphereCloudSpec)
-		}
-		p.Vsphere[name] = vsphereCloudSpec
+		return p.addProviderConfigVsphere(name, provider)
 	}
+
+	return fmt.Errorf("failed to determine the correct cloudSpecType")
+}
+
+func (p *ProviderConfig) addProviderConfigAlibaba(name string, provider interface{}) error {
+	alibabaCloudSpec, ok := provider.(models.AlibabaCloudSpec)
+	if !ok {
+		return fmt.Errorf("failed to cast provider into proper type: models.AlibabaCloudSpec")
+	}
+	if p.Alibaba == nil {
+		p.Alibaba = make(map[string]models.AlibabaCloudSpec)
+	}
+	p.Alibaba[name] = alibabaCloudSpec
+
+	return nil
+}
+
+func (p *ProviderConfig) addProviderConfigAnexia(name string, provider interface{}) error {
+	anexiaCloudSpec, ok := provider.(models.AnexiaCloudSpec)
+	if !ok {
+		return fmt.Errorf("failed to cast provider into proper type: models.AnexiaCloudSpec")
+	}
+	if p.Anexia == nil {
+		p.Anexia = make(map[string]models.AnexiaCloudSpec)
+	}
+	p.Anexia[name] = anexiaCloudSpec
+
+	return nil
+}
+
+func (p *ProviderConfig) addProviderConfigAws(name string, provider interface{}) error {
+	awsCloudSpec, ok := provider.(models.AWSCloudSpec)
+	if !ok {
+		return fmt.Errorf("failed to cast provider into proper type: models.AwsCloudSpec")
+	}
+	if p.Aws == nil {
+		p.Aws = make(map[string]models.AWSCloudSpec)
+	}
+	p.Aws[name] = awsCloudSpec
+
+	return nil
+}
+
+func (p *ProviderConfig) addProviderConfigAzure(name string, provider interface{}) error {
+	azureCloudSpec, ok := provider.(models.AzureCloudSpec)
+	if !ok {
+		return fmt.Errorf("failed to cast provider into proper type: models.AzureCloudSpec")
+	}
+	if p.Azure == nil {
+		p.Azure = make(map[string]models.AzureCloudSpec)
+	}
+	p.Azure[name] = azureCloudSpec
+
+	return nil
+}
+
+func (p *ProviderConfig) addProviderConfigBringyourown(name string, provider interface{}) error {
+	bringyourownCloudSpec, ok := provider.(models.BringYourOwnCloudSpec)
+	if !ok {
+		return fmt.Errorf("failed to cast provider into proper type: models.BringyourownCloudSpec")
+	}
+	if p.Bringyourown == nil {
+		p.Bringyourown = make(map[string]models.BringYourOwnCloudSpec)
+	}
+	p.Bringyourown[name] = bringyourownCloudSpec
+
+	return nil
+}
+
+func (p *ProviderConfig) addProviderConfigDigitalocean(name string, provider interface{}) error {
+	digitaloceanCloudSpec, ok := provider.(models.DigitaloceanCloudSpec)
+	if !ok {
+		return fmt.Errorf("failed to cast provider into proper type: models.DigitaloceanCloudSpec")
+	}
+	if p.Digitalocean == nil {
+		p.Digitalocean = make(map[string]models.DigitaloceanCloudSpec)
+	}
+	p.Digitalocean[name] = digitaloceanCloudSpec
+
+	return nil
+}
+
+func (p *ProviderConfig) addProviderConfigFake(name string, provider interface{}) error {
+	fakeCloudSpec, ok := provider.(models.FakeCloudSpec)
+	if !ok {
+		return fmt.Errorf("failed to cast provider into proper type: models.FakeCloudSpec")
+	}
+	if p.Fake == nil {
+		p.Fake = make(map[string]models.FakeCloudSpec)
+	}
+	p.Fake[name] = fakeCloudSpec
+
+	return nil
+}
+
+func (p *ProviderConfig) addProviderConfigGcp(name string, provider interface{}) error {
+	gcpCloudSpec, ok := provider.(models.GCPCloudSpec)
+	if !ok {
+		return fmt.Errorf("failed to cast provider into proper type: models.GcpCloudSpec")
+	}
+	if p.Gcp == nil {
+		p.Gcp = make(map[string]models.GCPCloudSpec)
+	}
+	p.Gcp[name] = gcpCloudSpec
+
+	return nil
+}
+
+func (p *ProviderConfig) addProviderConfigHetzner(name string, provider interface{}) error {
+	hetznerCloudSpec, ok := provider.(models.HetznerCloudSpec)
+	if !ok {
+		return fmt.Errorf("failed to cast provider into proper type: models.HetznerCloudSpec")
+	}
+	if p.Hetzner == nil {
+		p.Hetzner = make(map[string]models.HetznerCloudSpec)
+	}
+	p.Hetzner[name] = hetznerCloudSpec
+
+	return nil
+}
+
+func (p *ProviderConfig) addProviderConfigKubevirt(name string, provider interface{}) error {
+	kubevirtCloudSpec, ok := provider.(models.KubevirtCloudSpec)
+	if !ok {
+		return fmt.Errorf("failed to cast provider into proper type: models.KubevirtCloudSpec")
+	}
+	if p.Kubevirt == nil {
+		p.Kubevirt = make(map[string]models.KubevirtCloudSpec)
+	}
+	p.Kubevirt[name] = kubevirtCloudSpec
+
+	return nil
+}
+
+func (p *ProviderConfig) addProviderConfigOpenstack(name string, provider interface{}) error {
+	openstackCloudSpec, ok := provider.(models.OpenstackCloudSpec)
+	if !ok {
+		return fmt.Errorf("failed to cast provider into proper type: models.OpenstackCloudSpec")
+	}
+	if p.Openstack == nil {
+		p.Openstack = make(map[string]models.OpenstackCloudSpec)
+	}
+	p.Openstack[name] = openstackCloudSpec
+
+	return nil
+}
+
+func (p *ProviderConfig) addProviderConfigPacket(name string, provider interface{}) error {
+	packetCloudSpec, ok := provider.(models.PacketCloudSpec)
+	if !ok {
+		return fmt.Errorf("failed to cast provider into proper type: models.PacketCloudSpec")
+	}
+	if p.Packet == nil {
+		p.Packet = make(map[string]models.PacketCloudSpec)
+	}
+	p.Packet[name] = packetCloudSpec
+
+	return nil
+}
+
+func (p *ProviderConfig) addProviderConfigVsphere(name string, provider interface{}) error {
+	vsphereCloudSpec, ok := provider.(models.VSphereCloudSpec)
+	if !ok {
+		return fmt.Errorf("failed to cast provider into proper type: models.VsphereCloudSpec")
+	}
+	if p.Vsphere == nil {
+		p.Vsphere = make(map[string]models.VSphereCloudSpec)
+	}
+	p.Vsphere[name] = vsphereCloudSpec
 
 	return nil
 }

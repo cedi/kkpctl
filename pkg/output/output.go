@@ -43,80 +43,51 @@ func ParseOutput(object interface{}, output string, sortBy string) (string, erro
 }
 
 // parseOutput is ugly and long, but it makes things kinda nicer to handle outside of the package
-func parseOutput(object interface{}, output string, sortBy string) (string, error) {
-	// KKP Projects
-	projects, ok := object.([]models.Project)
-	if ok {
-		return parseProjects(projects, output, sortBy)
-	}
+func parseOutput(outputObject interface{}, output string, sortBy string) (string, error) {
 
-	project, ok := object.(models.Project)
-	if ok {
-		return parseProject(project, output)
-	}
+	switch o := outputObject.(type) {
+	// KKP Project
+	case []models.Project:
+		return parseProjects(o, output, sortBy)
+	case models.Project:
+		return parseProject(o, output)
 
 	// KKP Clusters
-	clusters, ok := object.([]models.Cluster)
-	if ok {
-		return parseClusters(clusters, output, sortBy)
-	}
-
-	cluster, ok := object.(models.Cluster)
-	if ok {
-		return parseCluster(cluster, output)
-	}
-
-	clusterP, ok := object.(*models.Cluster)
-	if ok {
-		return parseCluster(*clusterP, output)
-	}
+	case []models.Cluster:
+		return parseClusters(o, output, sortBy)
+	case models.Cluster:
+		return parseCluster(o, output)
+	case *models.Cluster:
+		return parseCluster(*o, output)
 
 	// Node Deployments
-	nodeDeployments, ok := object.([]models.NodeDeployment)
-	if ok {
-		return parseNodeDeployments(nodeDeployments, output, sortBy)
-	}
-
-	nodeDeployment, ok := object.(models.NodeDeployment)
-	if ok {
-		return parseNodeDeployment(nodeDeployment, output)
-	}
+	case []models.NodeDeployment:
+		return parseNodeDeployments(o, output, sortBy)
+	case models.NodeDeployment:
+		return parseNodeDeployment(o, output)
 
 	// Datacenter
-	datacenters, ok := object.([]models.Datacenter)
-	if ok {
-		return parseDatacenters(datacenters, output, sortBy)
-	}
-
-	datacenter, ok := object.(models.Datacenter)
-	if ok {
-		return parseDatacenter(datacenter, output)
-	}
+	case []models.Datacenter:
+		return parseDatacenters(o, output, sortBy)
+	case models.Datacenter:
+		return parseDatacenter(o, output)
 
 	// ClusterHealth
-	clusterHealth, ok := object.(*models.ClusterHealth)
-	if ok {
-		return parseClusterHealth(clusterHealth, output)
-	}
+	case *models.ClusterHealth:
+		return parseClusterHealth(o, output)
 
 	// Cluster Versions
-	clusterVersions, ok := object.(model.VersionList)
-	if ok {
-		return parseClusterVersions(clusterVersions, output)
-	}
-
-	clusterVersion, ok := object.(model.Version)
-	if ok {
-		return parseClusterVersion(clusterVersion, output)
-	}
+	case model.VersionList:
+		return parseClusterVersions(o, output)
+	case model.Version:
+		return parseClusterVersion(o, output)
 
 	// Config
-	cloudConfig, ok := object.(config.CloudConfig)
-	if ok {
-		return parseConfigCloud(cloudConfig, output)
+	case config.CloudConfig:
+		return parseConfigCloud(o, output)
 	}
 
-	return fmt.Sprintf("%v\n", object), fmt.Errorf("unable to parse proper type of object")
+	return fmt.Sprintf("%v\n", outputObject), fmt.Errorf("unable to parse proper type of object")
 }
 
 func validateOutput(output string) error {
