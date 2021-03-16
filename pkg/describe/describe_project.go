@@ -3,7 +3,6 @@ package describe
 import (
 	"bytes"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"strings"
 
@@ -11,14 +10,6 @@ import (
 	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/lensesio/tableprinter"
 )
-
-// projectRender is a intermediate struct to make use of lensesio/tableprinter, which relies on the header anotation
-type projectMetaStruct struct {
-	ID                string `header:"ProjectID"`
-	Name              string `header:"Name"`
-	Status            string `header:"Status"`
-	CreationTimestamp string `header:"Created"`
-}
 
 type ownerStruct struct {
 	ID                string `header:"UserID"`
@@ -44,8 +35,7 @@ func describeProject(project *models.Project) (string, error) {
 		}
 	}
 
-	var ownerRenderBuf io.ReadWriter
-	ownerRenderBuf = new(bytes.Buffer)
+	ownerRenderBuf := new(bytes.Buffer)
 	tableprinter.Print(ownerRenderBuf, ownerMeta)
 	ownerRenderBytes, err := ioutil.ReadAll(ownerRenderBuf)
 

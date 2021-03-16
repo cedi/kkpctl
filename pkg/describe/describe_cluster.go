@@ -12,12 +12,14 @@ import (
 type ClusterDescribeMeta struct {
 	Cluster         *models.Cluster
 	NodeDeployments []models.NodeDeployment
+	ClusterHealth   *models.ClusterHealth
 }
 
 // describeProject takes any KKP Cluster and describes it
 func describeCluster(meta *ClusterDescribeMeta) (string, error) {
 	cluster := meta.Cluster
 	nd := meta.NodeDeployments
+	ch := meta.ClusterHealth
 
 	clusterTable, err := output.ParseOutput(cluster, output.Text, output.Name)
 	if err != nil {
@@ -25,6 +27,11 @@ func describeCluster(meta *ClusterDescribeMeta) (string, error) {
 	}
 
 	nodeDeploymentTable, err := output.ParseOutput(nd, output.Text, output.Name)
+	if err != nil {
+		return "", err
+	}
+
+	clusterHealthTable, err := output.ParseOutput(ch, output.Text, output.Name)
 	if err != nil {
 		return "", err
 	}
@@ -45,8 +52,9 @@ func describeCluster(meta *ClusterDescribeMeta) (string, error) {
 		inheritedLabels = append(inheritedLabels, "[None]")
 	}
 
-	result := fmt.Sprintf("Cluster:\n%s\n\nNode Deployments:\n%s\n\nInherited Labels:\n%s\n\nLabels:\n%s\n",
+	result := fmt.Sprintf("Cluster:\n%s\n\nHealth Status:\n%s\n\nNode Deployments:\n%s\n\nInherited Labels:\n%s\n\nLabels:\n%s\n",
 		clusterTable,
+		clusterHealthTable,
 		nodeDeploymentTable,
 		strings.Join(inheritedLabels, "; "),
 		strings.Join(labels, "; "),

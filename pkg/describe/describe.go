@@ -1,7 +1,6 @@
 package describe
 
 import (
-	"errors"
 	"fmt"
 
 	"github.com/kubermatic/go-kubermatic/models"
@@ -20,5 +19,5 @@ func Object(object interface{}) (string, error) {
 		return describeCluster(meta)
 	}
 
-	return fmt.Sprintf("%v\n", object), errors.New("Unable to parse proper type of object")
+	return fmt.Sprintf("%v\n", object), fmt.Errorf("unable to parse proper type of object")
 }

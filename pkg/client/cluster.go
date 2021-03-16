@@ -11,9 +11,10 @@ import (
 )
 
 const (
-	clusterPath    string = "clusters"
-	datacenterPath string = "dc"
-	kubeconfigPath string = "kubeconfig"
+	clusterPath       string = "clusters"
+	datacenterPath    string = "dc"
+	kubeconfigPath    string = "kubeconfig"
+	clusterHealthPath string = "health"
 )
 
 // ListClusters lists all clusters
@@ -245,4 +246,22 @@ func (c *Client) GetKubeConfig(clusterID string, projectID string, dc string) (s
 	}
 
 	return string(body), nil
+}
+
+// GetClusterHealth returns the health status of a cluster
+func (c *Client) GetClusterHealth(clusterID string, projectID string, dc string) (*models.ClusterHealth, error) {
+	var err error
+	result := &models.ClusterHealth{}
+
+	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s",
+		projectPath,
+		projectID,
+		datacenterPath,
+		dc,
+		clusterPath,
+		clusterID,
+		clusterHealthPath,
+	)
+	_, err = c.Get(requestURL, &result)
+	return result, err
 }

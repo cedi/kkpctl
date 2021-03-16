@@ -91,6 +91,12 @@ func parseOutput(object interface{}, output string, sortBy string) (string, erro
 		return parseDatacenter(datacenter, output)
 	}
 
+	// ClusterHealth
+	clusterHealth, ok := object.(*models.ClusterHealth)
+	if ok {
+		return parseClusterHealth(clusterHealth, output)
+	}
+
 	return fmt.Sprintf("%v\n", object), fmt.Errorf("unable to parse proper type of object")
 }
 

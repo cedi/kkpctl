@@ -43,9 +43,15 @@ var describeClusterCmd = &cobra.Command{
 			return errors.Wrap(err, "Error fetching node deployments for cluster")
 		}
 
+		clusterHealth, err := kkp.GetClusterHealth(cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
+		if err != nil {
+			return errors.Wrap(err, "Error fetching cluster health status")
+		}
+
 		meta := describe.ClusterDescribeMeta{
 			Cluster:         &cluster,
 			NodeDeployments: nodeDeployments,
+			ClusterHealth:   clusterHealth,
 		}
 
 		parsed, err := describe.Object(&meta)
