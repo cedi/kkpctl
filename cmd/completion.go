@@ -7,6 +7,7 @@ import (
 	"sort"
 
 	"github.com/cedi/kkpctl/pkg/client"
+	"github.com/cedi/kkpctl/pkg/config"
 	"github.com/cedi/kkpctl/pkg/utils"
 	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/spf13/cobra"
@@ -232,6 +233,42 @@ func getValidProvider(cmd *cobra.Command, args []string, toComplete string) ([]s
 
 	toCompleteRegexp := regexp.MustCompile(fmt.Sprintf("^%s.*$", toComplete))
 	for _, name := range Config.Provider.GetAllProviderNames() {
+		if toCompleteRegexp.MatchString(name) {
+			completions = append(completions, name)
+		}
+	}
+
+	return completions, cobra.ShellCompDirectiveNoFileComp
+}
+
+func getValidOperatingSystem(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	completions := make([]string, 0)
+
+	toCompleteRegexp := regexp.MustCompile(fmt.Sprintf("^%s.*$", toComplete))
+	for _, name := range Config.OSSpec.GetValidOSSpecNames() {
+		if toCompleteRegexp.MatchString(string(name)) {
+			completions = append(completions, string(name))
+		}
+	}
+
+	return completions, cobra.ShellCompDirectiveNoFileComp
+}
+
+func getValidFlavorArgs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	return []string{
+		string(config.CentOS),
+		string(config.Flatcar),
+		string(config.Rhel),
+		string(config.Sles),
+		string(config.Ubuntu),
+	}, cobra.ShellCompDirectiveNoFileComp
+}
+
+func getValidNodeSpecArgs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	completions := make([]string, 0)
+
+	toCompleteRegexp := regexp.MustCompile(fmt.Sprintf("^%s.*$", toComplete))
+	for _, name := range Config.NodeSpec.GetAllNodeSpecNames() {
 		if toCompleteRegexp.MatchString(name) {
 			completions = append(completions, name)
 		}

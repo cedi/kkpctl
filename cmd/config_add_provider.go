@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"github.com/cedi/kkpctl/pkg/config"
 	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/spf13/cobra"
 )
@@ -32,7 +31,7 @@ var configAddProviderOpenStackCmd = &cobra.Command{
 	Args:    cobra.ExactArgs(1),
 	Example: "kkpctl config add provider openstack optimist --username \"user@email.de\" --password \"my-super-secure-password\" --tenant \"internal-openstack-tenant\"",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		err := Config.Provider.AddProviderConfig(args[0], config.Openstack, models.OpenstackCloudSpec{
+		err := Config.Provider.AddProviderConfig(args[0], models.OpenstackCloudSpec{
 			Username:       username,
 			Password:       password,
 			Domain:         osDomain,

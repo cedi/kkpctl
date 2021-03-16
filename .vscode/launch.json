@@ -30,7 +30,7 @@
                 //"get", "cluster", "rbw47nm2h8", "--project", "dw2s9jk28z", "--datacenter", "ix1"
                 //"delete", "cluster", "srf8p7m67r", "--project", "9mt8bvhkkf", "--datacenter", "ix1"
                 //"describe", "cluster", "22x5xvgs5p", "--project", "68s9vbpslg", "--datacenter", "ix1"
-                "describe", "cluster", "qvjdddt72t", "--project", "6tmbnhdl7h"
+                //"describe", "cluster", "qvjdddt72t", "--project", "6tmbnhdl7h"
                 //"get", "kubeconfig", "f7pv2w49mk", "--project", "x5zvx9bcx6", "--datacenter", "es1"
                 //"get", "kubeconfig", "rbw47nm2h8", "--project", "dw2s9jk28z"
                 //"get", "kubeconfig", "phql4zfj77", "--project", "z7qbzk5mn4"
@@ -43,7 +43,9 @@
                 //"delete", "cluster", "--project", "x5zvx9bcx6", "--delete-volumes", "--delete-loadbalancers", "f7pv2w49mk"
                 //"get", "version"
                 //"config", "get", "cloud"
-           ]
+                //"config", "add", "node", "openstack", "--flavor", "flatcar", "--image", "Flatcar_Production 2020 - Latest", "flatcar1"
+                "add", "nodedeployment", "--project", "6tmbnhdl7h", "--cluster", "qvjdddt72t", "--nodespec", "flatcar1", "--operatingsystem", "flatcar", "--provider", "optimist", "first_node_deployment"
+          ]
         }
     ]
 }
