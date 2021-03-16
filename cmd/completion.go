@@ -205,7 +205,7 @@ func getValidKubernetesVersions(cmd *cobra.Command, args []string, toComplete st
 		return completions, cobra.ShellCompDirectiveError
 	}
 
-	clusterVersions, err := kkp.GetClusterVersions()
+	clusterVersions, err := kkp.ListClusterVersions()
 	if err != nil {
 		return completions, cobra.ShellCompDirectiveNoFileComp
 	}
