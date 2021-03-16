@@ -93,7 +93,7 @@ func main() {
 	}
 	fmt.Printf("* Response: %v\n", res)
 
-	body, err = ioutil.ReadAll(res.Body)
+	_, err = ioutil.ReadAll(res.Body)
 	if err != nil {
 		fmt.Println("ERROR: " + err.Error())
 		return
@@ -132,7 +132,7 @@ func main() {
 	}
 	fmt.Printf("* Response: %v\n", res)
 
-	body, err = ioutil.ReadAll(res.Body)
+	_, err = ioutil.ReadAll(res.Body)
 	if err != nil {
 		fmt.Println("ERROR: " + err.Error())
 		return
