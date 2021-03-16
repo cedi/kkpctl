@@ -7,7 +7,6 @@ import (
 	"sort"
 
 	"github.com/cedi/kkpctl/pkg/client"
-	"github.com/cedi/kkpctl/pkg/config"
 	"github.com/cedi/kkpctl/pkg/utils"
 	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/spf13/cobra"
@@ -255,13 +254,7 @@ func getValidOperatingSystem(cmd *cobra.Command, args []string, toComplete strin
 }
 
 func getValidFlavorArgs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-	return []string{
-		string(config.CentOS),
-		string(config.Flatcar),
-		string(config.Rhel),
-		string(config.Sles),
-		string(config.Ubuntu),
-	}, cobra.ShellCompDirectiveNoFileComp
+	return []string{}, cobra.ShellCompDirectiveNoFileComp
 }
 
 func getValidNodeSpecArgs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {

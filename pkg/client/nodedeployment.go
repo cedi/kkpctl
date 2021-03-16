@@ -27,7 +27,25 @@ func (c *Client) GetNodeDeployments(clusterID string, projectID string, dc strin
 	return result, err
 }
 
-func (c *Client) CreateNodeDeployment(newNodeDeployment *models.NodeDeploymentSpec, clusterID string, projectID string, dc string) (models.NodeDeployment, error) {
+// GetNodeDeployment lists all node deployments for a cluster
+func (c *Client) GetNodeDeployment(nodeDeploymentID string, clusterID string, projectID string, dc string) (models.NodeDeployment, error) {
+	result := models.NodeDeployment{}
+
+	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s/%s",
+		projectPath,
+		projectID,
+		datacenterPath,
+		dc,
+		clusterPath,
+		clusterID,
+		nodeDeploymentPath,
+		nodeDeploymentID,
+	)
+	_, err := c.Get(requestURL, &result)
+	return result, err
+}
+
+func (c *Client) CreateNodeDeployment(newNodeDeployment *models.NodeDeployment, clusterID string, projectID string, dc string) (models.NodeDeployment, error) {
 	result := models.NodeDeployment{}
 
 	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s",
@@ -42,4 +60,20 @@ func (c *Client) CreateNodeDeployment(newNodeDeployment *models.NodeDeploymentSp
 
 	_, err := c.Post(requestURL, contentTypeJSON, newNodeDeployment, result)
 	return result, err
+}
+
+func (c *Client) DeleteNodeDeployment(nodeDeploymentID string, clusterID string, projectID string, dc string) error {
+	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s/%s",
+		projectPath,
+		projectID,
+		datacenterPath,
+		dc,
+		clusterPath,
+		clusterID,
+		nodeDeploymentPath,
+		nodeDeploymentID,
+	)
+
+	_, err := c.Delete(requestURL)
+	return err
 }

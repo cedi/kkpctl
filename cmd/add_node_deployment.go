@@ -20,9 +20,10 @@ var (
 
 // projectCmd represents the project command
 var createNodeDeploymentCmd = &cobra.Command{
-	Use:   "nodedeployment name",
-	Short: "Lets you create a new node deployment",
-	Args:  cobra.ExactArgs(1),
+	Use:     "nodedeployment name",
+	Short:   "Lets you create a new node deployment",
+	Args:    cobra.ExactArgs(1),
+	Example: "kkpctl add nodedeployment --project 6tmbnhdl7h --cluster qvjdddt72t --nodespec flatcar1 --operatingsystem flatcar --provider optimist first_node_deployment",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		clusterName := args[0]
 
@@ -51,18 +52,25 @@ var createNodeDeploymentCmd = &cobra.Command{
 				mapLabels[splitLabel[0]] = splitLabel[1]
 			}
 		}
+		clusterVersion, ok := cluster.Spec.Version.(string)
+		if !ok {
+			return fmt.Errorf("cluster version does not appear to be a string")
+		}
 
-		newNodeDp := models.NodeDeploymentSpec{
-			DynamicConfig: dynamicConfig,
-			Replicas:      &nodeReplica,
-			Template: &models.NodeSpec{
-				Labels:          mapLabels,
-				SSHUserName:     "",
-				Taints:          []*models.TaintSpec{},
-				Cloud:           Config.NodeSpec.GetNodeCloudSpec(nodeSpecName),
-				OperatingSystem: Config.OSSpec.GetOperatingSystemSpec(),
-				Versions: &models.NodeVersionInfo{
-					Kubelet: "",
+		newNodeDp := models.NodeDeployment{
+			Name: args[0],
+			Spec: &models.NodeDeploymentSpec{
+				DynamicConfig: dynamicConfig,
+				Replicas:      &nodeReplica,
+				Template: &models.NodeSpec{
+					Labels:          mapLabels,
+					SSHUserName:     "",
+					Taints:          []*models.TaintSpec{},
+					Cloud:           Config.NodeSpec.GetNodeCloudSpec(nodeSpecName),
+					OperatingSystem: Config.OSSpec.GetOperatingSystemSpec(),
+					Versions: &models.NodeVersionInfo{
+						Kubelet: clusterVersion,
+					},
 				},
 			},
 		}

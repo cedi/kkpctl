@@ -43,7 +43,7 @@
                 //"delete", "cluster", "--project", "x5zvx9bcx6", "--delete-volumes", "--delete-loadbalancers", "f7pv2w49mk"
                 //"get", "version"
                 //"config", "get", "cloud"
-                //"config", "add", "node", "openstack", "--flavor", "flatcar", "--image", "Flatcar_Production 2020 - Latest", "flatcar1"
+                //"config", "add", "node", "openstack", "--flavor", "m1.micro", "--image", "Flatcar_Production 2020 - Latest", "flatcar1"
                 "add", "nodedeployment", "--project", "6tmbnhdl7h", "--cluster", "qvjdddt72t", "--nodespec", "flatcar1", "--operatingsystem", "flatcar", "--provider", "optimist", "first_node_deployment"
           ]
         }

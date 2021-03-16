@@ -22,7 +22,7 @@ var configAddOSNodeSpecCmd = &cobra.Command{
 	Use:     "openstack",
 	Short:   "Lets add a cloud node spec for openstack",
 	Args:    cobra.ExactArgs(1),
-	Example: "",
+	Example: "kkpctl config add node openstack --flavor \"m1.micro\" --image \"Flatcar_Production 2020 - Latest\" flatcar-m1micro",
 	RunE: func(cmd *cobra.Command, args []string) error {
 
 		err := Config.NodeSpec.AddCloudNodeSpec(args[0], models.OpenstackNodeSpec{
