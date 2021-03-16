@@ -85,6 +85,10 @@ func parseOutput(outputObject interface{}, output string, sortBy string) (string
 	// Config
 	case config.CloudConfig:
 		return parseConfigCloud(o, output)
+
+	// Events
+	case []models.Event:
+		return parseEvents(o, output)
 	}
 
 	return fmt.Sprintf("%v\n", outputObject), fmt.Errorf("unable to parse proper type of object")

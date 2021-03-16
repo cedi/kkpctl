@@ -49,10 +49,17 @@ var describeClusterCmd = &cobra.Command{
 			return errors.Wrap(err, "Error fetching cluster health status")
 		}
 
+		clusterEvents, err := kkp.GetEvents(cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
+		if err != nil {
+			// Just because we didn't get the events, doesn't meen we wanna fail
+			clusterEvents = make([]models.Event, 0)
+		}
+
 		meta := describe.ClusterDescribeMeta{
 			Cluster:         &cluster,
 			NodeDeployments: nodeDeployments,
 			ClusterHealth:   clusterHealth,
+			ClusterEvents:   clusterEvents,
 		}
 
 		parsed, err := describe.Object(&meta)
