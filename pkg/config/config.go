@@ -12,11 +12,14 @@ import (
 // ConfigPath is the path to our configuration file on disk
 var ConfigPath string
 
+// CloudConfig is the key-value store from the cloud name to it's URL
+type CloudConfig map[string]string
+
 // Config is the configuration for KKPCTL
 type Config struct {
-	Provider ProviderConfig    `yaml:"provider"`
-	Context  Context           `yaml:"ctx"`
-	Cloud    map[string]string `yaml:"cloud"`
+	Provider ProviderConfig `yaml:"provider"`
+	Context  Context        `yaml:"ctx"`
+	Cloud    CloudConfig    `yaml:"cloud"`
 }
 
 // NewConfig creates a new, empty, config

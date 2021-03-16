@@ -41,7 +41,8 @@
                 //"delete", "cluster", "--project", "x5zvx9bcx6", "--datacenter", "ix2", "n74hx5fxbx"
                 //"delete", "cluster", "--project", "x5zvx9bcx6", "--datacenter", "ix2", "--delete-volumes", "--delete-loadbalancers", "5688dt4fv4"
                 //"delete", "cluster", "--project", "x5zvx9bcx6", "--delete-volumes", "--delete-loadbalancers", "f7pv2w49mk"
-                "get", "version"
+                //"get", "version"
+                "config", "get", "cloud"
            ]
         }
     ]

@@ -3,6 +3,7 @@ package output
 import (
 	"fmt"
 
+	"github.com/cedi/kkpctl/pkg/config"
 	"github.com/cedi/kkpctl/pkg/model"
 	"github.com/cedi/kkpctl/pkg/utils"
 	"github.com/kubermatic/go-kubermatic/models"
@@ -98,6 +99,7 @@ func parseOutput(object interface{}, output string, sortBy string) (string, erro
 		return parseClusterHealth(clusterHealth, output)
 	}
 
+	// Cluster Versions
 	clusterVersions, ok := object.(model.VersionList)
 	if ok {
 		return parseClusterVersions(clusterVersions, output)
@@ -106,6 +108,12 @@ func parseOutput(object interface{}, output string, sortBy string) (string, erro
 	clusterVersion, ok := object.(model.Version)
 	if ok {
 		return parseClusterVersion(clusterVersion, output)
+	}
+
+	// Config
+	cloudConfig, ok := object.(config.CloudConfig)
+	if ok {
+		return parseConfigCloud(cloudConfig, output)
 	}
 
 	return fmt.Sprintf("%v\n", object), fmt.Errorf("unable to parse proper type of object")
