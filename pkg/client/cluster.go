@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/cedi/kkpctl/pkg/model"
 	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/pkg/errors"
 )
@@ -15,6 +16,7 @@ const (
 	datacenterPath    string = "dc"
 	kubeconfigPath    string = "kubeconfig"
 	clusterHealthPath string = "health"
+	upgradesPath      string = "upgrades"
 )
 
 // ListClusters lists all clusters
@@ -263,5 +265,38 @@ func (c *Client) GetClusterHealth(clusterID string, projectID string, dc string)
 		clusterHealthPath,
 	)
 	_, err = c.Get(requestURL, &result)
+	return result, err
+}
+
+// GetClusterUpgradeVersions upgrades a cluster to a specified version
+func (c *Client) GetClusterUpgradeVersions(clusterID string, projectID string, dc string) (model.VersionList, error) {
+	result := make(model.VersionList, 0)
+
+	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s",
+		projectPath,
+		projectID,
+		datacenterPath,
+		dc,
+		clusterPath,
+		clusterID,
+		upgradesPath,
+	)
+	_, err := c.Get(requestURL, &result)
+	return result, err
+}
+
+// UpgradeCluster upgrades a cluster to a specified version
+func (c *Client) UpgradeCluster(toVersion string, clusterID string, projectID string, dc string) (models.Cluster, error) {
+	result := models.Cluster{}
+
+	cluster, err := c.GetClusterInProjectInDC(clusterID, projectID, dc)
+	if err != nil {
+		return result, err
+	}
+
+	cluster.Spec.Version = toVersion
+
+	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s", projectPath, projectID, datacenterPath, dc, clusterPath, clusterID)
+	_, err = c.Patch(requestURL, contentTypeJSON, cluster, &result)
 	return result, err
 }

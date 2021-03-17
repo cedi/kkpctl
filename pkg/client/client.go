@@ -124,8 +124,18 @@ func (c *Client) Post(requestURL string, contentType string, body interface{}, o
 }
 
 // Patch functions the same as http.Client.Post but injects a stored token into the header
-func (c *Client) Patch(requestURL string, contentType string, body io.Reader, out interface{}) (*http.Response, error) {
-	req, err := http.NewRequest("PATCH", c.formatURL(requestURL), body)
+func (c *Client) Patch(requestURL string, contentType string, body interface{}, out interface{}) (*http.Response, error) {
+	var bodyBuf io.ReadWriter
+
+	if body != nil {
+		bodyBuf = new(bytes.Buffer)
+		err := json.NewEncoder(bodyBuf).Encode(body)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	req, err := http.NewRequest("PATCH", c.formatURL(requestURL), bodyBuf)
 	if err != nil {
 		return nil, err
 	}
@@ -134,8 +144,18 @@ func (c *Client) Patch(requestURL string, contentType string, body io.Reader, ou
 }
 
 // Put functions the same as http.Client.Put but injects a stored token into the header
-func (c *Client) Put(requestURL string, contentType string, body io.Reader, out interface{}) (*http.Response, error) {
-	req, err := http.NewRequest("PUT", c.formatURL(requestURL), body)
+func (c *Client) Put(requestURL string, contentType string, body interface{}, out interface{}) (*http.Response, error) {
+	var bodyBuf io.ReadWriter
+
+	if body != nil {
+		bodyBuf = new(bytes.Buffer)
+		err := json.NewEncoder(bodyBuf).Encode(body)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	req, err := http.NewRequest("PUT", c.formatURL(requestURL), bodyBuf)
 	if err != nil {
 		return nil, err
 	}

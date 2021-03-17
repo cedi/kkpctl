@@ -117,3 +117,27 @@ func (c *Client) GetNodeDeploymentEvents(nodeDeploymentID string, clusterID stri
 	_, err := c.Get(requestURL, &result)
 	return result, err
 }
+
+// GetNodeDeploymentNodes gets all nodes in a node deployment
+func (c *Client) UpgradeWorkerDeploymentVersion(toVersion string, clusterID string, projectID string, dc string) error {
+
+	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s/%s",
+		projectPath,
+		projectID,
+		datacenterPath,
+		dc,
+		clusterPath,
+		clusterID,
+		nodePath,
+		upgradesPath,
+	)
+
+	updateVersion := models.MasterVersion{
+		Default:                    true,
+		RestrictedByKubeletVersion: true,
+		Version:                    toVersion,
+	}
+
+	_, err := c.Put(requestURL, contentTypeJSON, updateVersion, nil)
+	return err
+}

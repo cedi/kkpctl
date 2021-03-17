@@ -320,3 +320,55 @@ func getValidNodeDeploymentArgs(cmd *cobra.Command, args []string, toComplete st
 
 	return completions, cobra.ShellCompDirectiveNoFileComp
 }
+
+func getValidToVersionArgs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+	completions := make([]string, 0)
+
+	baseURL, apiToken := Config.GetCloudFromContext()
+	kkp, err := client.NewClient(baseURL, apiToken)
+	if err != nil {
+		fmt.Println(err.Error())
+		return completions, cobra.ShellCompDirectiveError
+	}
+
+	// clusterID
+	if len(args) == 0 {
+		return completions, cobra.ShellCompDirectiveNoFileComp
+	}
+	clusterID = args[0]
+
+	projectID, err := cmd.Flags().GetString("project")
+	if err != nil {
+		return completions, cobra.ShellCompDirectiveNoFileComp
+	}
+
+	dc, err := cmd.Flags().GetString("datacenter")
+	if err != nil {
+		return completions, cobra.ShellCompDirectiveNoFileComp
+	}
+
+	var cluster models.Cluster
+	if dc == "" {
+		cluster, err = kkp.GetClusterInProject(clusterID, projectID)
+	} else {
+		cluster, err = kkp.GetClusterInProjectInDC(clusterID, projectID, dc)
+	}
+
+	if err != nil {
+		return completions, cobra.ShellCompDirectiveNoFileComp
+	}
+
+	upgradeVersions, err := kkp.GetClusterUpgradeVersions(clusterID, projectID, cluster.Spec.Cloud.DatacenterName)
+	if err != nil {
+		return completions, cobra.ShellCompDirectiveNoFileComp
+	}
+
+	toCompleteRegexp := regexp.MustCompile(fmt.Sprintf("^%s.*$", toComplete))
+	for _, version := range upgradeVersions {
+		if toCompleteRegexp.MatchString(version.Version) {
+			completions = append(completions, version.Version)
+		}
+	}
+
+	return completions, cobra.ShellCompDirectiveNoFileComp
+}
