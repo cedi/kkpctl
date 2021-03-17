@@ -12,11 +12,11 @@ import (
 
 // clustersCmd represents the clusters command
 var getNodeDeploymentCmd = &cobra.Command{
-	Use:     "nodedeployment [name]",
-	Short:   "Lists all available datacenters",
-	Example: "kkpctl get datacenter",
-	Args:    cobra.MaximumNArgs(1),
-	//ValidArgsFunction: getValidNodeDeploymentArgs,
+	Use:               "nodedeployment [name]",
+	Short:             "List nodedeployments for a cluster",
+	Example:           "kkpctl describe nodedeployment my_nodedeployment",
+	Args:              cobra.MaximumNArgs(1),
+	ValidArgsFunction: getValidNodeDeploymentArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		baseURL, apiToken := Config.GetCloudFromContext()
 		kkp, err := client.NewClient(baseURL, apiToken)

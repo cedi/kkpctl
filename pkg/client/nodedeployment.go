@@ -8,6 +8,7 @@ import (
 
 const (
 	nodeDeploymentPath string = "nodedeployments"
+	nodePath           string = "nodes"
 )
 
 // GetNodeDeployments lists all node deployments for a cluster
@@ -76,4 +77,43 @@ func (c *Client) DeleteNodeDeployment(nodeDeploymentID string, clusterID string,
 
 	_, err := c.Delete(requestURL)
 	return err
+}
+
+// GetNodeDeploymentNodes gets all nodes in a node deployment
+func (c *Client) GetNodeDeploymentNodes(nodeDeploymentID string, clusterID string, projectID string, dc string) ([]models.Node, error) {
+	result := make([]models.Node, 0)
+
+	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s/%s/%s",
+		projectPath,
+		projectID,
+		datacenterPath,
+		dc,
+		clusterPath,
+		clusterID,
+		nodeDeploymentPath,
+		nodeDeploymentID,
+		nodePath,
+	)
+	_, err := c.Get(requestURL, &result)
+	return result, err
+}
+
+// GetNodeDeploymentNodes gets all nodes in a node deployment
+func (c *Client) GetNodeDeploymentEvents(nodeDeploymentID string, clusterID string, projectID string, dc string) ([]models.Event, error) {
+	result := make([]models.Event, 0)
+
+	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s/%s/%s/%s",
+		projectPath,
+		projectID,
+		datacenterPath,
+		dc,
+		clusterPath,
+		clusterID,
+		nodeDeploymentPath,
+		nodeDeploymentID,
+		nodePath,
+		eventsPath,
+	)
+	_, err := c.Get(requestURL, &result)
+	return result, err
 }

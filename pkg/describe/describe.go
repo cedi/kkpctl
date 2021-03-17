@@ -8,16 +8,17 @@ import (
 
 // Object takes any KKP Object as an input and then describes it
 func Object(object interface{}) (string, error) {
-	// this is ugly and long, but it makes things kinda nicer to handle outside of the package
-	project, ok := object.(*models.Project)
-	if ok {
-		return describeProject(project)
-	}
+	switch describeObj := object.(type) {
+	case *models.Project:
+		return describeProject(describeObj)
 
-	meta, ok := object.(*ClusterDescribeMeta)
-	if ok {
-		return describeCluster(meta)
-	}
+	case *ClusterDescribeMeta:
+		return describeCluster(describeObj)
 
-	return fmt.Sprintf("%v\n", object), fmt.Errorf("unable to parse proper type of object")
+	case *NodeDeploymentDescribeMeta:
+		return describeNodeDeployment(describeObj)
+
+	default:
+		return fmt.Sprintf("%v\n", object), fmt.Errorf("unable to parse proper type of object")
+	}
 }

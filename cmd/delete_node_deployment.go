@@ -10,10 +10,11 @@ import (
 )
 
 var deleteNodeDeploymentCmd = &cobra.Command{
-	Use:     "nodedeployment name",
-	Short:   "Lets you create a new node deployment",
-	Args:    cobra.ExactArgs(1),
-	Example: "kkpctl delete nodedeployment --project 6tmbnhdl7h --cluster qvjdddt72t",
+	Use:               "nodedeployment name",
+	Short:             "Lets you create a new node deployment",
+	Args:              cobra.ExactArgs(1),
+	Example:           "kkpctl delete nodedeployment --project 6tmbnhdl7h --cluster qvjdddt72t my_first_nodedeployment",
+	ValidArgsFunction: getValidNodeDeploymentArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		baseURL, apiToken := Config.GetCloudFromContext()
 		kkp, err := client.NewClient(baseURL, apiToken)

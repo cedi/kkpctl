@@ -65,6 +65,8 @@ func parseOutput(outputObject interface{}, output string, sortBy string) (string
 		return parseNodeDeployments(o, output, sortBy)
 	case models.NodeDeployment:
 		return parseNodeDeployment(o, output)
+	case *models.NodeDeployment:
+		return parseNodeDeployment(*o, output)
 
 	// Datacenter
 	case []models.Datacenter:
@@ -89,6 +91,18 @@ func parseOutput(outputObject interface{}, output string, sortBy string) (string
 	// Events
 	case []models.Event:
 		return parseEvents(o, output)
+
+	// Node Taints
+	case *models.TaintSpec:
+		return parseNodeTaint(o, output)
+	case []*models.TaintSpec:
+		return parseNodeTaints(o, output)
+
+	// Node
+	case models.Node:
+		return parseNode(o, output)
+	case []models.Node:
+		return parseNodes(o, output)
 	}
 
 	return fmt.Sprintf("%v\n", outputObject), fmt.Errorf("unable to parse proper type of object")
