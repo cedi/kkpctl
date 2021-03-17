@@ -13,7 +13,7 @@ import (
 var ConfigPath string
 
 // CloudConfig is the key-value store from the cloud name to it's URL
-type CloudConfig map[string]string
+type CloudConfig map[string]Cloud
 
 // Config is the configuration for KKPCTL
 type Config struct {
@@ -29,7 +29,7 @@ func NewConfig() Config {
 	return Config{
 		Provider: NewProvider(),
 		Context:  NewContext(),
-		Cloud:    make(map[string]string),
+		Cloud:    make(map[string]Cloud),
 	}
 }
 
@@ -85,5 +85,5 @@ func ensureConfig() error {
 
 // GetCloudFromContext returns a touple of cloud-url and bearer
 func (c *Config) GetCloudFromContext() (string, string) {
-	return c.Cloud[c.Context.CloudName], c.Context.Bearer
+	return c.Cloud[c.Context.CloudName].URL, c.Cloud[c.Context.CloudName].Bearer
 }

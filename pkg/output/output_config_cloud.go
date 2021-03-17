@@ -34,7 +34,7 @@ func parseConfigCloud(object config.CloudConfig, output string) (string, error) 
 		for key, value := range object {
 			rendered = append(rendered, configCloudRender{
 				Name: key,
-				URL:  value,
+				URL:  value.URL,
 			})
 		}
 

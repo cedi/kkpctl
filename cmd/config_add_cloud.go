@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/cedi/kkpctl/pkg/config"
 	"github.com/spf13/cobra"
 )
 
@@ -14,9 +15,11 @@ var configAddCloudCmd = &cobra.Command{
 	Args:    cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if Config.Cloud == nil {
-			Config.Cloud = make(map[string]string)
+			Config.Cloud = make(map[string]config.Cloud)
 		}
-		Config.Cloud[args[0]] = cloudURL
+		Config.Cloud[args[0]] = config.Cloud{
+			URL: cloudURL,
+		}
 
 		return Config.Save()
 	},

@@ -51,17 +51,6 @@ var ctxGetCloudCmd = &cobra.Command{
 	},
 }
 
-var ctxSetBearerCmd = &cobra.Command{
-	Use:     "bearer token",
-	Short:   "Lets you set the context of which bearer token to use",
-	Args:    cobra.ExactArgs(1),
-	Example: "kkpctl ctx set bearer sdfhjsldkfjsdklfhj...",
-	RunE: func(cmd *cobra.Command, args []string) error {
-		Config.Context.Bearer = args[0]
-		return Config.Save()
-	},
-}
-
 func init() {
 	rootCmd.AddCommand(ctxCmd)
 	ctxCmd.AddCommand(ctxSetCmd)
@@ -69,7 +58,6 @@ func init() {
 
 	// Set
 	ctxSetCmd.AddCommand(ctxSetCloudCmd)
-	ctxSetCmd.AddCommand(ctxSetBearerCmd)
 
 	// Get
 	ctxGetCmd.AddCommand(ctxGetCloudCmd)
