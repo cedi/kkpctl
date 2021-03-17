@@ -95,6 +95,9 @@ For the full usage documentation see the [docs](docs/commandline-usage.md)
 # Add your first cloud
 $ kkpctl config add cloud imke_prod https://imke.cloud/
 
+# Note: This is a work around, until we have oidc-login available in kkpctl
+$ kkpctl config set cloud imke_prod berer ey....
+
 # Add your first cloudprovider
 $ kkpctl config add provider openstack --username "user@email.de" --password "my-super-secure-password" --tenant "internal-openstack-tenant" optimist
 
@@ -102,33 +105,27 @@ $ kkpctl config add provider openstack --username "user@email.de" --password "my
 $ kkpctl ctx set cloud imke_prod
 ```
 
-2. Login to KKP
-```
-# Note: This is a work around, until we have oidc-login available in kkpctl
-$ kkpctl ctx set bearer 'ey03b....'
-```
-
-3. Create your first project
+2. Create your first project
 ```
 $ kkpctl add project testproject
 ```
 
-4. Display your newly created project
+3. Display your newly created project
 ```
 $ kkpctl describe project 6tmbnhdl7h
 ```
 
-5. Create your first cluster
+4. Create your first cluster
 ```
 $ kkpctl add cluster --project 6tmbnhdl7h --datacenter ix2 --provider optimist --version 1.18.13 --labels stage=dev kkpctltest
 ```
 
-6. Describe your first cluster
+5. Describe your first cluster
 ```
 $ kkpctl describe cluster --project 6tmbnhdl7h qvjdddt72t
 ```
 
-7. Connect to your cluster, once it's ready
+6. Connect to your cluster, once it's ready
 ```
 $ kkpctl get kubeconfig --project testproject qvjdddt72t -w 
 $ export KUBECONFIG=./kubeconfig-admin-qvjdddt72t
