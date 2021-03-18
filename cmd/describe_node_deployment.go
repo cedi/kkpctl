@@ -4,8 +4,7 @@ import (
 	"fmt"
 
 	"github.com/cedi/kkpctl/pkg/describe"
-	"github.com/kubermatic/go-kubermatic/models"
-	"github.com/pkg/errors"
+	"github.com/cedi/kkpctl/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
@@ -13,39 +12,36 @@ import (
 var describeNodeDeploymentCmd = &cobra.Command{
 	Use:               "nodedeployment name",
 	Short:             "Describes a node deployment",
-	Example:           "kkpctl describe nodedeployment my_nodedeployment",
+	Example:           "kkpctl describe nodedeployment --project 6tmbnhdl7h --cluster qvjdddt72t hallowelt",
 	Args:              cobra.ExactArgs(1),
 	ValidArgsFunction: getValidNodeDeploymentArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		nodeDeploymentName := args[0]
+
 		kkp, err := Config.GetKKPClient()
 		if err != nil {
 			return err
 		}
 
-		var cluster models.Cluster
-		if datacenter == "" {
-			cluster, err = kkp.GetClusterInProject(clusterID, projectID)
-		} else if datacenter != "" && projectID != "" {
-			cluster, err = kkp.GetClusterInProjectInDC(clusterID, projectID, datacenter)
-		}
+		cluster, err := kkp.GetClusterInProjectInDC(clusterID, projectID, datacenter)
 
 		if err != nil {
-			return errors.Wrap(err, "could not fetch cluster")
+			return errors.Wrapf(err, "failed to get cluster %s in project %s", clusterID, projectID)
 		}
 
-		nodeDeployment, err := kkp.GetNodeDeployment(args[0], cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
+		nodeDeployment, err := kkp.GetNodeDeployment(nodeDeploymentName, cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
 		if err != nil {
-			return errors.Wrap(err, "Error fetching node deployment")
+			return errors.Wrapf(err, "failed to get node deployment %s for cluster %s in project %s", nodeDeploymentName, clusterID, projectID)
 		}
 
 		nodeDeploymentNodes, err := kkp.GetNodeDeploymentNodes(nodeDeployment.ID, cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
 		if err != nil {
-			return errors.Wrap(err, "Error fetching node deployment nodes")
+			return errors.Wrapf(err, "failed to get node deployment %s's nodes for cluster %s in project %s", nodeDeploymentName, clusterID, projectID)
 		}
 
 		nodeDeploymentEvents, err := kkp.GetNodeDeploymentEvents(nodeDeployment.ID, cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
 		if err != nil {
-			return errors.Wrap(err, "Error fetching node deployment events")
+			return errors.Wrapf(err, "failed to get node deployment %s's events for cluster %s in project %s", nodeDeploymentName, clusterID, projectID)
 		}
 
 		meta := &describe.NodeDeploymentDescribeMeta{
@@ -56,7 +52,7 @@ var describeNodeDeploymentCmd = &cobra.Command{
 
 		parsed, err := describe.Object(meta)
 		if err != nil {
-			return errors.Wrap(err, "Error parsing datacenters")
+			return errors.Wrapf(err, "failed to describe node deployment %s", nodeDeploymentName)
 		}
 
 		fmt.Println(parsed)

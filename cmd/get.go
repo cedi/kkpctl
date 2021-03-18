@@ -7,7 +7,7 @@ import (
 // getCmd represents the get command
 var getCmd = &cobra.Command{
 	Use:   "get",
-	Short: "Get lets you fetch a list or a specific named object.",
+	Short: "Get an object of a specified resource type",
 }
 
 func init() {

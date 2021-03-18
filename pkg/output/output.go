@@ -105,7 +105,7 @@ func parseOutput(outputObject interface{}, output string, sortBy string) (string
 		return parseNodes(o, output)
 	}
 
-	return fmt.Sprintf("%v\n", outputObject), fmt.Errorf("unable to parse proper type of object")
+	return fmt.Sprintf("%v\n", outputObject), fmt.Errorf("unable to determine proper output type")
 }
 
 func validateOutput(output string) error {

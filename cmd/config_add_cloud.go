@@ -14,12 +14,13 @@ var configAddCloudCmd = &cobra.Command{
 	Example: "kkpctl config add cloud imke --url https://imke.cloud",
 	Args:    cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
+		name := args[0]
+
 		if Config.Cloud == nil {
-			Config.Cloud = make(map[string]config.Cloud)
+			Config.Cloud = config.NewCloudConfig()
 		}
-		Config.Cloud[args[0]] = config.Cloud{
-			URL: cloudURL,
-		}
+
+		Config.Cloud.Set(name, config.Cloud{URL: cloudURL})
 
 		return Config.Save()
 	},
@@ -27,6 +28,6 @@ var configAddCloudCmd = &cobra.Command{
 
 func init() {
 	configAddCmd.AddCommand(configAddCloudCmd)
-	configAddCloudCmd.Flags().StringVar(&cloudURL, "url", "", "The KKP Cloud URL to connect to")
+	configAddCloudCmd.Flags().StringVar(&cloudURL, "url", "", "The URL to your KKP installation")
 	configAddCloudCmd.MarkFlagRequired("url")
 }

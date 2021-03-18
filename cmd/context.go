@@ -8,31 +8,32 @@ import (
 
 var ctxCmd = &cobra.Command{
 	Use:   "ctx",
-	Short: "Lets you work with the current context in which kkpctl commands are executed",
+	Short: "Manipulate the current context kkpctl works with",
+	Long:  "kkpctl uses this context to save the cloud which you want to connect to",
 }
 
 var ctxSetCmd = &cobra.Command{
 	Use:   "set",
-	Short: "Lets you set the context of an specific type",
+	Short: "Set context",
 }
 
 var ctxGetCmd = &cobra.Command{
 	Use:   "get",
-	Short: "Lets you get the context of an specific type",
+	Short: "Get context",
 }
 
 var ctxSetCloudCmd = &cobra.Command{
 	Use:               "cloud name",
-	Short:             "Lets you set the context of which cloud to use",
+	Short:             "Set the cloud which you want to connect to",
 	Args:              cobra.ExactArgs(1),
-	Example:           "kkpctl ctx set cloud optimist",
+	Example:           "kkpctl ctx set cloud imke",
 	ValidArgsFunction: getValidCloudContextArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		cloudName := args[0]
 
-		_, ok := Config.Cloud[cloudName]
-		if !ok {
-			return fmt.Errorf("cloud '%s' is not configured and therefore cannot be set as context", cloudName)
+		_, err := Config.Cloud.Get(cloudName)
+		if err != nil {
+			return fmt.Errorf("failed to set the cloud %s to the current context", cloudName)
 		}
 
 		Config.Context.CloudName = cloudName
@@ -42,7 +43,7 @@ var ctxSetCloudCmd = &cobra.Command{
 
 var ctxGetCloudCmd = &cobra.Command{
 	Use:               "cloud",
-	Short:             "Lets you get the context of which cloud to use",
+	Short:             "Get the cloud which you want to connect to",
 	Args:              cobra.ExactArgs(0),
 	Example:           "kkpctl ctx get cloud",
 	ValidArgsFunction: getValidCloudContextArgs,

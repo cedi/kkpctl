@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/cedi/kkpctl/pkg/errors"
 	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/spf13/cobra"
 )
@@ -12,27 +13,27 @@ var (
 )
 
 var configAddNodeSpecCmd = &cobra.Command{
-	Use:       "node",
-	Short:     "Lets add a cloud node spec",
-	Args:      cobra.ExactArgs(1),
-	ValidArgs: []string{"openstack"},
+	Use:   "node",
+	Short: "Lets add a cloud node spec",
+	Args:  cobra.ExactArgs(1),
 }
 
 var configAddOSNodeSpecCmd = &cobra.Command{
-	Use:     "openstack",
+	Use:     "openstack name",
 	Short:   "Lets add a cloud node spec for openstack",
 	Args:    cobra.ExactArgs(1),
 	Example: "kkpctl config add node openstack --flavor \"m1.micro\" --image \"Flatcar_Production 2020 - Latest\" flatcar-m1micro",
 	RunE: func(cmd *cobra.Command, args []string) error {
+		name := args[0]
 
-		err := Config.NodeSpec.AddCloudNodeSpec(args[0], models.OpenstackNodeSpec{
+		err := Config.NodeSpec.AddCloudNodeSpec(name, models.OpenstackNodeSpec{
 			Flavor:        &flavor,
 			Image:         &image,
 			UseFloatingIP: useFloatingIP,
 		})
 
 		if err != nil {
-			return err
+			return errors.Wrapf(err, "failed to add openstack cloud %s", name)
 		}
 
 		return Config.Save()

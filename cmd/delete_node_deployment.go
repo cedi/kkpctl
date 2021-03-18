@@ -3,45 +3,39 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/kubermatic/go-kubermatic/models"
-	"github.com/pkg/errors"
+	"github.com/cedi/kkpctl/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
 var deleteNodeDeploymentCmd = &cobra.Command{
 	Use:               "nodedeployment name",
-	Short:             "Lets you create a new node deployment",
+	Short:             "Delete a node deployment from a cluster",
 	Args:              cobra.ExactArgs(1),
 	Example:           "kkpctl delete nodedeployment --project 6tmbnhdl7h --cluster qvjdddt72t my_first_nodedeployment",
 	ValidArgsFunction: getValidNodeDeploymentArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		nodeDeploymentName := args[0]
 		kkp, err := Config.GetKKPClient()
 		if err != nil {
 			return err
 		}
 
-		var cluster models.Cluster
-		if datacenter == "" {
-			cluster, err = kkp.GetClusterInProject(clusterID, projectID)
-		} else if datacenter != "" && projectID != "" {
-			cluster, err = kkp.GetClusterInProjectInDC(clusterID, projectID, datacenter)
+		cluster, err := kkp.GetClusterInProjectInDC(clusterID, projectID, datacenter)
+		if err != nil {
+			return errors.Wrapf(err, "failed to find cluster %s in project %s", clusterID, projectID)
 		}
 
+		nodeDeployment, err := kkp.GetNodeDeployment(nodeDeploymentName, clusterID, projectID, cluster.Spec.Cloud.DatacenterName)
 		if err != nil {
-			return errors.Wrap(err, "could not fetch cluster")
-		}
-
-		nodeDeployment, err := kkp.GetNodeDeployment(args[0], clusterID, projectID, cluster.Spec.Cloud.DatacenterName)
-		if err != nil {
-			return errors.Wrap(err, "Error fetching node deployment")
+			return errors.Wrapf(err, "failed to get node deployment %s in cluster %s", nodeDeploymentName, clusterID)
 		}
 
 		err = kkp.DeleteNodeDeployment(nodeDeployment.ID, clusterID, projectID, cluster.Spec.Cloud.DatacenterName)
 		if err != nil {
-			return errors.Wrap(err, "Error deleting node deployment")
+			return errors.Wrapf(err, "failed to delete node deployment %s (%s) in cluster %s", nodeDeployment.Name, nodeDeployment.ID, clusterID)
 		}
 
-		fmt.Printf("Successfully deleted node deployment '%s'\n", nodeDeployment.Name)
+		fmt.Printf("Successfully deleted node deployment %s in cluster %s\n", nodeDeployment.Name, clusterID)
 		return nil
 	},
 }

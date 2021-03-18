@@ -18,25 +18,30 @@ var getProjectsCmd = &cobra.Command{
 	Args:              cobra.MaximumNArgs(1),
 	ValidArgsFunction: getValidProjectArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		projectID := ""
+		if len(args) == 1 {
+			projectID = args[0]
+		}
+
 		kkp, err := Config.GetKKPClient()
 		if err != nil {
 			return err
 		}
 
 		var result interface{}
-		if len(args) == 0 || listAll {
+		if projectID == "" || listAll {
 			result, err = kkp.ListProjects(listAll)
 		} else {
-			result, err = kkp.GetProject(args[0])
+			result, err = kkp.GetProject(projectID)
 		}
 
 		if err != nil {
-			return errors.Wrap(err, "Error fetching project")
+			return errors.Wrap(err, "failed to get project")
 		}
 
 		parsed, err := output.ParseOutput(result, outputType, sortBy)
 		if err != nil {
-			return errors.Wrap(err, "Error parsing project")
+			return errors.Wrap(err, "failed to parse project")
 		}
 		fmt.Print(parsed)
 

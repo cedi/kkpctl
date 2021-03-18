@@ -7,7 +7,7 @@ import (
 // addCmd represents the add command
 var configCmd = &cobra.Command{
 	Use:   "config",
-	Short: "Lets you configure KKPCTL",
+	Short: "Configure kkpctl",
 }
 
 func init() {

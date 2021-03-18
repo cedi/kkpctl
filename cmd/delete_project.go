@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/pkg/errors"
+	"github.com/cedi/kkpctl/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
@@ -15,22 +15,24 @@ var delProjectsCmd = &cobra.Command{
 	Args:              cobra.ExactArgs(1),
 	ValidArgsFunction: getValidProjectArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		projectID := args[0]
+
 		kkp, err := Config.GetKKPClient()
 		if err != nil {
 			return err
 		}
 
-		project, err := kkp.GetProject(args[0])
+		project, err := kkp.GetProject(projectID)
 		if err != nil {
-			return errors.Wrap(err, "Error finding project")
+			return errors.Wrapf(err, "failed to find project %s", projectID)
 		}
 
 		err = kkp.DeleteProject(args[0])
 		if err != nil {
-			return errors.Wrap(err, "Error deleting project")
+			return errors.Wrapf(err, "failed to delete project %s (%s)", project.Name, projectID)
 		}
 
-		fmt.Printf("Successfully deleted Project %s (%s)\n", project.Name, args[0])
+		fmt.Printf("Successfully deleted Project %s (%s)\n", project.Name, projectID)
 		return nil
 	},
 }

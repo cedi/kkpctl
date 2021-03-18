@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/cedi/kkpctl/pkg/model"
 	"github.com/cedi/kkpctl/pkg/utils"
-	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
@@ -18,11 +18,11 @@ var (
 	usePodNodeSelectorAdmissionPlugin   bool
 )
 
-// projectCmd represents the project command
 var createClusterCmd = &cobra.Command{
-	Use:   "cluster name",
-	Short: "Lets you create a new cluster",
-	Args:  cobra.ExactArgs(1),
+	Use:     "cluster clusterName",
+	Short:   "Create a new cluster",
+	Example: "kkpctl add cluster --project 6tmbnhdl7h --datacenter ix2 --provider optimist --version 1.18.13 --labels stage=dev kkpctltest",
+	Args:    cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		clusterName := args[0]
 
@@ -31,26 +31,20 @@ var createClusterCmd = &cobra.Command{
 			return err
 		}
 
-		newCluster := models.CreateClusterSpec{
-			Cluster: &models.Cluster{
-				Labels: utils.SplitLabelString(labels),
-				Name:   clusterName,
-				Type:   clusterType,
-				Spec: &models.ClusterSpec{
-					UsePodNodeSelectorAdmissionPlugin:   usePodNodeSelectorAdmissionPlugin,
-					UsePodSecurityPolicyAdmissionPlugin: usePodSecurityPolicyAdmissionPlugin,
-					AuditLogging: &models.AuditLoggingSettings{
-						Enabled: enableAuditLogging,
-					},
-					Cloud:   Config.Provider.GetProviderCloudSpec(providerName, datacenter),
-					Version: k8sVersion,
-				},
-			},
-		}
+		newCluster := model.NewCreateClusterSpec(
+			clusterName,
+			clusterType,
+			k8sVersion,
+			Config.Provider.GetProviderCloudSpec(providerName, datacenter),
+			utils.SplitLabelString(labels),
+			usePodNodeSelectorAdmissionPlugin,
+			usePodSecurityPolicyAdmissionPlugin,
+			enableAuditLogging,
+		)
 
-		result, err := kkp.CreateCluster(&newCluster, projectID, datacenter)
+		result, err := kkp.CreateCluster(newCluster, projectID, datacenter)
 		if err != nil {
-			return errors.Wrap(err, "error creating cluster")
+			return errors.Wrapf(err, "failed to create %s cluster %s", clusterType, clusterName)
 		}
 
 		fmt.Printf("Successfully created cluster '%s' (%s)\n", clusterName, result.ID)

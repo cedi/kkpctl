@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/kubermatic/go-kubermatic/models"
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
@@ -18,20 +19,20 @@ var (
 
 // configAddProviderCmd represents the add provider command
 var configAddProviderCmd = &cobra.Command{
-	Use:       "provider {openstack}",
-	Short:     "Lets add a specific provider object",
-	Args:      cobra.ExactArgs(1),
-	ValidArgs: []string{"openstack"},
+	Use:   "provider",
+	Short: "Add a provider to your configuration",
+	Args:  cobra.ExactArgs(1),
 }
 
 // adding an PpenStack provider
 var configAddProviderOpenStackCmd = &cobra.Command{
 	Use:     "openstack name",
-	Short:   "Lets add a specific openstack provider",
+	Short:   "Add an openstack provider to your configuration",
 	Args:    cobra.ExactArgs(1),
 	Example: "kkpctl config add provider openstack optimist --username \"user@email.de\" --password \"my-super-secure-password\" --tenant \"internal-openstack-tenant\"",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		err := Config.Provider.AddProviderConfig(args[0], models.OpenstackCloudSpec{
+		name := args[0]
+		err := Config.Provider.AddProviderConfig(name, models.OpenstackCloudSpec{
 			Username:       username,
 			Password:       password,
 			Domain:         osDomain,
@@ -41,8 +42,9 @@ var configAddProviderOpenStackCmd = &cobra.Command{
 			Network:        osNetwork,
 			SubnetID:       osSubnetID,
 		})
+
 		if err != nil {
-			return err
+			return errors.Wrapf(err, "failed to add openstack cloudprovider %s to configuration", name)
 		}
 
 		return Config.Save()
@@ -60,10 +62,8 @@ func init() {
 func initOpenStackFlags() {
 	configAddProviderOpenStackCmd.Flags().StringVar(&osTenant, "tenant", "", "The OpenStack tenant")
 	configAddProviderOpenStackCmd.MarkFlagRequired("tenant")
-	// TODO: configAddProviderOpenStackCmd.RegisterFlagCompletionFunc("tenant", ...)
 
 	configAddProviderOpenStackCmd.Flags().StringVar(&osDomain, "domain", "default", "The OpenStack Domain")
-	// TODO: configAddProviderOpenStackCmd.RegisterFlagCompletionFunc("domain", ...)
 
 	configAddProviderOpenStackCmd.Flags().StringVar(&username, "username", "", "Your OpenStack Username")
 	configAddProviderOpenStackCmd.MarkFlagRequired("username")
@@ -72,14 +72,7 @@ func initOpenStackFlags() {
 	configAddProviderOpenStackCmd.MarkFlagRequired("password")
 
 	configAddProviderOpenStackCmd.Flags().StringVar(&osFloatingIPPool, "floatingIpPool", "", "When specified, all worker nodes will receive a public ip from this floating ip pool")
-	// TODO: configAddProviderOpenStackCmd.RegisterFlagCompletionFunc("floatingIpPool", ...)
-
 	configAddProviderOpenStackCmd.Flags().StringVar(&osSecurityGroups, "securityGroup", "", "When specified, all worker nodes will be attached to this security group. If not specified, a security group will be created.")
-	// TODO: configAddProviderOpenStackCmd.RegisterFlagCompletionFunc("securityGroup", ...)
-
 	configAddProviderOpenStackCmd.Flags().StringVar(&osNetwork, "network", "", "When specified, all worker nodes will be attached to this network. If not specified, a network, subnet & router will be created")
-	// TODO: configAddProviderOpenStackCmd.RegisterFlagCompletionFunc("network", ...)
-
 	configAddProviderOpenStackCmd.Flags().StringVar(&osSubnetID, "subnet", "", "Please specify a SubnetID that exists in your network")
-	// TODO: configAddProviderOpenStackCmd.RegisterFlagCompletionFunc("subnet", ...)
 }

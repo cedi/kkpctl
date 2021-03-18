@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/pkg/errors"
+	"github.com/cedi/kkpctl/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
@@ -20,28 +20,26 @@ var delClusterCmd = &cobra.Command{
 	Args:              cobra.ExactArgs(1),
 	ValidArgsFunction: getValidClusterArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		clusterID := args[0]
+
 		kkp, err := Config.GetKKPClient()
 		if err != nil {
 			return err
 		}
 
-		cluster, err := kkp.GetClusterInProject(args[0], projectID)
+		cluster, err := kkp.GetClusterInProject(clusterID, projectID)
 		if err != nil {
-			return errors.Wrap(err, "Error finding cluster")
+			return errors.Wrapf(err, "failed to find cluster %s which should be deleted", clusterID)
 		}
 
-		if datacenter == "" {
-			err = kkp.DeleteCluster(args[0], projectID, !noDeleteVolumes, !noDeleteLoadBalancers)
-		} else {
-			err = kkp.DeleteClusterInDC(args[0], projectID, datacenter, !noDeleteVolumes, !noDeleteLoadBalancers)
-		}
+		err = kkp.DeleteClusterInDC(clusterID, projectID, datacenter, !noDeleteVolumes, !noDeleteLoadBalancers)
 		if err != nil {
-			return errors.Wrap(err, "Error deleting cluster")
+			return errors.Wrapf(err, "failed to delete cluster %s in project %s", clusterID, projectID)
 		}
 
-		fmt.Printf("Successfully deleted Cluster %s (ClusterId: %s, ProjectId %s, Datacenter %s)\n",
+		fmt.Printf("Successfully deleted Cluster %s (%s) in ProjectId %s in Datacenter %s\n",
 			cluster.Name,
-			args[0],
+			cluster.ID,
 			projectID,
 			cluster.Spec.Cloud.DatacenterName,
 		)

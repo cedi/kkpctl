@@ -16,7 +16,7 @@ type OperatingSystemConfig struct {
 }
 
 // AddProviderConfig adds a new provider to the configuration
-func (o *OperatingSystemConfig) AddOperatingSystemSpec(osType OperatingSystemType, osSpec interface{}) error {
+func (o *OperatingSystemConfig) SetOperatingSystemSpec(osType OperatingSystemType, osSpec interface{}) error {
 	var ok bool
 
 	switch osType {

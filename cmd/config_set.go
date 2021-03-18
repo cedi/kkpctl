@@ -1,25 +1,24 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/cedi/kkpctl/pkg/config"
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
 var configSetCmd = &cobra.Command{
 	Use:   "set",
-	Short: "Lets you set the config of an specific type",
+	Short: "Set values in your configuration",
 }
 
 var configSetCloudCmd = &cobra.Command{
 	Use:   "cloud",
-	Short: "Lets you set the config of an specific type",
+	Short: "Set values in your cloud configuration",
 }
 
 var configSetBearerCmd = &cobra.Command{
-	Use:               "bearer token",
-	Short:             "Lets you set the bearer token in the config",
+	Use:               "bearer cloudName bearerToken",
+	Short:             "Set the bearer token for a cloud",
 	Args:              cobra.ExactArgs(2),
 	Example:           "kkpctl config set cloud bearer imke_prod sdfhjsldkfjsdklfhj...",
 	ValidArgsFunction: getValidCloudContextArgs,
@@ -27,15 +26,15 @@ var configSetBearerCmd = &cobra.Command{
 		cloudName := args[0]
 		bearer := args[1]
 
-		cloud, ok := Config.Cloud[cloudName]
-		if !ok {
-			return fmt.Errorf("unable to find cloud with name '%s'", cloudName)
+		cloud, err := Config.Cloud.Get(cloudName)
+		if err != nil {
+			return errors.Wrapf(err, "failed to set berar token for cloud %s", cloudName)
 		}
 
-		Config.Cloud[cloudName] = config.Cloud{
+		Config.Cloud.Set(cloudName, config.Cloud{
 			URL:    cloud.URL,
 			Bearer: bearer,
-		}
+		})
 
 		return Config.Save()
 	},

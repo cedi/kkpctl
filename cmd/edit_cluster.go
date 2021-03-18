@@ -6,7 +6,7 @@ import (
 
 var editClusterCmd = &cobra.Command{
 	Use:   "cluster",
-	Short: "Lets you edit a cluster",
+	Short: "Edit a cluster",
 }
 
 func init() {

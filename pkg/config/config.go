@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -32,6 +33,11 @@ func NewConfig() Config {
 		Context:  NewContext(),
 		Cloud:    make(map[string]Cloud),
 	}
+}
+
+// NewCloudConfig creates a new cloud config object
+func NewCloudConfig() CloudConfig {
+	return make(CloudConfig)
 }
 
 // Save saves a configuration
@@ -98,4 +104,18 @@ func (c *Config) GetKKPClient() (*client.Client, error) {
 	}
 
 	return kkp, nil
+}
+
+// Set sets a cloud
+func (c *CloudConfig) Set(name string, value Cloud) {
+	(*c)[name] = value
+}
+
+// Get gets a cloud
+func (c *CloudConfig) Get(name string) (*Cloud, error) {
+	cloud, ok := (*c)[name]
+	if !ok {
+		return nil, fmt.Errorf("cannot find cloud %s in your configuration", name)
+	}
+	return &cloud, nil
 }

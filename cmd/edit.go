@@ -6,7 +6,7 @@ import (
 
 var editCmd = &cobra.Command{
 	Use:   "edit",
-	Short: "Lets you edit an object of a specified resource type",
+	Short: "Edit an object of a specified resource type",
 }
 
 func init() {

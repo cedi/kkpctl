@@ -7,7 +7,7 @@ import (
 // getCmd represents the get command
 var describeCmd = &cobra.Command{
 	Use:   "describe",
-	Short: "Lets you describe an object of a specified resource type in greater detail",
+	Short: "Describe an object of a specified resource type in greater detail",
 }
 
 func init() {

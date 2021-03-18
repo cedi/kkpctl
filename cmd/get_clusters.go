@@ -21,37 +21,30 @@ var getClustersCmd = &cobra.Command{
 	Args:              cobra.MaximumNArgs(1),
 	ValidArgsFunction: getValidClusterArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		clusterID := ""
+		if len(args) == 1 {
+			clusterID = args[0]
+		}
+
 		kkp, err := Config.GetKKPClient()
 		if err != nil {
 			return err
 		}
 
 		var result interface{}
-		if len(args) == 0 || listAll {
-			if datacenter == "" && projectID == "" {
-				result, err = kkp.ListAllClusters(listAll)
-			} else if datacenter == "" && projectID != "" {
-				result, err = kkp.ListClustersInProject(projectID)
-			} else if datacenter != "" && projectID == "" {
-				result, err = kkp.ListClustersInDC(datacenter, listAll)
-			} else if datacenter != "" && projectID != "" {
-				result, err = kkp.ListClustersInProjectInDC(projectID, datacenter)
-			}
+		if clusterID == "" || listAll {
+			result, err = kkp.ListClustersInProjectInDC(projectID, datacenter)
 		} else {
-			if datacenter == "" {
-				result, err = kkp.GetClusterInProject(args[0], projectID)
-			} else {
-				result, err = kkp.GetClusterInProjectInDC(args[0], projectID, datacenter)
-			}
+			result, err = kkp.GetClusterInProjectInDC(clusterID, projectID, datacenter)
 		}
 
 		if err != nil {
-			return errors.Wrap(err, "Error fetching clusters")
+			return errors.Wrap(err, "unable to get cluster")
 		}
 
 		parsed, err := output.ParseOutput(result, outputType, sortBy)
 		if err != nil {
-			return errors.Wrap(err, "Error parsing clusters")
+			return errors.Wrap(err, "failed to parse cluster")
 		}
 		fmt.Print(parsed)
 

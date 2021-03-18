@@ -7,7 +7,7 @@ import (
 // addCmd represents the add command
 var configAddCmd = &cobra.Command{
 	Use:   "add",
-	Short: "Lets add a specific configuration object",
+	Short: "Add a specific configuration object",
 }
 
 func init() {

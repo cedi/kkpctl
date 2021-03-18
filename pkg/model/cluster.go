@@ -1,6 +1,8 @@
 package model
 
-import "github.com/kubermatic/go-kubermatic/models"
+import (
+	"github.com/kubermatic/go-kubermatic/models"
+)
 
 // NewCluster creates a new Cluster Object
 func NewCluster(name string, datacenter string, version string, labels map[string]string) *models.Cluster {
@@ -39,6 +41,26 @@ func NewCluster(name string, datacenter string, version string, labels map[strin
 				Vsphere:        &models.VSphereCloudSpec{},
 			},
 			Version: version,
+		},
+	}
+}
+
+// NewCreateClusterSpec creates a new models.CreateClusterSpec object
+func NewCreateClusterSpec(clusterName string, clusterType string, k8sVersion string, cloudSpec *models.CloudSpec, labels map[string]string, usePodNodeSelectorAdmissionPlugin bool, usePodSecurityPolicyAdmissionPlugin bool, enableAuditLogging bool) *models.CreateClusterSpec {
+	return &models.CreateClusterSpec{
+		Cluster: &models.Cluster{
+			Labels: labels,
+			Name:   clusterName,
+			Type:   clusterType,
+			Spec: &models.ClusterSpec{
+				UsePodNodeSelectorAdmissionPlugin:   usePodNodeSelectorAdmissionPlugin,
+				UsePodSecurityPolicyAdmissionPlugin: usePodSecurityPolicyAdmissionPlugin,
+				AuditLogging: &models.AuditLoggingSettings{
+					Enabled: enableAuditLogging,
+				},
+				Cloud:   cloudSpec,
+				Version: k8sVersion,
+			},
 		},
 	}
 }

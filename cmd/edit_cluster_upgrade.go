@@ -3,9 +3,8 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/cedi/kkpctl/pkg/errors"
 	"github.com/cedi/kkpctl/pkg/output"
-	"github.com/kubermatic/go-kubermatic/models"
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
@@ -21,37 +20,33 @@ var editClusterUpgradeCmd = &cobra.Command{
 	Args:              cobra.ExactArgs(1),
 	ValidArgsFunction: getValidClusterArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		clusterID := args[0]
+
 		kkp, err := Config.GetKKPClient()
 		if err != nil {
 			return err
 		}
 
-		var cluster models.Cluster
-		if datacenter == "" && projectID != "" {
-			cluster, err = kkp.GetClusterInProject(args[0], projectID)
-		} else {
-			cluster, err = kkp.GetClusterInProjectInDC(args[0], projectID, datacenter)
-		}
-
+		cluster, err := kkp.GetClusterInProjectInDC(clusterID, projectID, datacenter)
 		if err != nil {
-			return errors.Wrap(err, "failed to retrieve cluster")
+			return errors.Wrapf(err, "failed to get cluster %s in project %s", clusterID, projectID)
 		}
 
 		result, err := kkp.UpgradeCluster(toVersion, cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
 		if err != nil {
-			return errors.Wrap(err, "failed to upgrade cluster")
+			return errors.Wrapf(err, "failed to upgrade cluster %s to version %s", clusterID, toVersion)
 		}
 
 		if !noUpgradeWorkers {
 			err = kkp.UpgradeWorkerDeploymentVersion(toVersion, cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
 			if err != nil {
-				return errors.Wrap(err, "failed to upgrade worker nodes")
+				return errors.Wrapf(err, "failed to upgrade worker-nodes in cluster %s to version %s", clusterID, toVersion)
 			}
 		}
 
 		parsed, err := output.ParseOutput(result, outputType, sortBy)
 		if err != nil {
-			return errors.Wrap(err, "Error parsing clusters")
+			return errors.Wrapf(err, "failed to parse cluster %s", clusterID)
 		}
 		fmt.Print(parsed)
 

@@ -11,7 +11,7 @@ import (
 // clustersCmd represents the clusters command
 var getClusterVersionCmd = &cobra.Command{
 	Use:               "version",
-	Short:             "Lists all available Kubernetes Versions",
+	Short:             "Lists all available Kubernetes Versions in your KKP installation",
 	Example:           "kkpctl get version",
 	Args:              cobra.ExactArgs(0),
 	ValidArgsFunction: getValidDatacenterArgs,
@@ -24,12 +24,12 @@ var getClusterVersionCmd = &cobra.Command{
 		result, err := kkp.ListClusterVersions()
 
 		if err != nil {
-			return errors.Wrap(err, "Error fetching versions")
+			return errors.Wrap(err, "failed to get versions")
 		}
 
 		parsed, err := output.ParseOutput(result, outputType, sortBy)
 		if err != nil {
-			return errors.Wrap(err, "Error parsing versions")
+			return errors.Wrap(err, "failed parsing versions")
 		}
 
 		fmt.Print(parsed)

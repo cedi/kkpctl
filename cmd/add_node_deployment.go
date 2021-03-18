@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/cedi/kkpctl/pkg/model"
 	"github.com/cedi/kkpctl/pkg/utils"
-	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
@@ -22,55 +22,41 @@ var createNodeDeploymentCmd = &cobra.Command{
 	Use:     "nodedeployment name",
 	Short:   "Lets you create a new node deployment",
 	Args:    cobra.ExactArgs(1),
-	Example: "kkpctl add nodedeployment --project 6tmbnhdl7h --cluster qvjdddt72t --nodespec flatcar1 --operatingsystem flatcar --provider optimist first_node_deployment",
+	Example: "kkpctl add nodedeployment --project 6tmbnhdl7h --cluster qvjdddt72t --nodespec flatcar-m1micro --operatingsystem flatcar --provider optimist --labels \"size=micro\" my_node_deployment --replica 3",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		clusterName := args[0]
+		nodeDeploymentName := args[0]
 
 		kkp, err := Config.GetKKPClient()
 		if err != nil {
 			return err
 		}
 
-		var cluster models.Cluster
-		if datacenter == "" {
-			cluster, err = kkp.GetClusterInProject(clusterID, projectID)
-		} else if datacenter != "" && projectID != "" {
-			cluster, err = kkp.GetClusterInProjectInDC(clusterID, projectID, datacenter)
-		}
-
+		cluster, err := kkp.GetClusterInProjectInDC(clusterID, projectID, datacenter)
 		if err != nil {
-			return errors.Wrap(err, "could not fetch cluster")
+			return errors.Wrapf(err, "failed to find cluster %s in project %s to add a node deployment", clusterID, projectID)
 		}
 
 		clusterVersion, ok := cluster.Spec.Version.(string)
 		if !ok {
-			return fmt.Errorf("cluster version does not appear to be a string")
+			return fmt.Errorf("fatal: cluster version does not appear to be a string")
 		}
 
-		newNodeDp := models.NodeDeployment{
-			Name: args[0],
-			Spec: &models.NodeDeploymentSpec{
-				DynamicConfig: dynamicConfig,
-				Replicas:      &nodeReplica,
-				Template: &models.NodeSpec{
-					Labels:          utils.SplitLabelString(labels),
-					SSHUserName:     "",
-					Taints:          []*models.TaintSpec{},
-					Cloud:           Config.NodeSpec.GetNodeCloudSpec(nodeSpecName),
-					OperatingSystem: Config.OSSpec.GetOperatingSystemSpec(),
-					Versions: &models.NodeVersionInfo{
-						Kubelet: clusterVersion,
-					},
-				},
-			},
-		}
+		newNodeDp := model.NewNodeDeployment(
+			nodeDeploymentName,
+			clusterVersion,
+			nodeReplica,
+			dynamicConfig,
+			Config.NodeSpec.GetNodeCloudSpec(nodeSpecName),
+			Config.OSSpec.GetOperatingSystemSpec(),
+			utils.SplitLabelString(labels),
+		)
 
-		_, err = kkp.CreateNodeDeployment(&newNodeDp, clusterID, projectID, cluster.Spec.Cloud.DatacenterName)
+		nodeDp, err := kkp.CreateNodeDeployment(newNodeDp, clusterID, projectID, cluster.Spec.Cloud.DatacenterName)
 		if err != nil {
-			return errors.Wrap(err, "Error fetching projects")
+			return errors.Wrapf(err, "unable to create node deployment %s for cluster %s in project %s", nodeDeploymentName, clusterID, projectID)
 		}
 
-		fmt.Printf("Successfully created cluster '%s'\n", clusterName)
+		fmt.Printf("Successfully created node deployment '%s' for cluster %s in project %s\n", nodeDp.ID, clusterID, projectID)
 		return nil
 	},
 }

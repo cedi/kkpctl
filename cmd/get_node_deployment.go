@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/cedi/kkpctl/pkg/output"
-	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
@@ -17,38 +16,35 @@ var getNodeDeploymentCmd = &cobra.Command{
 	Args:              cobra.MaximumNArgs(1),
 	ValidArgsFunction: getValidNodeDeploymentArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
+		nodeDeploymentName := ""
+		if len(args) == 1 {
+			nodeDeploymentName = args[0]
+		}
+
 		kkp, err := Config.GetKKPClient()
 		if err != nil {
 			return err
 		}
 
-		var cluster models.Cluster
-		if datacenter == "" {
-			cluster, err = kkp.GetClusterInProject(clusterID, projectID)
-		} else if datacenter != "" && projectID != "" {
-			cluster, err = kkp.GetClusterInProjectInDC(clusterID, projectID, datacenter)
-		}
-
+		cluster, err := kkp.GetClusterInProjectInDC(clusterID, projectID, datacenter)
 		if err != nil {
-			return errors.Wrap(err, "could not fetch cluster")
+			return errors.Wrapf(err, "failed to get cluster %s in project", clusterID, projectID)
 		}
 
-		nodeDeployments := make([]models.NodeDeployment, 0)
+		var nodeDeployments interface{}
 		if len(args) == 0 {
 			nodeDeployments, err = kkp.GetNodeDeployments(clusterID, projectID, cluster.Spec.Cloud.DatacenterName)
 		} else {
-			var nodeDeployment models.NodeDeployment
-			nodeDeployment, err = kkp.GetNodeDeployment(args[0], clusterID, projectID, cluster.Spec.Cloud.DatacenterName)
-			nodeDeployments = append(nodeDeployments, nodeDeployment)
+			nodeDeployments, err = kkp.GetNodeDeployment(nodeDeploymentName, clusterID, projectID, cluster.Spec.Cloud.DatacenterName)
 		}
 
 		if err != nil {
-			return errors.Wrap(err, "Error fetching node deployment")
+			return errors.Wrapf(err, "failed to get node deployment %s for cluster %s in project %s", nodeDeploymentName, clusterID, projectID)
 		}
 
 		parsed, err := output.ParseOutput(nodeDeployments, outputType, sortBy)
 		if err != nil {
-			return errors.Wrap(err, "Error parsing datacenters")
+			return errors.Wrap(err, "failed to parse node deployment")
 		}
 
 		fmt.Print(parsed)
