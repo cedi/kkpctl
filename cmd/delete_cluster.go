@@ -9,8 +9,8 @@ import (
 )
 
 var (
-	deleteVolumes       bool
-	deleteLoadBalancers bool
+	noDeleteVolumes       bool
+	noDeleteLoadBalancers bool
 )
 
 // delProjectsCmd represents the projects command
@@ -33,9 +33,9 @@ var delClusterCmd = &cobra.Command{
 		}
 
 		if datacenter == "" {
-			err = kkp.DeleteCluster(args[0], projectID, deleteVolumes, deleteLoadBalancers)
+			err = kkp.DeleteCluster(args[0], projectID, !noDeleteVolumes, !noDeleteLoadBalancers)
 		} else {
-			err = kkp.DeleteClusterInDC(args[0], projectID, datacenter, deleteVolumes, deleteLoadBalancers)
+			err = kkp.DeleteClusterInDC(args[0], projectID, datacenter, !noDeleteVolumes, !noDeleteLoadBalancers)
 		}
 		if err != nil {
 			return errors.Wrap(err, "Error deleting cluster")
@@ -62,6 +62,6 @@ func init() {
 	delClusterCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter to delete the cluster in")
 	delClusterCmd.RegisterFlagCompletionFunc("datacenter", getValidDatacenterArgs)
 
-	delClusterCmd.Flags().BoolVar(&deleteVolumes, "delete-volumes", false, "Cleanup connected volumes (PVs and PCVs)")
-	delClusterCmd.Flags().BoolVar(&deleteLoadBalancers, "delete-loadbalancers", false, "Cleanup connected Load Balancers")
+	delClusterCmd.Flags().BoolVar(&noDeleteVolumes, "no-delete-volumes", false, "Do not cleanup connected volumes (PVs and PCVs)")
+	delClusterCmd.Flags().BoolVar(&noDeleteLoadBalancers, "no-delete-loadbalancers", false, "Do not cleanup connected Load Balancers")
 }
