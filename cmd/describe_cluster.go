@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/cedi/kkpctl/pkg/describe"
 	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/pkg/errors"
@@ -17,20 +16,15 @@ var describeClusterCmd = &cobra.Command{
 	Args:              cobra.ExactArgs(1),
 	ValidArgsFunction: getValidClusterArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		baseURL, apiToken := Config.GetCloudFromContext()
-		kkp, err := client.NewClient(baseURL, apiToken)
+		kkp, err := Config.GetKKPClient()
 		if err != nil {
-			return errors.New("Could not initialize Kubermatic API client")
+			return err
 		}
 
 		var cluster models.Cluster
-		if datacenter == "" && projectID == "" {
-			cluster, err = kkp.GetCluster(args[0], listAll)
-		} else if datacenter == "" && projectID != "" {
+		if datacenter == "" {
 			cluster, err = kkp.GetClusterInProject(args[0], projectID)
-		} else if datacenter != "" && projectID == "" {
-			cluster, err = kkp.GetClusterInDC(args[0], datacenter, listAll)
-		} else if datacenter != "" && projectID != "" {
+		} else {
 			cluster, err = kkp.GetClusterInProjectInDC(args[0], projectID, datacenter)
 		}
 

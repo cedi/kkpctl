@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -16,10 +15,9 @@ var deleteNodeDeploymentCmd = &cobra.Command{
 	Example:           "kkpctl delete nodedeployment --project 6tmbnhdl7h --cluster qvjdddt72t my_first_nodedeployment",
 	ValidArgsFunction: getValidNodeDeploymentArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		baseURL, apiToken := Config.GetCloudFromContext()
-		kkp, err := client.NewClient(baseURL, apiToken)
+		kkp, err := Config.GetKKPClient()
 		if err != nil {
-			return errors.New("Could not initialize Kubermatic API client")
+			return err
 		}
 
 		var cluster models.Cluster

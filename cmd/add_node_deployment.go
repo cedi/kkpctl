@@ -2,9 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"strings"
 
-	"github.com/cedi/kkpctl/pkg/client"
+	"github.com/cedi/kkpctl/pkg/utils"
 	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -27,10 +26,9 @@ var createNodeDeploymentCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		clusterName := args[0]
 
-		baseURL, apiToken := Config.GetCloudFromContext()
-		kkp, err := client.NewClient(baseURL, apiToken)
+		kkp, err := Config.GetKKPClient()
 		if err != nil {
-			return errors.Wrap(err, "could not initialize Kubermatic API client")
+			return err
 		}
 
 		var cluster models.Cluster
@@ -44,14 +42,6 @@ var createNodeDeploymentCmd = &cobra.Command{
 			return errors.Wrap(err, "could not fetch cluster")
 		}
 
-		mapLabels := make(map[string]string)
-		if labels != "" {
-			slicedLabels := strings.Split(labels, ",")
-			for _, slicedLabel := range slicedLabels {
-				splitLabel := strings.Split(slicedLabel, "=")
-				mapLabels[splitLabel[0]] = splitLabel[1]
-			}
-		}
 		clusterVersion, ok := cluster.Spec.Version.(string)
 		if !ok {
 			return fmt.Errorf("cluster version does not appear to be a string")
@@ -63,7 +53,7 @@ var createNodeDeploymentCmd = &cobra.Command{
 				DynamicConfig: dynamicConfig,
 				Replicas:      &nodeReplica,
 				Template: &models.NodeSpec{
-					Labels:          mapLabels,
+					Labels:          utils.SplitLabelString(labels),
 					SSHUserName:     "",
 					Taints:          []*models.TaintSpec{},
 					Cloud:           Config.NodeSpec.GetNodeCloudSpec(nodeSpecName),

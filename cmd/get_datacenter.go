@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/cedi/kkpctl/pkg/output"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -17,10 +16,9 @@ var getDatacenterCmd = &cobra.Command{
 	Args:              cobra.MaximumNArgs(1),
 	ValidArgsFunction: getValidDatacenterArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		baseURL, apiToken := Config.GetCloudFromContext()
-		kkp, err := client.NewClient(baseURL, apiToken)
+		kkp, err := Config.GetKKPClient()
 		if err != nil {
-			return errors.Wrap(err, "Could not initialize Kubermatic API client")
+			return err
 		}
 
 		var result interface{}

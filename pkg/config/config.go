@@ -5,6 +5,7 @@ import (
 	"os"
 	"path"
 
+	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v3"
 )
@@ -76,7 +77,7 @@ func ensureConfig() error {
 		config := NewConfig()
 		err = config.Save()
 		if err != nil {
-			return errors.Wrap(err, "Failed to write empty kkpctl config")
+			return errors.Wrap(err, "failed to write empty kkpctl config")
 		}
 	}
 
@@ -84,6 +85,17 @@ func ensureConfig() error {
 }
 
 // GetCloudFromContext returns a touple of cloud-url and bearer
-func (c *Config) GetCloudFromContext() (string, string) {
+func (c *Config) getCloudFromContext() (string, string) {
 	return c.Cloud[c.Context.CloudName].URL, c.Cloud[c.Context.CloudName].Bearer
+}
+
+// GetKKPClient returns a KKP Client for the currently configured cloud
+func (c *Config) GetKKPClient() (*client.Client, error) {
+	baseUrl, apiToken := c.getCloudFromContext()
+	kkp, err := client.NewClient(baseUrl, apiToken)
+	if err != nil {
+		return kkp, errors.Wrap(err, "could not initialize Kubermatic API client")
+	}
+
+	return kkp, nil
 }

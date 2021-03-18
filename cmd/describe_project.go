@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/cedi/kkpctl/pkg/describe"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -17,10 +16,9 @@ var describeProjectsCmd = &cobra.Command{
 	Args:              cobra.ExactArgs(1),
 	ValidArgsFunction: getValidProjectArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		baseURL, apiToken := Config.GetCloudFromContext()
-		kkp, err := client.NewClient(baseURL, apiToken)
+		kkp, err := Config.GetKKPClient()
 		if err != nil {
-			return errors.New("Could not initialize Kubermatic API client")
+			return err
 		}
 
 		project, err := kkp.GetProject(args[0])

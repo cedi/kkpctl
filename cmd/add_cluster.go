@@ -2,9 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"strings"
 
-	"github.com/cedi/kkpctl/pkg/client"
+	"github.com/cedi/kkpctl/pkg/utils"
 	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -27,24 +26,14 @@ var createClusterCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		clusterName := args[0]
 
-		baseURL, apiToken := Config.GetCloudFromContext()
-		kkp, err := client.NewClient(baseURL, apiToken)
+		kkp, err := Config.GetKKPClient()
 		if err != nil {
-			return errors.Wrap(err, "Could not initialize Kubermatic API client")
-		}
-
-		mapLabels := make(map[string]string)
-		if labels != "" {
-			slicedLabels := strings.Split(labels, ",")
-			for _, slicedLabel := range slicedLabels {
-				splitLabel := strings.Split(slicedLabel, "=")
-				mapLabels[splitLabel[0]] = splitLabel[1]
-			}
+			return err
 		}
 
 		newCluster := models.CreateClusterSpec{
 			Cluster: &models.Cluster{
-				Labels: mapLabels,
+				Labels: utils.SplitLabelString(labels),
 				Name:   clusterName,
 				Type:   clusterType,
 				Spec: &models.ClusterSpec{
@@ -59,12 +48,12 @@ var createClusterCmd = &cobra.Command{
 			},
 		}
 
-		_, err = kkp.CreateCluster(&newCluster, projectID, datacenter)
+		result, err := kkp.CreateCluster(&newCluster, projectID, datacenter)
 		if err != nil {
-			return errors.Wrap(err, "Error fetching projects")
+			return errors.Wrap(err, "error creating cluster")
 		}
 
-		fmt.Printf("Successfully created cluster '%s'\n", clusterName)
+		fmt.Printf("Successfully created cluster '%s' (%s)\n", clusterName, result.ID)
 		return nil
 	},
 }

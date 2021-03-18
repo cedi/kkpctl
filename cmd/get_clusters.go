@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/cedi/kkpctl/pkg/output"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -22,16 +21,15 @@ var getClustersCmd = &cobra.Command{
 	Args:              cobra.MaximumNArgs(1),
 	ValidArgsFunction: getValidClusterArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		baseURL, apiToken := Config.GetCloudFromContext()
-		kkp, err := client.NewClient(baseURL, apiToken)
+		kkp, err := Config.GetKKPClient()
 		if err != nil {
-			return errors.Wrap(err, "Could not initialize Kubermatic API client")
+			return err
 		}
 
 		var result interface{}
 		if len(args) == 0 || listAll {
 			if datacenter == "" && projectID == "" {
-				result, err = kkp.ListClusters(listAll)
+				result, err = kkp.ListAllClusters(listAll)
 			} else if datacenter == "" && projectID != "" {
 				result, err = kkp.ListClustersInProject(projectID)
 			} else if datacenter != "" && projectID == "" {
@@ -40,13 +38,9 @@ var getClustersCmd = &cobra.Command{
 				result, err = kkp.ListClustersInProjectInDC(projectID, datacenter)
 			}
 		} else {
-			if datacenter == "" && projectID == "" {
-				result, err = kkp.GetCluster(args[0], listAll)
-			} else if datacenter == "" && projectID != "" {
+			if datacenter == "" {
 				result, err = kkp.GetClusterInProject(args[0], projectID)
-			} else if datacenter != "" && projectID == "" {
-				result, err = kkp.GetClusterInDC(args[0], datacenter, listAll)
-			} else if datacenter != "" && projectID != "" {
+			} else {
 				result, err = kkp.GetClusterInProjectInDC(args[0], projectID, datacenter)
 			}
 		}
