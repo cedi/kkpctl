@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/cedi/kkpctl/pkg/errors"
 	"github.com/cedi/kkpctl/pkg/output"
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 

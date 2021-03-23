@@ -3,9 +3,9 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/cedi/kkpctl/pkg/errors"
 	"github.com/cedi/kkpctl/pkg/model"
 	"github.com/cedi/kkpctl/pkg/utils"
-	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 

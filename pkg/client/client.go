@@ -3,12 +3,13 @@ package client
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 
-	"github.com/pkg/errors"
+	"github.com/cedi/kkpctl/pkg/errors"
 )
 
 const (
@@ -30,7 +31,7 @@ type Client struct {
 func NewClient(baseURL string, bearer string) (*Client, error) {
 	parsedURL, err := url.Parse(baseURL + apiV1Path)
 	if err != nil {
-		return nil, errors.Wrap(err, "Failed parsing API URL "+baseURL+apiV1Path)
+		return nil, errors.Wrapf(err, "Failed parsing API URL %s%s ", baseURL, apiV1Path)
 	}
 
 	httpClient := &http.Client{}
@@ -55,7 +56,7 @@ func (c *Client) Do(req *http.Request, out interface{}) (*http.Response, error) 
 	}
 
 	if resp.StatusCode >= 299 {
-		return resp, errors.New(resp.Status)
+		return resp, fmt.Errorf("%v", resp.Status)
 	}
 
 	if resp.Header.Get("content-type") != "application/json" {

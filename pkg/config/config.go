@@ -7,7 +7,7 @@ import (
 	"path"
 
 	"github.com/cedi/kkpctl/pkg/client"
-	"github.com/pkg/errors"
+	"github.com/cedi/kkpctl/pkg/errors"
 	"gopkg.in/yaml.v3"
 )
 
