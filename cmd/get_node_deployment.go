@@ -28,7 +28,7 @@ var getNodeDeploymentCmd = &cobra.Command{
 
 		cluster, err := kkp.GetClusterInProjectInDC(clusterID, projectID, datacenter)
 		if err != nil {
-			return errors.Wrapf(err, "failed to get cluster %s in project", clusterID, projectID)
+			return errors.Wrapf(err, "failed to get cluster %s in project %s", clusterID, projectID)
 		}
 
 		var nodeDeployments interface{}

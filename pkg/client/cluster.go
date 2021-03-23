@@ -17,7 +17,7 @@ const (
 	upgradesPath      string = "upgrades"
 )
 
-// ListClusters lists all clusters
+// ListAllClusters lists all clusters
 //	all lists all clusters in all projects, if you have the permission to do so
 func (c *Client) ListAllClusters(all bool) ([]models.Cluster, error) {
 	result := make([]models.Cluster, 0)

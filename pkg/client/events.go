@@ -8,7 +8,7 @@ import (
 
 const eventsPath string = "events"
 
-// GetClusterHealth returns the health status of a cluster
+// GetEvents returns the events of a cluster
 func (c *Client) GetEvents(clusterID string, projectID string, dc string) ([]models.Event, error) {
 	var err error
 	result := make([]models.Event, 0)

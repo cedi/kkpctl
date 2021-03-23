@@ -2,13 +2,13 @@
 
 all: build
 
-build: build_dir fmt tidy
+build: build_dir fmt tidy vet
 	go build -race -o build/kkpctl ./main.go
 
-release: build_dir
+release: clean build_dir vet
 	go build -ldflags "-s -w" -o build/kkpctl ./main.go
 
-test: build_dir
+test: build_dir fmt tidy vet
 	go test -covermode=count -coverprofile=./build/profile.out ./...
 	if [ -f ./build/profile.out ]; then go tool cover -func=./build/profile.out; fi
 

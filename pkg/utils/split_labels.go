@@ -2,6 +2,7 @@ package utils
 
 import "strings"
 
+// SplitLabelString splits a string in the format `key=value` to map[string]string
 func SplitLabelString(labels string) map[string]string {
 	mapLabels := make(map[string]string)
 

@@ -7,14 +7,24 @@ import (
 	"github.com/kubermatic/go-kubermatic/models"
 )
 
+// OperatingSystemType is a string, describing the operation systm type
 type OperatingSystemType string
 
 const (
-	CentOS  OperatingSystemType = "centos"
+	// CentOS represents the CentOS Operating system
+	CentOS OperatingSystemType = "centos"
+
+	// Flatcar represents the Flatcar operating system
 	Flatcar OperatingSystemType = "flatcar"
-	Rhel    OperatingSystemType = "rhel"
-	Sles    OperatingSystemType = "sles"
-	Ubuntu  OperatingSystemType = "ubuntu"
+
+	// Rhel represents the Rhel operating system
+	Rhel OperatingSystemType = "rhel"
+
+	// Sles represents the Sles operating system
+	Sles OperatingSystemType = "sles"
+
+	// Ubuntu represents the Ubuntu operating system
+	Ubuntu OperatingSystemType = "ubuntu"
 )
 
 // CloudNodeConfig is used to identify the node spec for a cloud
@@ -73,7 +83,7 @@ func (c *CloudNodeConfig) GetAllNodeSpecNames() []string {
 	return providerNames
 }
 
-// AddProviderConfig adds a new provider to the configuration
+// AddCloudNodeSpec adds a new CloudNodeSpec to the configuration
 func (c *CloudNodeConfig) AddCloudNodeSpec(name string, nodeSpec interface{}) error {
 	if utils.IsOneOf(name, c.GetAllNodeSpecNames()) {
 		return fmt.Errorf("the nodespec name '%s' is already used", name)
@@ -142,6 +152,7 @@ func (c *CloudNodeConfig) AddCloudNodeSpec(name string, nodeSpec interface{}) er
 	return nil
 }
 
+// GetNodeCloudSpec gets the *models.NodeCloudSpec for the specified name from the CloudNodeConfig
 func (c *CloudNodeConfig) GetNodeCloudSpec(name string) *models.NodeCloudSpec {
 	nodeCloudSpec := &models.NodeCloudSpec{}
 

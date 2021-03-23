@@ -46,6 +46,7 @@ func (c *Client) GetNodeDeployment(nodeDeploymentID string, clusterID string, pr
 	return result, err
 }
 
+// CreateNodeDeployment creates a new node deployment on a cluster
 func (c *Client) CreateNodeDeployment(newNodeDeployment *models.NodeDeployment, clusterID string, projectID string, dc string) (models.NodeDeployment, error) {
 	result := models.NodeDeployment{}
 
@@ -63,6 +64,7 @@ func (c *Client) CreateNodeDeployment(newNodeDeployment *models.NodeDeployment, 
 	return result, err
 }
 
+// DeleteNodeDeployment delets a node deployment from a cluster
 func (c *Client) DeleteNodeDeployment(nodeDeploymentID string, clusterID string, projectID string, dc string) error {
 	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s/%s",
 		projectPath,
@@ -98,7 +100,7 @@ func (c *Client) GetNodeDeploymentNodes(nodeDeploymentID string, clusterID strin
 	return result, err
 }
 
-// GetNodeDeploymentNodes gets all nodes in a node deployment
+// GetNodeDeploymentEvents gets all nodes in a node deployment
 func (c *Client) GetNodeDeploymentEvents(nodeDeploymentID string, clusterID string, projectID string, dc string) ([]models.Event, error) {
 	result := make([]models.Event, 0)
 
@@ -118,7 +120,7 @@ func (c *Client) GetNodeDeploymentEvents(nodeDeploymentID string, clusterID stri
 	return result, err
 }
 
-// GetNodeDeploymentNodes gets all nodes in a node deployment
+// UpgradeWorkerDeploymentVersion gets all versions which are valid to upgrade to from a node deployment
 func (c *Client) UpgradeWorkerDeploymentVersion(toVersion string, clusterID string, projectID string, dc string) error {
 
 	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s/%s",

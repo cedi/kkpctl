@@ -15,7 +15,7 @@ type OperatingSystemConfig struct {
 	Ubuntu  *models.UbuntuSpec  `json:"ubuntu,omitempty"`
 }
 
-// AddProviderConfig adds a new provider to the configuration
+// SetOperatingSystemSpec sets the OperatingSystemType type to the OperatingSystemConfig
 func (o *OperatingSystemConfig) SetOperatingSystemSpec(osType OperatingSystemType, osSpec interface{}) error {
 	var ok bool
 
@@ -39,6 +39,7 @@ func (o *OperatingSystemConfig) SetOperatingSystemSpec(osType OperatingSystemTyp
 	return nil
 }
 
+// GetOperatingSystemSpec returns a *models.OperatingSystemSpec object from the OperatingSystemConfig
 func (o *OperatingSystemConfig) GetOperatingSystemSpec() *models.OperatingSystemSpec {
 	return &models.OperatingSystemSpec{
 		Centos:  o.CentOS,
@@ -49,6 +50,7 @@ func (o *OperatingSystemConfig) GetOperatingSystemSpec() *models.OperatingSystem
 	}
 }
 
+// GetValidOSSpecNames returns an []OperatingSystemType from the OperatingSystemConfig
 func (o *OperatingSystemConfig) GetValidOSSpecNames() []OperatingSystemType {
 	result := make([]OperatingSystemType, 0)
 
