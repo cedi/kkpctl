@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/cedi/kkpctl/pkg/describe"
-	"github.com/cedi/kkpctl/pkg/errors"
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 

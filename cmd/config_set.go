@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/cedi/kkpctl/pkg/config"
-	"github.com/cedi/kkpctl/pkg/errors"
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 

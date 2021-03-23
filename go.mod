@@ -6,7 +6,6 @@ require (
 	github.com/dustin/go-humanize v1.0.0 // indirect
 	github.com/go-openapi/errors v0.20.0 // indirect
 	github.com/go-openapi/validate v0.20.2 // indirect
-	github.com/go-test/deep v1.0.7
 	github.com/google/go-cmp v0.5.4 // indirect
 	github.com/google/uuid v1.1.2 // indirect
 	github.com/kataras/tablewriter v0.0.0-20180708051242-e063d29b7c23 // indirect

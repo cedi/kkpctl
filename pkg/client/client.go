@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/cedi/kkpctl/pkg/errors"
+	"github.com/pkg/errors"
 )
 
 const (

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"github.com/cedi/kkpctl/pkg/errors"
 	"github.com/cedi/kkpctl/pkg/model"
 	"github.com/kubermatic/go-kubermatic/models"
+	"github.com/pkg/errors"
 )
 
 const (

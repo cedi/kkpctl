@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"github.com/cedi/kkpctl/pkg/config"
-	"github.com/cedi/kkpctl/pkg/errors"
 	"github.com/kubermatic/go-kubermatic/models"
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
 
