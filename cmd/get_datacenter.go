@@ -18,7 +18,7 @@ var getDatacenterCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		dc := ""
 		if len(args) == 1 {
-			dc = args[1]
+			dc = args[0]
 		}
 
 		kkp, err := Config.GetKKPClient()
