@@ -143,3 +143,55 @@ func (c *Client) UpgradeWorkerDeploymentVersion(toVersion string, clusterID stri
 	_, err := c.Put(requestURL, contentTypeJSON, updateVersion, nil)
 	return err
 }
+
+// AreAllWorkerDeploymentsReady gets all worker deployments and checks if their unavailable replica count is 0
+//	returns true if all WorkerDeployments are ready
+func (c *Client) AreAllWorkerDeploymentsReady(clusterID string, projectID string, dc string) (bool, error) {
+	var nodeDeployments []models.NodeDeployment
+
+	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s",
+		projectPath,
+		projectID,
+		datacenterPath,
+		dc,
+		clusterPath,
+		clusterID,
+		nodeDeploymentPath,
+	)
+
+	_, err := c.Get(requestURL, nodeDeployments)
+	if err != nil {
+		return false, err
+	}
+
+	for _, nodeDeployment := range nodeDeployments {
+		if nodeDeployment.Status.UnavailableReplicas != 0 {
+			return false, nil
+		}
+	}
+
+	return true, nil
+}
+
+// IsWorkerDeploymentsReady gets the specified worker deployment and checks if the unavailable replica count is 0
+func (c *Client) IsWorkerDeploymentsReady(nodeDeploymentID string, clusterID string, projectID string, dc string) (bool, error) {
+	var nodeDeployment models.NodeDeployment
+
+	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s/%s",
+		projectPath,
+		projectID,
+		datacenterPath,
+		dc,
+		clusterPath,
+		clusterID,
+		nodeDeploymentPath,
+		nodeDeploymentID,
+	)
+
+	_, err := c.Get(requestURL, nodeDeployment)
+	if err != nil {
+		return false, err
+	}
+
+	return nodeDeployment.Status.UnavailableReplicas == 0, nil
+}
