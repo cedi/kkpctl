@@ -250,7 +250,7 @@ func (c *Client) CreateCluster(newCluster *models.CreateClusterSpec, projectID s
 	}
 
 	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s", projectPath, projectID, datacenterPath, dc, clusterPath)
-	_, err := c.Post(requestURL, contentTypeJSON, newCluster, result)
+	_, err := c.Post(requestURL, contentTypeJSON, newCluster, &result)
 	if err != nil {
 		return result, errors.Wrapf(err, "failed to create cluster %s in project %s in datacenter %s", newCluster.Cluster.Name, projectID, dc)
 	}
