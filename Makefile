@@ -5,7 +5,7 @@ all: build
 build: build_dir fmt tidy vet
 	go build -race -o build/kkpctl ./main.go
 
-release: clean build_dir vet
+release: clean build_dir
 	go build -ldflags "-s -w" -o build/kkpctl ./main.go
 
 test: build_dir fmt tidy vet
