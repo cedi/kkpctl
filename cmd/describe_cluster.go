@@ -57,7 +57,7 @@ var describeClusterCmd = &cobra.Command{
 		if err != nil {
 			return errors.Wrapf(err, "failed to describe cluster %s in project %s", clusterID, projectID)
 		}
-		fmt.Print(parsed)
+		fmt.Println(parsed)
 
 		return nil
 	},
