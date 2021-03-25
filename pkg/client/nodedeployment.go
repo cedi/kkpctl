@@ -159,7 +159,7 @@ func (c *Client) AreAllWorkerDeploymentsReady(clusterID string, projectID string
 		nodeDeploymentPath,
 	)
 
-	_, err := c.Get(requestURL, nodeDeployments)
+	_, err := c.Get(requestURL, &nodeDeployments)
 	if err != nil {
 		return false, err
 	}
@@ -188,7 +188,7 @@ func (c *Client) IsWorkerDeploymentsReady(nodeDeploymentID string, clusterID str
 		nodeDeploymentID,
 	)
 
-	_, err := c.Get(requestURL, nodeDeployment)
+	_, err := c.Get(requestURL, &nodeDeployment)
 	if err != nil {
 		return false, err
 	}
