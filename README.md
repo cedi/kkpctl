@@ -164,7 +164,7 @@ kkpctl describe cluster --project 6tmbnhdl7h qvjdddt72t
 1. Connect to your cluster, once it's ready
 
 ```bash
-kkpctl get kubeconfig --project testproject qvjdddt72t -w
+kkpctl get kubeconfig --project 6tmbnhdl7h qvjdddt72t -w
 export KUBECONFIG=./kubeconfig-admin-qvjdddt72t
 kubectl get pods -A
 ```
