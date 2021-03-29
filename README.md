@@ -103,6 +103,7 @@ kkpctl config add provider openstack --username "user@email.de" --password "my-s
 ```bash
 # Create an empty configuration
 kkpctl config generate -w
+
 # Edit the just created configuration with your favorite Editor and fill in the details yourself
 $EDITOR ~/.config/kkpctl/config.yaml
 ```
