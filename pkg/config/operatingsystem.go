@@ -15,8 +15,8 @@ type OperatingSystemConfig struct {
 	Ubuntu  *models.UbuntuSpec  `json:"ubuntu,omitempty"`
 }
 
-// NewOSSpec creates a new, empty OperatingSystemConfig
-func NewOSSpec() *OperatingSystemConfig {
+// NewOSSpecConfig creates a new, empty OperatingSystemConfig
+func NewOSSpecConfig() *OperatingSystemConfig {
 	return &OperatingSystemConfig{
 		CentOS: &models.CentOSSpec{
 			DistUpgradeOnBoot: false,

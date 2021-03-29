@@ -26,7 +26,7 @@ var configAddOSNodeSpecCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		name := args[0]
 
-		err := Config.NodeSpec.AddCloudNodeSpec(name, models.OpenstackNodeSpec{
+		err := Config.NodeSpec.AddCloudNodeSpec(name, &models.OpenstackNodeSpec{
 			Flavor:        &flavor,
 			Image:         &image,
 			UseFloatingIP: useFloatingIP,

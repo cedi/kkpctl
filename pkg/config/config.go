@@ -28,7 +28,8 @@ func NewConfig() *Config {
 		Provider: NewProvider(),
 		Context:  NewContext(),
 		Cloud:    NewCloudConfig(),
-		OSSpec:   NewOSSpec(),
+		OSSpec:   NewOSSpecConfig(),
+		NodeSpec: NewNodeSpecConfig(),
 	}
 }
 
