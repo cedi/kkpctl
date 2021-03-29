@@ -104,7 +104,7 @@ kkpctl config add provider openstack --username "user@email.de" --password "my-s
 # Create an empty configuration
 kkpctl config generate -w
 # Edit the just created configuration with your favorite Editor and fill in the details yourself
-editor ~/.config/kkpctl/config.yaml
+$EDITOR ~/.config/kkpctl/config.yaml
 ```
 
 ## Add your KKP Cloud
