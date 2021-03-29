@@ -50,7 +50,7 @@ func (c *Config) Save() error {
 
 // Read reads the config file and creates a empty config file if could not find a config file at the given path
 func Read() (*Config, error) {
-	err := ensureConfig()
+	err := EnsureConfig()
 	if err != nil {
 		return NewConfig(), errors.Wrap(err, "Failed to read kkpctl config")
 	}
@@ -68,7 +68,7 @@ func Read() (*Config, error) {
 	return config, nil
 }
 
-func ensureConfig() error {
+func EnsureConfig() error {
 	if _, err := os.Stat(ConfigPath); os.IsNotExist(err) {
 		path, _ := path.Split(ConfigPath)
 		os.MkdirAll(path, 0640)
