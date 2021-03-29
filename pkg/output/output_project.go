@@ -39,7 +39,7 @@ func (r projectRender) ParseObject(inputObj interface{}, output string) (string,
 
 func (r projectRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
 	var err error
-	var parsedOutput []byte
+	parsedOutput := make([]byte, 0)
 
 	objects, ok := inputObj.([]models.Project)
 	if !ok {

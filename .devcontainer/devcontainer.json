@@ -55,7 +55,9 @@
 		},
 		"codeQL.runningQueries.memory": 2048,
         "codeQL.runningQueries.debug": true,
-		"git.autofetch": true
+		"git.autofetch": true,
+		"editor.renderFinalNewline": true,
+		"editor.codeLens": true
 	},
 
 	// Add the IDs of extensions you want installed when the container is created.
@@ -63,6 +65,11 @@
 		"golang.Go",
 		"ms-azuretools.vscode-docker",
 		"github.vscode-codeql",
+		"davidanson.vscode-markdownlint",
+        "shardulm94.trailing-spaces",
+		"Tabnine.tabnine-vscode",
+		"github.vscode-pull-request-github",
+		"eamodio.gitlens"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.

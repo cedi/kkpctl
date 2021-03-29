@@ -17,7 +17,7 @@ type OperatingSystemConfig struct {
 
 // SetOperatingSystemSpec sets the OperatingSystemType type to the OperatingSystemConfig
 func (o *OperatingSystemConfig) SetOperatingSystemSpec(osType OperatingSystemType, osSpec interface{}) error {
-	var ok bool
+	ok := false
 
 	switch osType {
 	case CentOS:

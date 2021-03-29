@@ -35,7 +35,7 @@ func (r datacenterRender) ParseObject(inputObject interface{}, output string) (s
 
 func (r datacenterRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
 	var err error
-	var parsedOutput []byte
+	parsedOutput := make([]byte, 0)
 
 	objects, ok := inputObj.([]models.Datacenter)
 	if !ok {

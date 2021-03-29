@@ -27,8 +27,8 @@ type Config struct {
 }
 
 // NewConfig creates a new, empty, config
-func NewConfig() Config {
-	return Config{
+func NewConfig() *Config {
+	return &Config{
 		Provider: NewProvider(),
 		Context:  NewContext(),
 		Cloud:    make(map[string]Cloud),
@@ -56,7 +56,7 @@ func (c *Config) Save() error {
 }
 
 // Read reads the config file and creates a empty config file if could not find a config file at the given path
-func Read() (Config, error) {
+func Read() (*Config, error) {
 	err := ensureConfig()
 	if err != nil {
 		return NewConfig(), errors.Wrap(err, "Failed to read kkpctl config")
@@ -67,8 +67,8 @@ func Read() (Config, error) {
 		return NewConfig(), errors.Wrap(err, "Failed to read kkpctl config")
 	}
 
-	var config Config
-	if err := yaml.Unmarshal(data, &config); err != nil {
+	config := &Config{}
+	if err := yaml.Unmarshal(data, config); err != nil {
 		return NewConfig(), errors.Wrap(err, "Failed to parse kkpctl config")
 	}
 

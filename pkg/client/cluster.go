@@ -107,8 +107,8 @@ func (c *Client) ListClustersInProjectInDC(projectID string, dc string) ([]model
 
 // GetCluster gets a clusters in a given Project
 //	clusterID the clusterID to lookup
-func (c *Client) GetCluster(clusterID string, listAll bool) (models.Cluster, error) {
-	var result models.Cluster
+func (c *Client) GetCluster(clusterID string, listAll bool) (*models.Cluster, error) {
+	result := &models.Cluster{}
 
 	if clusterID == "" {
 		return result, fmt.Errorf("failed to get cluster: no clusterID specified")
@@ -122,7 +122,7 @@ func (c *Client) GetCluster(clusterID string, listAll bool) (models.Cluster, err
 	found := false
 	for _, cluster := range clusters {
 		if cluster.ID == clusterID {
-			result = cluster
+			result = &cluster
 			found = true
 			break
 		}
@@ -138,8 +138,8 @@ func (c *Client) GetCluster(clusterID string, listAll bool) (models.Cluster, err
 // GetClusterInDC gets a clusters in a given Project
 //	clusterID the clusterID to lookup
 //	dc the datacenter in which to search for the cluster in
-func (c *Client) GetClusterInDC(clusterID string, dc string, listAll bool) (models.Cluster, error) {
-	var result models.Cluster
+func (c *Client) GetClusterInDC(clusterID string, dc string, listAll bool) (*models.Cluster, error) {
+	result := &models.Cluster{}
 
 	if clusterID == "" {
 		return result, fmt.Errorf("failed to get cluster in datacenter: no clusterID specified")
@@ -157,7 +157,7 @@ func (c *Client) GetClusterInDC(clusterID string, dc string, listAll bool) (mode
 	found := false
 	for _, cluster := range clusters {
 		if cluster.ID == clusterID {
-			result = cluster
+			result = &cluster
 			found = true
 			break
 		}
@@ -173,8 +173,8 @@ func (c *Client) GetClusterInDC(clusterID string, dc string, listAll bool) (mode
 // GetClusterInProject gets a clusters in a given Project
 //	clusterID the clusterID to lookup
 //	projectID the projectID in which to search the cluster in
-func (c *Client) GetClusterInProject(clusterID string, projectID string) (models.Cluster, error) {
-	result := models.Cluster{}
+func (c *Client) GetClusterInProject(clusterID string, projectID string) (*models.Cluster, error) {
+	result := &models.Cluster{}
 
 	if clusterID == "" {
 		return result, fmt.Errorf("failed to get cluster in project: no clusterID specified")
@@ -192,7 +192,7 @@ func (c *Client) GetClusterInProject(clusterID string, projectID string) (models
 	found := false
 	for _, cluster := range clusters {
 		if cluster.ID == clusterID {
-			result = cluster
+			result = &cluster
 			found = true
 			break
 		}
@@ -209,8 +209,8 @@ func (c *Client) GetClusterInProject(clusterID string, projectID string) (models
 //	clusterID the clusterID to lookup
 //	projectID the projectID in which to search the cluster in
 //	dc the datacenter in which to search for the cluster in
-func (c *Client) GetClusterInProjectInDC(clusterID string, projectID string, dc string) (models.Cluster, error) {
-	result := models.Cluster{}
+func (c *Client) GetClusterInProjectInDC(clusterID string, projectID string, dc string) (*models.Cluster, error) {
+	result := &models.Cluster{}
 
 	if clusterID == "" {
 		return result, fmt.Errorf("failed to get cluster in project in datacenter: no clusterID specified")
@@ -225,7 +225,7 @@ func (c *Client) GetClusterInProjectInDC(clusterID string, projectID string, dc 
 	}
 
 	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s", projectPath, projectID, datacenterPath, dc, clusterPath, clusterID)
-	_, err := c.Get(requestURL, &result)
+	_, err := c.Get(requestURL, result)
 	if err != nil {
 		return result, errors.Wrapf(err, "failed to get cluster %s in project %s in datacenter %s", clusterID, projectID, dc)
 	}
@@ -406,8 +406,8 @@ func (c *Client) GetClusterUpgradeVersions(clusterID string, projectID string, d
 }
 
 // UpgradeCluster upgrades a cluster to a specified version
-func (c *Client) UpgradeCluster(toVersion string, clusterID string, projectID string, dc string) (models.Cluster, error) {
-	result := models.Cluster{}
+func (c *Client) UpgradeCluster(toVersion string, clusterID string, projectID string, dc string) (*models.Cluster, error) {
+	result := &models.Cluster{}
 
 	if clusterID == "" {
 		return result, fmt.Errorf("failed to upgrade cluster: no clusterID given")
@@ -429,6 +429,6 @@ func (c *Client) UpgradeCluster(toVersion string, clusterID string, projectID st
 	cluster.Spec.Version = toVersion
 
 	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s", projectPath, projectID, datacenterPath, dc, clusterPath, clusterID)
-	_, err = c.Patch(requestURL, contentTypeJSON, cluster, &result)
+	_, err = c.Patch(requestURL, contentTypeJSON, cluster, result)
 	return result, errors.Wrapf(err, "failed to upgrade cluster %s in project %s in datacenter %s", clusterID, projectID, dc)
 }

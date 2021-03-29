@@ -29,8 +29,8 @@ func (c *Client) GetNodeDeployments(clusterID string, projectID string, dc strin
 }
 
 // GetNodeDeployment lists all node deployments for a cluster
-func (c *Client) GetNodeDeployment(nodeDeploymentID string, clusterID string, projectID string, dc string) (models.NodeDeployment, error) {
-	result := models.NodeDeployment{}
+func (c *Client) GetNodeDeployment(nodeDeploymentID string, clusterID string, projectID string, dc string) (*models.NodeDeployment, error) {
+	result := &models.NodeDeployment{}
 
 	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s/%s",
 		projectPath,
@@ -42,7 +42,7 @@ func (c *Client) GetNodeDeployment(nodeDeploymentID string, clusterID string, pr
 		nodeDeploymentPath,
 		nodeDeploymentID,
 	)
-	_, err := c.Get(requestURL, &result)
+	_, err := c.Get(requestURL, result)
 	return result, err
 }
 
@@ -147,7 +147,7 @@ func (c *Client) UpgradeWorkerDeploymentVersion(toVersion string, clusterID stri
 // AreAllWorkerDeploymentsReady gets all worker deployments and checks if their unavailable replica count is 0
 //	returns true if all WorkerDeployments are ready
 func (c *Client) AreAllWorkerDeploymentsReady(clusterID string, projectID string, dc string) (bool, error) {
-	var nodeDeployments []models.NodeDeployment
+	nodeDeployments := make([]models.NodeDeployment, 0)
 
 	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s",
 		projectPath,
@@ -175,7 +175,7 @@ func (c *Client) AreAllWorkerDeploymentsReady(clusterID string, projectID string
 
 // IsWorkerDeploymentsReady gets the specified worker deployment and checks if the unavailable replica count is 0
 func (c *Client) IsWorkerDeploymentsReady(nodeDeploymentID string, clusterID string, projectID string, dc string) (bool, error) {
-	var nodeDeployment models.NodeDeployment
+	nodeDeployment := &models.NodeDeployment{}
 
 	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s/%s",
 		projectPath,
@@ -188,7 +188,7 @@ func (c *Client) IsWorkerDeploymentsReady(nodeDeploymentID string, clusterID str
 		nodeDeploymentID,
 	)
 
-	_, err := c.Get(requestURL, &nodeDeployment)
+	_, err := c.Get(requestURL, nodeDeployment)
 	if err != nil {
 		return false, err
 	}

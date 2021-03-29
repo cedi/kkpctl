@@ -20,7 +20,7 @@ type configCloudRender struct {
 
 func (r configCloudRender) ParseObject(inputObj interface{}, output string) (string, error) {
 	var err error
-	var parsedOutput []byte
+	parsedOutput := make([]byte, 0)
 	var cfg config.CloudConfig
 
 	switch object := inputObj.(type) {

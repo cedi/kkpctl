@@ -70,7 +70,7 @@ func (c *Client) Do(req *http.Request, out interface{}) (*http.Response, error) 
 		return nil, err
 	}
 
-	err = json.Unmarshal(body, &out)
+	err = json.Unmarshal(body, out)
 	if err != nil {
 		return resp, errors.Wrap(err, "Unable parsing response")
 	}

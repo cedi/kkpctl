@@ -40,7 +40,7 @@ func (r nodeDeploymentRender) ParseObject(inputObj interface{}, output string) (
 
 func (r nodeDeploymentRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
 	var err error
-	var parsedOutput []byte
+	parsedOutput := make([]byte, 0)
 
 	objects, ok := inputObj.([]models.NodeDeployment)
 	if !ok {

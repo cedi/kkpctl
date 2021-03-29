@@ -105,7 +105,7 @@ func getValidClusterArgs(cmd *cobra.Command, args []string, toComplete string) (
 		return completions, cobra.ShellCompDirectiveError
 	}
 
-	var projects []models.Project
+	projects := make([]models.Project, 0)
 
 	projectStr, err := cmd.Flags().GetString("project")
 	if err != nil {
@@ -120,11 +120,11 @@ func getValidClusterArgs(cmd *cobra.Command, args []string, toComplete string) (
 	} else {
 		project, err := kkp.GetProject(projectStr)
 		if err == nil {
-			projects = append(projects, project)
+			projects = append(projects, *project)
 		}
 	}
 
-	var clusters []models.Cluster
+	clusters := make([]models.Cluster, 0)
 
 	for _, projectTmp := range projects {
 		clusterTmp, _ := kkp.ListClustersInProject(projectTmp.ID)
@@ -159,7 +159,7 @@ func getValidDatacenterArgs(cmd *cobra.Command, args []string, toComplete string
 			cluster, err := kkp.GetClusterInProject(args[0], projectStr)
 			if err == nil {
 				datacenter, _ := kkp.GetDatacenter(cluster.Spec.Cloud.DatacenterName)
-				datacenters = append(datacenters, datacenter)
+				datacenters = append(datacenters, *datacenter)
 			}
 		}
 	}
@@ -286,7 +286,7 @@ func getValidNodeDeploymentArgs(cmd *cobra.Command, args []string, toComplete st
 		return completions, cobra.ShellCompDirectiveNoFileComp
 	}
 
-	var cluster models.Cluster
+	var cluster *models.Cluster
 	if dc == "" {
 		cluster, err = kkp.GetClusterInProject(clusterID, projectID)
 	} else {
@@ -336,7 +336,7 @@ func getValidToVersionArgs(cmd *cobra.Command, args []string, toComplete string)
 		return completions, cobra.ShellCompDirectiveNoFileComp
 	}
 
-	var cluster models.Cluster
+	var cluster *models.Cluster
 	if dc == "" {
 		cluster, err = kkp.GetClusterInProject(clusterID, projectID)
 	} else {

@@ -36,38 +36,42 @@ func init() {
 	// KKP Project
 	parser.AddCollectionParser(reflect.TypeOf([]models.Project{}), projectRender{})
 	parser.AddObjectParser(reflect.TypeOf(models.Project{}), projectRender{})
+	parser.AddObjectParser(reflect.TypeOf(&models.Project{}), projectRender{})
+
+	// Datacenter
+	parser.AddCollectionParser(reflect.TypeOf([]models.Datacenter{}), datacenterRender{})
+	parser.AddObjectParser(reflect.TypeOf(models.Datacenter{}), datacenterRender{})
+	parser.AddObjectParser(reflect.TypeOf(&models.Datacenter{}), datacenterRender{})
+
+	// KKP Clusters
+	parser.AddCollectionParser(reflect.TypeOf([]models.Cluster{}), clusterRender{})
+	parser.AddObjectParser(reflect.TypeOf(models.Cluster{}), clusterRender{})
+	parser.AddObjectParser(reflect.TypeOf(&models.Cluster{}), clusterRender{})
+
+	// Cluster Versions
+	parser.AddCollectionParser(reflect.TypeOf(model.VersionList{}), clusterVersionRender{})
+	parser.AddObjectParser(reflect.TypeOf(model.Version{}), clusterVersionRender{})
+	parser.AddObjectParser(reflect.TypeOf(&model.Version{}), clusterVersionRender{})
+
+	// ClusterHealth
+	parser.AddObjectParser(reflect.TypeOf(&models.ClusterHealth{}), clusterHealthRender{})
+
+	// Events
+	parser.AddCollectionParser(reflect.TypeOf([]models.Event{}), eventRender{})
 
 	// Node Deployments
 	parser.AddCollectionParser(reflect.TypeOf([]models.NodeDeployment{}), nodeDeploymentRender{})
 	parser.AddObjectParser(reflect.TypeOf(models.NodeDeployment{}), nodeDeploymentRender{})
 	parser.AddObjectParser(reflect.TypeOf(&models.NodeDeployment{}), nodeDeploymentRender{})
 
-	// Datacenter
-	parser.AddCollectionParser(reflect.TypeOf([]models.Datacenter{}), datacenterRender{})
-	parser.AddObjectParser(reflect.TypeOf(models.Datacenter{}), datacenterRender{})
-
-	// Events
-	parser.AddCollectionParser(reflect.TypeOf([]models.Event{}), eventRender{})
+	// Node
+	parser.AddCollectionParser(reflect.TypeOf([]models.Node{}), nodeRender{})
+	parser.AddObjectParser(reflect.TypeOf(models.Node{}), nodeRender{})
+	parser.AddObjectParser(reflect.TypeOf(&models.Node{}), nodeRender{})
 
 	// Node Taints
-	parser.AddObjectParser(reflect.TypeOf(&models.TaintSpec{}), taintRender{})
 	parser.AddCollectionParser(reflect.TypeOf([]*models.TaintSpec{}), taintRender{})
-
-	// Node
-	parser.AddObjectParser(reflect.TypeOf(models.Node{}), nodeRender{})
-	parser.AddCollectionParser(reflect.TypeOf([]models.Node{}), nodeRender{})
-
-	// KKP Clusters
-	parser.AddCollectionParser(reflect.TypeOf([]models.Cluster{}), clusterRender{})
-	parser.AddObjectParser(reflect.TypeOf(&models.Cluster{}), clusterRender{})
-	parser.AddObjectParser(reflect.TypeOf(models.Cluster{}), clusterRender{})
-
-	// Cluster Versions
-	parser.AddCollectionParser(reflect.TypeOf(model.VersionList{}), clusterVersionRender{})
-	parser.AddObjectParser(reflect.TypeOf(model.Version{}), clusterVersionRender{})
-
-	// ClusterHealth
-	parser.AddObjectParser(reflect.TypeOf(&models.ClusterHealth{}), clusterHealthRender{})
+	parser.AddObjectParser(reflect.TypeOf(&models.TaintSpec{}), taintRender{})
 
 	// Config
 	parser.AddObjectParser(reflect.TypeOf(config.CloudConfig{}), configCloudRender{})

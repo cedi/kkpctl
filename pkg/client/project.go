@@ -31,9 +31,9 @@ func (c *Client) ListProjects(all bool) ([]models.Project, error) {
 }
 
 // GetProject gets a specific project
-func (c *Client) GetProject(projectID string) (models.Project, error) {
-	result := models.Project{}
-	_, err := c.Get(fmt.Sprintf("%s/%s", projectPath, projectID), &result)
+func (c *Client) GetProject(projectID string) (*models.Project, error) {
+	result := &models.Project{}
+	_, err := c.Get(fmt.Sprintf("%s/%s", projectPath, projectID), result)
 	if err != nil {
 		return result, err
 	}
@@ -42,16 +42,16 @@ func (c *Client) GetProject(projectID string) (models.Project, error) {
 }
 
 // CreateProject creates a new project with the given name and labels
-func (c *Client) CreateProject(name string, labels map[string]string) (models.Project, error) {
+func (c *Client) CreateProject(name string, labels map[string]string) (*models.Project, error) {
 	newProject := models.Project{
 		Name:   name,
 		Labels: labels,
 	}
 
-	result := models.Project{}
-	_, err := c.Post(projectPath, contentTypeJSON, newProject, &result)
+	result := &models.Project{}
+	_, err := c.Post(projectPath, contentTypeJSON, newProject, result)
 	if err != nil {
-		return models.Project{}, err
+		return &models.Project{}, err
 	}
 
 	return result, nil

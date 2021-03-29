@@ -11,7 +11,7 @@ import (
 
 var (
 	// Config holds the global configuration for kkpctl
-	Config config.Config
+	Config *config.Config
 
 	configPath string
 	outputType string

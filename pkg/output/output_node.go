@@ -38,7 +38,7 @@ func (r nodeRender) ParseObject(inputObj interface{}, output string) (string, er
 
 func (r nodeRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
 	var err error
-	var parsedOutput []byte
+	parsedOutput := make([]byte, 0)
 
 	objects, ok := inputObj.([]models.Node)
 	if !ok {

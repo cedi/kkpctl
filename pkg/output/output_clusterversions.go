@@ -34,7 +34,7 @@ func (r clusterVersionRender) ParseObject(inputObj interface{}, output string) (
 
 func (r clusterVersionRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
 	var err error
-	var parsedOutput []byte
+	parsedOutput := make([]byte, 0)
 
 	objects, ok := inputObj.(model.VersionList)
 	if !ok {

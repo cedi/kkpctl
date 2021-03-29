@@ -44,13 +44,13 @@ var describeNodeDeploymentCmd = &cobra.Command{
 			return errors.Wrapf(err, "failed to get node deployment %s's events for cluster %s in project %s", nodeDeploymentName, clusterID, projectID)
 		}
 
-		meta := &describe.NodeDeploymentDescribeMeta{
-			NodeDeployment: &nodeDeployment,
+		meta := describe.NodeDeploymentDescribeMeta{
+			NodeDeployment: nodeDeployment,
 			Nodes:          nodeDeploymentNodes,
 			NodeEvents:     nodeDeploymentEvents,
 		}
 
-		parsed, err := describe.Object(meta)
+		parsed, err := describe.Object(&meta)
 		if err != nil {
 			return errors.Wrapf(err, "failed to describe node deployment %s", nodeDeploymentName)
 		}

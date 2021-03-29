@@ -25,7 +25,7 @@ type clusterHealthRender struct {
 
 func (rendered clusterHealthRender) ParseObject(inputObj interface{}, output string) (string, error) {
 	var err error
-	var parsedOutput []byte
+	parsedOutput := make([]byte, 0)
 
 	object, ok := inputObj.(*models.ClusterHealth)
 	if !ok {

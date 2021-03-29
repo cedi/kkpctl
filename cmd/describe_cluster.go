@@ -47,7 +47,7 @@ var describeClusterCmd = &cobra.Command{
 
 		// this meta object contains all the information about one specific cluster
 		meta := describe.ClusterDescribeMeta{
-			Cluster:         &cluster,
+			Cluster:         cluster,
 			NodeDeployments: nodeDeployments,
 			ClusterHealth:   clusterHealth,
 			ClusterEvents:   clusterEvents,

@@ -28,7 +28,7 @@ var describeProjectsCmd = &cobra.Command{
 			return errors.Wrapf(err, "failed to get project %s", projectID)
 		}
 
-		parsed, err := describe.Object(&project)
+		parsed, err := describe.Object(project)
 		if err != nil {
 			return errors.Wrapf(err, "failed to describe project %s", projectID)
 		}
