@@ -32,7 +32,7 @@ var configAddProviderOpenStackCmd = &cobra.Command{
 	Example: "kkpctl config add provider openstack optimist --username \"user@email.de\" --password \"my-super-secure-password\" --tenant \"internal-openstack-tenant\"",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		name := args[0]
-		err := Config.Provider.AddProviderConfig(name, models.OpenstackCloudSpec{
+		err := Config.Provider.AddProviderConfig(name, &models.OpenstackCloudSpec{
 			Username:       username,
 			Password:       password,
 			Domain:         osDomain,

@@ -31,10 +31,7 @@ var configSetBearerCmd = &cobra.Command{
 			return errors.Wrapf(err, "failed to set berar token for cloud %s", cloudName)
 		}
 
-		Config.Cloud.Set(cloudName, config.Cloud{
-			URL:    cloud.URL,
-			Bearer: bearer,
-		})
+		Config.Cloud.Set(cloudName, config.NewCloud(cloud.URL, bearer))
 
 		return Config.Save()
 	},

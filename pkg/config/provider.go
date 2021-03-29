@@ -41,36 +41,51 @@ const (
 
 // ProviderConfig contains the various possible providers in KKP
 type ProviderConfig struct {
-	Alibaba      map[string]models.AlibabaCloudSpec      `yaml:"alibaba,omitempty"`
-	Anexia       map[string]models.AnexiaCloudSpec       `yaml:"anexia,omitempty"`
-	Aws          map[string]models.AWSCloudSpec          `yaml:"aws,omitempty"`
-	Azure        map[string]models.AzureCloudSpec        `yaml:"azure,omitempty"`
-	Digitalocean map[string]models.DigitaloceanCloudSpec `yaml:"digitalocean,omitempty"`
-	Fake         map[string]models.FakeCloudSpec         `yaml:"fake,omitempty"`
-	Gcp          map[string]models.GCPCloudSpec          `yaml:"gcp,omitempty"`
-	Hetzner      map[string]models.HetznerCloudSpec      `yaml:"hetzner,omitempty"`
-	Kubevirt     map[string]models.KubevirtCloudSpec     `yaml:"kubevirt,omitempty"`
-	Openstack    map[string]models.OpenstackCloudSpec    `yaml:"openstack,omitempty"`
-	Packet       map[string]models.PacketCloudSpec       `yaml:"packet,omitempty"`
-	Vsphere      map[string]models.VSphereCloudSpec      `yaml:"vsphere,omitempty"`
+	Alibaba      map[string]*models.AlibabaCloudSpec      `yaml:"alibaba,omitempty"`
+	Anexia       map[string]*models.AnexiaCloudSpec       `yaml:"anexia,omitempty"`
+	Aws          map[string]*models.AWSCloudSpec          `yaml:"aws,omitempty"`
+	Azure        map[string]*models.AzureCloudSpec        `yaml:"azure,omitempty"`
+	Digitalocean map[string]*models.DigitaloceanCloudSpec `yaml:"digitalocean,omitempty"`
+	Fake         map[string]*models.FakeCloudSpec         `yaml:"fake,omitempty"`
+	Gcp          map[string]*models.GCPCloudSpec          `yaml:"gcp,omitempty"`
+	Hetzner      map[string]*models.HetznerCloudSpec      `yaml:"hetzner,omitempty"`
+	Kubevirt     map[string]*models.KubevirtCloudSpec     `yaml:"kubevirt,omitempty"`
+	Openstack    map[string]*models.OpenstackCloudSpec    `yaml:"openstack,omitempty"`
+	Packet       map[string]*models.PacketCloudSpec       `yaml:"packet,omitempty"`
+	Vsphere      map[string]*models.VSphereCloudSpec      `yaml:"vsphere,omitempty"`
 }
 
 // NewProvider creates a new, empty, provider config
-func NewProvider() ProviderConfig {
-	return ProviderConfig{
-		Alibaba:      make(map[string]models.AlibabaCloudSpec),
-		Anexia:       make(map[string]models.AnexiaCloudSpec),
-		Aws:          make(map[string]models.AWSCloudSpec),
-		Azure:        make(map[string]models.AzureCloudSpec),
-		Digitalocean: make(map[string]models.DigitaloceanCloudSpec),
-		Fake:         make(map[string]models.FakeCloudSpec),
-		Gcp:          make(map[string]models.GCPCloudSpec),
-		Hetzner:      make(map[string]models.HetznerCloudSpec),
-		Kubevirt:     make(map[string]models.KubevirtCloudSpec),
-		Openstack:    make(map[string]models.OpenstackCloudSpec),
-		Packet:       make(map[string]models.PacketCloudSpec),
-		Vsphere:      make(map[string]models.VSphereCloudSpec),
+func NewProvider() *ProviderConfig {
+	providerConfig := &ProviderConfig{
+		Alibaba:      make(map[string]*models.AlibabaCloudSpec),
+		Anexia:       make(map[string]*models.AnexiaCloudSpec),
+		Aws:          make(map[string]*models.AWSCloudSpec),
+		Azure:        make(map[string]*models.AzureCloudSpec),
+		Digitalocean: make(map[string]*models.DigitaloceanCloudSpec),
+		Fake:         make(map[string]*models.FakeCloudSpec),
+		Gcp:          make(map[string]*models.GCPCloudSpec),
+		Hetzner:      make(map[string]*models.HetznerCloudSpec),
+		Kubevirt:     make(map[string]*models.KubevirtCloudSpec),
+		Openstack:    make(map[string]*models.OpenstackCloudSpec),
+		Packet:       make(map[string]*models.PacketCloudSpec),
+		Vsphere:      make(map[string]*models.VSphereCloudSpec),
 	}
+
+	providerConfig.Alibaba["Alibaba"] = newAlibabaCloudSpec()
+	providerConfig.Anexia["Anexia"] = newAnexiaCloudSpec()
+	providerConfig.Aws["Aws"] = newAWSCloudSpec()
+	providerConfig.Azure["Azure"] = newAzureCloudSpec()
+	providerConfig.Digitalocean["Digitalocean"] = newDigitaloceanCloudSpec()
+	providerConfig.Fake["Fake"] = newFakeCloudSpec()
+	providerConfig.Gcp["Gcp"] = newGCPCloudSpec()
+	providerConfig.Hetzner["Hetzner"] = newHetznerCloudSpec()
+	providerConfig.Kubevirt["Kubevirt"] = newKubevirtCloudSpec()
+	providerConfig.Openstack["Openstack"] = newOpenstackCloudSpec()
+	providerConfig.Packet["Packet"] = newPacketCloudSpec()
+	providerConfig.Vsphere["Vsphere"] = newVSphereCloudSpec()
+
+	return providerConfig
 }
 
 // GetProviderCloudSpec returns a models.CloudSpec object with the correct CloudProvider filled
@@ -82,51 +97,51 @@ func (p *ProviderConfig) GetProviderCloudSpec(providerName string, datacenter st
 
 	providerAlibaba, ok := p.Alibaba[providerName]
 	if ok {
-		cs.Alibaba = &providerAlibaba
+		cs.Alibaba = providerAlibaba
 	}
 	providerAnexia, ok := p.Anexia[providerName]
 	if ok {
-		cs.Anexia = &providerAnexia
+		cs.Anexia = providerAnexia
 	}
 	providerAws, ok := p.Aws[providerName]
 	if ok {
-		cs.Aws = &providerAws
+		cs.Aws = providerAws
 	}
 	providerAzure, ok := p.Azure[providerName]
 	if ok {
-		cs.Azure = &providerAzure
+		cs.Azure = providerAzure
 	}
 	providerDigitalocean, ok := p.Digitalocean[providerName]
 	if ok {
-		cs.Digitalocean = &providerDigitalocean
+		cs.Digitalocean = providerDigitalocean
 	}
 	providerFake, ok := p.Fake[providerName]
 	if ok {
-		cs.Fake = &providerFake
+		cs.Fake = providerFake
 	}
 	providerGcp, ok := p.Gcp[providerName]
 	if ok {
-		cs.Gcp = &providerGcp
+		cs.Gcp = providerGcp
 	}
 	providerHetzner, ok := p.Hetzner[providerName]
 	if ok {
-		cs.Hetzner = &providerHetzner
+		cs.Hetzner = providerHetzner
 	}
 	providerKubevirt, ok := p.Kubevirt[providerName]
 	if ok {
-		cs.Kubevirt = &providerKubevirt
+		cs.Kubevirt = providerKubevirt
 	}
 	providerOpenstack, ok := p.Openstack[providerName]
 	if ok {
-		cs.Openstack = &providerOpenstack
+		cs.Openstack = providerOpenstack
 	}
 	providerPacket, ok := p.Packet[providerName]
 	if ok {
-		cs.Packet = &providerPacket
+		cs.Packet = providerPacket
 	}
 	providerVsphere, ok := p.Vsphere[providerName]
 	if ok {
-		cs.Vsphere = &providerVsphere
+		cs.Vsphere = providerVsphere
 	}
 
 	return cs
@@ -187,64 +202,64 @@ func (p *ProviderConfig) AddProviderConfig(name string, provider interface{}) er
 	}
 
 	switch providerSpec := provider.(type) {
-	case models.AlibabaCloudSpec:
+	case *models.AlibabaCloudSpec:
 		if p.Alibaba == nil {
-			p.Alibaba = make(map[string]models.AlibabaCloudSpec)
+			p.Alibaba = make(map[string]*models.AlibabaCloudSpec)
 		}
 		p.Alibaba[name] = providerSpec
-	case models.AnexiaCloudSpec:
+	case *models.AnexiaCloudSpec:
 		if p.Anexia == nil {
-			p.Anexia = make(map[string]models.AnexiaCloudSpec)
+			p.Anexia = make(map[string]*models.AnexiaCloudSpec)
 		}
 		p.Anexia[name] = providerSpec
-	case models.AWSCloudSpec:
+	case *models.AWSCloudSpec:
 		if p.Aws == nil {
-			p.Aws = make(map[string]models.AWSCloudSpec)
+			p.Aws = make(map[string]*models.AWSCloudSpec)
 		}
 		p.Aws[name] = providerSpec
-	case models.AzureCloudSpec:
+	case *models.AzureCloudSpec:
 		if p.Azure == nil {
-			p.Azure = make(map[string]models.AzureCloudSpec)
+			p.Azure = make(map[string]*models.AzureCloudSpec)
 		}
 		p.Azure[name] = providerSpec
-	case models.DigitaloceanCloudSpec:
+	case *models.DigitaloceanCloudSpec:
 		if p.Digitalocean == nil {
-			p.Digitalocean = make(map[string]models.DigitaloceanCloudSpec)
+			p.Digitalocean = make(map[string]*models.DigitaloceanCloudSpec)
 		}
 		p.Digitalocean[name] = providerSpec
-	case models.FakeCloudSpec:
+	case *models.FakeCloudSpec:
 		if p.Fake == nil {
-			p.Fake = make(map[string]models.FakeCloudSpec)
+			p.Fake = make(map[string]*models.FakeCloudSpec)
 		}
 		p.Fake[name] = providerSpec
-	case models.GCPCloudSpec:
+	case *models.GCPCloudSpec:
 		if p.Gcp == nil {
-			p.Gcp = make(map[string]models.GCPCloudSpec)
+			p.Gcp = make(map[string]*models.GCPCloudSpec)
 		}
 		p.Gcp[name] = providerSpec
-	case models.HetznerCloudSpec:
+	case *models.HetznerCloudSpec:
 		if p.Hetzner == nil {
-			p.Hetzner = make(map[string]models.HetznerCloudSpec)
+			p.Hetzner = make(map[string]*models.HetznerCloudSpec)
 		}
 		p.Hetzner[name] = providerSpec
-	case models.KubevirtCloudSpec:
+	case *models.KubevirtCloudSpec:
 		if p.Kubevirt == nil {
-			p.Kubevirt = make(map[string]models.KubevirtCloudSpec)
+			p.Kubevirt = make(map[string]*models.KubevirtCloudSpec)
 		}
 		p.Kubevirt[name] = providerSpec
-	case models.OpenstackCloudSpec:
+	case *models.OpenstackCloudSpec:
 		if p.Openstack == nil {
-			p.Openstack = make(map[string]models.OpenstackCloudSpec)
+			p.Openstack = make(map[string]*models.OpenstackCloudSpec)
 		}
 		p.Openstack[name] = providerSpec
-	case models.PacketCloudSpec:
+	case *models.PacketCloudSpec:
 		if p.Packet == nil {
-			p.Packet = make(map[string]models.PacketCloudSpec)
+			p.Packet = make(map[string]*models.PacketCloudSpec)
 		}
 		p.Packet[name] = providerSpec
-	case models.VSphereCloudSpec:
+	case *models.VSphereCloudSpec:
 		if p.Vsphere == nil {
-			p.Vsphere = make(map[string]models.VSphereCloudSpec)
+			p.Vsphere = make(map[string]*models.VSphereCloudSpec)
 		}
 		p.Vsphere[name] = providerSpec
 	default:
@@ -252,4 +267,106 @@ func (p *ProviderConfig) AddProviderConfig(name string, provider interface{}) er
 	}
 
 	return nil
+}
+
+func newAlibabaCloudSpec() *models.AlibabaCloudSpec {
+	return &models.AlibabaCloudSpec{
+		AccessKeyID:     "",
+		AccessKeySecret: "",
+	}
+}
+func newAnexiaCloudSpec() *models.AnexiaCloudSpec {
+	return &models.AnexiaCloudSpec{
+		Token: "",
+	}
+}
+func newAWSCloudSpec() *models.AWSCloudSpec {
+	return &models.AWSCloudSpec{
+		AccessKeyID:         "",
+		ControlPlaneRoleARN: "",
+		InstanceProfileName: "",
+		RoleName:            "",
+		RouteTableID:        "",
+		SecretAccessKey:     "",
+		SecurityGroupID:     "",
+		VPCID:               "",
+	}
+}
+func newAzureCloudSpec() *models.AzureCloudSpec {
+	return &models.AzureCloudSpec{
+		AvailabilitySet: "",
+		ClientID:        "",
+		ClientSecret:    "",
+		ResourceGroup:   "",
+		RouteTableName:  "",
+		SecurityGroup:   "",
+		SubnetName:      "",
+		SubscriptionID:  "",
+		TenantID:        "",
+		VNetName:        "",
+	}
+}
+func newDigitaloceanCloudSpec() *models.DigitaloceanCloudSpec {
+	return &models.DigitaloceanCloudSpec{
+		Token: "",
+	}
+}
+func newFakeCloudSpec() *models.FakeCloudSpec {
+	return &models.FakeCloudSpec{
+		Token: "",
+	}
+}
+func newGCPCloudSpec() *models.GCPCloudSpec {
+	return &models.GCPCloudSpec{
+		Network:        "",
+		ServiceAccount: "",
+		Subnetwork:     "",
+	}
+}
+func newHetznerCloudSpec() *models.HetznerCloudSpec {
+	return &models.HetznerCloudSpec{
+		Network: "",
+		Token:   "",
+	}
+}
+func newKubevirtCloudSpec() *models.KubevirtCloudSpec {
+	return &models.KubevirtCloudSpec{
+		Kubeconfig: "",
+	}
+}
+func newOpenstackCloudSpec() *models.OpenstackCloudSpec {
+	return &models.OpenstackCloudSpec{
+		Domain:         "",
+		FloatingIPPool: "",
+		Network:        "",
+		Password:       "",
+		RouterID:       "",
+		SecurityGroups: "",
+		SubnetID:       "",
+		Tenant:         "",
+		TenantID:       "",
+		UseOctavia:     true,
+		Username:       "",
+	}
+}
+func newPacketCloudSpec() *models.PacketCloudSpec {
+	return &models.PacketCloudSpec{
+		APIKey:       "",
+		BillingCycle: "",
+		ProjectID:    "",
+	}
+}
+func newVSphereCloudSpec() *models.VSphereCloudSpec {
+	return &models.VSphereCloudSpec{
+		Datastore:        "",
+		DatastoreCluster: "",
+		Folder:           "",
+		Password:         "",
+		Username:         "",
+		VMNetName:        "",
+		InfraManagementUser: &models.VSphereCredentials{
+			Password: "",
+			Username: "",
+		},
+	}
 }

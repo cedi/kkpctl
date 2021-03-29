@@ -15,6 +15,30 @@ type OperatingSystemConfig struct {
 	Ubuntu  *models.UbuntuSpec  `json:"ubuntu,omitempty"`
 }
 
+// NewOSSpec creates a new, empty OperatingSystemConfig
+func NewOSSpec() *OperatingSystemConfig {
+	return &OperatingSystemConfig{
+		CentOS: &models.CentOSSpec{
+			DistUpgradeOnBoot: false,
+		},
+		Flatcar: &models.FlatcarSpec{
+			DisableAutoUpdate: false,
+		},
+		Rhel: &models.RHELSpec{
+			DistUpgradeOnBoot:               false,
+			RHELSubscriptionManagerPassword: "",
+			RHELSubscriptionManagerUser:     "",
+			RHSMOfflineToken:                "",
+		},
+		Sles: &models.SLESSpec{
+			DistUpgradeOnBoot: false,
+		},
+		Ubuntu: &models.UbuntuSpec{
+			DistUpgradeOnBoot: false,
+		},
+	}
+}
+
 // SetOperatingSystemSpec sets the OperatingSystemType type to the OperatingSystemConfig
 func (o *OperatingSystemConfig) SetOperatingSystemSpec(osType OperatingSystemType, osSpec interface{}) error {
 	ok := false

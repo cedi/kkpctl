@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -14,16 +13,13 @@ import (
 // ConfigPath is the path to our configuration file on disk
 var ConfigPath string
 
-// CloudConfig is the key-value store from the cloud name to it's URL
-type CloudConfig map[string]Cloud
-
 // Config is the configuration for KKPCTL
 type Config struct {
-	Provider ProviderConfig        `yaml:"provider"`
-	Context  Context               `yaml:"ctx"`
-	Cloud    CloudConfig           `yaml:"cloud"`
-	OSSpec   OperatingSystemConfig `yaml:"os_spec"`
-	NodeSpec CloudNodeConfig       `yaml:"node_spec"`
+	Provider *ProviderConfig        `yaml:"provider"`
+	Context  *Context               `yaml:"ctx"`
+	Cloud    CloudConfig            `yaml:"cloud"`
+	OSSpec   *OperatingSystemConfig `yaml:"os_spec"`
+	NodeSpec *CloudNodeConfig       `yaml:"node_spec"`
 }
 
 // NewConfig creates a new, empty, config
@@ -31,13 +27,9 @@ func NewConfig() *Config {
 	return &Config{
 		Provider: NewProvider(),
 		Context:  NewContext(),
-		Cloud:    make(map[string]Cloud),
+		Cloud:    NewCloudConfig(),
+		OSSpec:   NewOSSpec(),
 	}
-}
-
-// NewCloudConfig creates a new cloud config object
-func NewCloudConfig() CloudConfig {
-	return make(CloudConfig)
 }
 
 // Save saves a configuration
@@ -92,7 +84,20 @@ func ensureConfig() error {
 
 // GetCloudFromContext returns a touple of cloud-url and bearer
 func (c *Config) getCloudFromContext() (string, string) {
-	return c.Cloud[c.Context.CloudName].URL, c.Cloud[c.Context.CloudName].Bearer
+	if c.Context == nil {
+		return "", ""
+	}
+
+	cloud, ok := c.Cloud[c.Context.CloudName]
+	if !ok {
+		return "", ""
+	}
+
+	if cloud == nil {
+		return "", ""
+	}
+
+	return cloud.URL, cloud.Bearer
 }
 
 // GetKKPClient returns a KKP Client for the currently configured cloud
@@ -104,18 +109,4 @@ func (c *Config) GetKKPClient() (*client.Client, error) {
 	}
 
 	return kkp, nil
-}
-
-// Set sets a cloud
-func (c *CloudConfig) Set(name string, value Cloud) {
-	(*c)[name] = value
-}
-
-// Get gets a cloud
-func (c *CloudConfig) Get(name string) (*Cloud, error) {
-	cloud, ok := (*c)[name]
-	if !ok {
-		return nil, fmt.Errorf("cannot find cloud %s in your configuration", name)
-	}
-	return &cloud, nil
 }

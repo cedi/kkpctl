@@ -20,7 +20,7 @@ var configAddCloudCmd = &cobra.Command{
 			Config.Cloud = config.NewCloudConfig()
 		}
 
-		Config.Cloud.Set(name, config.Cloud{URL: cloudURL})
+		Config.Cloud.Set(name, config.NewCloud(cloudURL, ""))
 
 		return Config.Save()
 	},

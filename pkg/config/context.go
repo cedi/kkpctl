@@ -6,8 +6,8 @@ type Context struct {
 }
 
 // NewContext creates a empty context for kkpctl
-func NewContext() Context {
-	return Context{
-		CloudName: "",
+func NewContext() *Context {
+	return &Context{
+		CloudName: "imke",
 	}
 }
