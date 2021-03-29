@@ -2,6 +2,7 @@ package output
 
 import (
 	"fmt"
+	"reflect"
 
 	"github.com/cedi/kkpctl/pkg/config"
 	"github.com/cedi/kkpctl/pkg/model"
@@ -26,6 +27,53 @@ const (
 	Date string = "date"
 )
 
+// make the parser factory a singleton
+var parser *ParserFactory
+
+func init() {
+	parser = NewParserFactory()
+
+	// KKP Project
+	parser.AddCollectionParser(reflect.TypeOf([]models.Project{}), projectRender{})
+	parser.AddObjectParser(reflect.TypeOf(models.Project{}), projectRender{})
+
+	// Node Deployments
+	parser.AddCollectionParser(reflect.TypeOf([]models.NodeDeployment{}), nodeDeploymentRender{})
+	parser.AddObjectParser(reflect.TypeOf(models.NodeDeployment{}), nodeDeploymentRender{})
+	parser.AddObjectParser(reflect.TypeOf(&models.NodeDeployment{}), nodeDeploymentRender{})
+
+	// Datacenter
+	parser.AddCollectionParser(reflect.TypeOf([]models.Datacenter{}), datacenterRender{})
+	parser.AddObjectParser(reflect.TypeOf(models.Datacenter{}), datacenterRender{})
+
+	// Events
+	parser.AddCollectionParser(reflect.TypeOf([]models.Event{}), eventRender{})
+
+	// Node Taints
+	parser.AddObjectParser(reflect.TypeOf(&models.TaintSpec{}), taintRender{})
+	parser.AddCollectionParser(reflect.TypeOf([]*models.TaintSpec{}), taintRender{})
+
+	// Node
+	parser.AddObjectParser(reflect.TypeOf(models.Node{}), nodeRender{})
+	parser.AddCollectionParser(reflect.TypeOf([]models.Node{}), nodeRender{})
+
+	// KKP Clusters
+	parser.AddCollectionParser(reflect.TypeOf([]models.Cluster{}), clusterRender{})
+	parser.AddObjectParser(reflect.TypeOf(&models.Cluster{}), clusterRender{})
+	parser.AddObjectParser(reflect.TypeOf(models.Cluster{}), clusterRender{})
+
+	// Cluster Versions
+	parser.AddCollectionParser(reflect.TypeOf(model.VersionList{}), clusterVersionRender{})
+	parser.AddObjectParser(reflect.TypeOf(model.Version{}), clusterVersionRender{})
+
+	// ClusterHealth
+	parser.AddObjectParser(reflect.TypeOf(&models.ClusterHealth{}), clusterHealthRender{})
+
+	// Config
+	parser.AddObjectParser(reflect.TypeOf(config.CloudConfig{}), configCloudRender{})
+	parser.AddObjectParser(reflect.TypeOf(&config.CloudConfig{}), configCloudRender{})
+}
+
 // ParseOutput takes any KKP Object as an input and then parses it to the appropriate output format
 func ParseOutput(object interface{}, output string, sortBy string) (string, error) {
 
@@ -39,73 +87,17 @@ func ParseOutput(object interface{}, output string, sortBy string) (string, erro
 		return "", err
 	}
 
-	return parseOutput(object, output, sortBy)
-}
-
-// parseOutput is ugly and long, but it makes things kinda nicer to handle outside of the package
-func parseOutput(outputObject interface{}, output string, sortBy string) (string, error) {
-
-	switch o := outputObject.(type) {
-	// KKP Project
-	case []models.Project:
-		return parseProjects(o, output, sortBy)
-	case models.Project:
-		return parseProject(o, output)
-
-	// KKP Clusters
-	case []models.Cluster:
-		return parseClusters(o, output, sortBy)
-	case models.Cluster:
-		return parseCluster(o, output)
-	case *models.Cluster:
-		return parseCluster(*o, output)
-
-	// Node Deployments
-	case []models.NodeDeployment:
-		return parseNodeDeployments(o, output, sortBy)
-	case models.NodeDeployment:
-		return parseNodeDeployment(o, output)
-	case *models.NodeDeployment:
-		return parseNodeDeployment(*o, output)
-
-	// Datacenter
-	case []models.Datacenter:
-		return parseDatacenters(o, output, sortBy)
-	case models.Datacenter:
-		return parseDatacenter(o, output)
-
-	// ClusterHealth
-	case *models.ClusterHealth:
-		return parseClusterHealth(o, output)
-
-	// Cluster Versions
-	case model.VersionList:
-		return parseClusterVersions(o, output)
-	case model.Version:
-		return parseClusterVersion(o, output)
-
-	// Config
-	case config.CloudConfig:
-		return parseConfigCloud(o, output)
-
-	// Events
-	case []models.Event:
-		return parseEvents(o, output)
-
-	// Node Taints
-	case *models.TaintSpec:
-		return parseNodeTaint(o, output)
-	case []*models.TaintSpec:
-		return parseNodeTaints(o, output)
-
-	// Node
-	case models.Node:
-		return parseNode(o, output)
-	case []models.Node:
-		return parseNodes(o, output)
+	collectionsParser, ok := parser.GetCollectionParser(reflect.TypeOf(object))
+	if ok {
+		return collectionsParser.ParseCollection(object, output, sortBy)
 	}
 
-	return fmt.Sprintf("%v\n", outputObject), fmt.Errorf("unable to determine proper output type")
+	objectParser, ok := parser.GetObjectParser(reflect.TypeOf(object))
+	if ok {
+		return objectParser.ParseObject(object, output)
+	}
+
+	return fmt.Sprintf("%v\n", object), fmt.Errorf("unable to determine proper output type")
 }
 
 func validateOutput(output string) error {

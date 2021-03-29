@@ -43,6 +43,7 @@ type CloudNodeConfig struct {
 }
 
 // GetAllNodeSpecNames returns a list of all provider names in use by the config
+//gocyclo:ignore
 func (c *CloudNodeConfig) GetAllNodeSpecNames() []string {
 	providerNames := make([]string, 0)
 
@@ -84,6 +85,7 @@ func (c *CloudNodeConfig) GetAllNodeSpecNames() []string {
 }
 
 // AddCloudNodeSpec adds a new CloudNodeSpec to the configuration
+//gocyclo:ignore
 func (c *CloudNodeConfig) AddCloudNodeSpec(name string, nodeSpec interface{}) error {
 	if utils.IsOneOf(name, c.GetAllNodeSpecNames()) {
 		return fmt.Errorf("the nodespec name '%s' is already used", name)
@@ -153,6 +155,7 @@ func (c *CloudNodeConfig) AddCloudNodeSpec(name string, nodeSpec interface{}) er
 }
 
 // GetNodeCloudSpec gets the *models.NodeCloudSpec for the specified name from the CloudNodeConfig
+//gocyclo:ignore
 func (c *CloudNodeConfig) GetNodeCloudSpec(name string) *models.NodeCloudSpec {
 	nodeCloudSpec := &models.NodeCloudSpec{}
 

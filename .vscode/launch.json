@@ -16,7 +16,7 @@
                 //"get", "project", "x5zvx9bcx6"
                 //"add", "project", "kkpctltest"
                 //"add", "project", "kkpctltest", "--labels", "stage=dev"
-                //"describe", "project", "dw2s9jk28z"
+                "describe", "project", "6tmbnhdl7h"
                 //"delete", "project", "r64pgz4cbw"
                 //"get", "cluster", "--all"
                 //"get", "cluster"
@@ -46,7 +46,7 @@
                 //"config", "add", "node", "openstack", "--flavor", "m1.micro", "--image", "Flatcar_Production 2020 - Latest", "flatcar1"
                 //"add", "nodedeployment", "--project", "6tmbnhdl7h", "--cluster", "qvjdddt72t", "--nodespec", "flatcar1", "--operatingsystem", "flatcar", "--provider", "optimist", "first_node_deployment"
                 //"describe", "nodedeployment", "--project", "6tmbnhdl7h", "--cluster", "qvjdddt72t", "test1234"
-                "edit", "cluster", "upgrade", "--project", "6tmbnhdl7h", "bwbnnh6874", "--to-version", "1.18.13"
+                //"edit", "cluster", "upgrade", "--project", "6tmbnhdl7h", "bwbnnh6874", "--to-version", "1.18.13"
           ]
         }
     ]

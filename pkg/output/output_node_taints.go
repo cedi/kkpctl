@@ -19,13 +19,27 @@ type taintRender struct {
 	Effect string `header:"effect"`
 }
 
-func parseNodeTaint(object *models.TaintSpec, output string) (string, error) {
-	return parseNodeTaints([]*models.TaintSpec{object}, output)
+func (r taintRender) ParseObject(inputObj interface{}, output string) (string, error) {
+	switch object := inputObj.(type) {
+	case models.TaintSpec:
+		return r.ParseCollection([]models.TaintSpec{object}, output, Name)
+
+	case *models.TaintSpec:
+		return r.ParseCollection([]models.TaintSpec{*object}, output, Name)
+
+	default:
+		return "", fmt.Errorf("inputObj is neighter a models.TaintSpec nor a *models.TaintSpec")
+	}
 }
 
-func parseNodeTaints(objects []*models.TaintSpec, output string) (string, error) {
+func (r taintRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
 	var err error
 	var parsedOutput []byte
+
+	objects, ok := inputObj.([]models.TaintSpec)
+	if !ok {
+		return "", fmt.Errorf("inputObj is not a []models.TaintSpec")
+	}
 
 	switch output {
 	case JSON:
@@ -37,10 +51,6 @@ func parseNodeTaints(objects []*models.TaintSpec, output string) (string, error)
 	case Text:
 		rendered := make([]taintRender, 0)
 		for _, taint := range objects {
-			if taint == nil {
-				continue
-			}
-
 			rendered = append(rendered, taintRender{
 				Key:    taint.Key,
 				Value:  taint.Value,

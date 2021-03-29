@@ -16,13 +16,19 @@ import (
 type eventRender struct {
 	CreationTimestamp string `header:"Created"`
 	LastTimestamp     string `header:"Last"`
+	Type              string `header:"Type"`
 	Message           string `header:"Message"`
 	Count             int32  `header:"Count"`
 }
 
-func parseEvents(objects []models.Event, output string) (string, error) {
+func (r eventRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
 	var err error
 	var parsedOutput []byte
+
+	objects, ok := inputObj.([]models.Event)
+	if !ok {
+		return "", fmt.Errorf("inputObj is not a []models.Event")
+	}
 
 	switch output {
 	case JSON:
@@ -37,13 +43,18 @@ func parseEvents(objects []models.Event, output string) (string, error) {
 			rendered = append(rendered, eventRender{
 				CreationTimestamp: evnt.CreationTimestamp.String(),
 				LastTimestamp:     evnt.LastTimestamp.String(),
+				Type:              evnt.Type,
 				Message:           evnt.Message,
 				Count:             evnt.Count,
 			})
 		}
 
 		sort.Slice(rendered, func(i, j int) bool {
-			return rendered[j].LastTimestamp > rendered[i].LastTimestamp
+			if sortBy == Date {
+				return rendered[j].LastTimestamp > rendered[i].LastTimestamp
+			}
+
+			return rendered[j].Type > rendered[i].Type
 		})
 
 		var bodyBuf io.ReadWriter

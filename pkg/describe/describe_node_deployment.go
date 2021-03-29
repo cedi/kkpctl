@@ -2,9 +2,9 @@ package describe
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/cedi/kkpctl/pkg/output"
+	"github.com/cedi/kkpctl/pkg/utils"
 	"github.com/kubermatic/go-kubermatic/models"
 )
 
@@ -41,14 +41,6 @@ func describeNodeDeployment(meta *NodeDeploymentDescribeMeta) (string, error) {
 		nodeEventTable = "[None]"
 	}
 
-	labels := make([]string, 0)
-	for key, value := range nd.Spec.Template.Labels {
-		labels = append(labels, fmt.Sprintf("%s=%s", key, value))
-	}
-	if len(labels) == 0 {
-		labels = append(labels, "[None]")
-	}
-
 	result := fmt.Sprintf(`Node Deployment:
 %s
 
@@ -66,7 +58,7 @@ Events:
 		nodeDeploymentTable,
 		nodeTable,
 		nodeTaintsTable,
-		strings.Join(labels, "; "),
+		utils.MergeLabels(nd.Spec.Template.Labels),
 		nodeEventTable,
 	)
 

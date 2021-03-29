@@ -2,9 +2,9 @@ package describe
 
 import (
 	"fmt"
-	"strings"
 
 	"github.com/cedi/kkpctl/pkg/output"
+	"github.com/cedi/kkpctl/pkg/utils"
 	"github.com/kubermatic/go-kubermatic/models"
 )
 
@@ -43,22 +43,6 @@ func describeCluster(meta *ClusterDescribeMeta) (string, error) {
 		clusterEventTable = "[None]"
 	}
 
-	labels := make([]string, 0)
-	for key, value := range cluster.Labels {
-		labels = append(labels, fmt.Sprintf("%s=%s", key, value))
-	}
-	if len(labels) == 0 {
-		labels = append(labels, "[None]")
-	}
-
-	inheritedLabels := make([]string, 0)
-	for key, value := range cluster.InheritedLabels {
-		inheritedLabels = append(inheritedLabels, fmt.Sprintf("%s=%s", key, value))
-	}
-	if len(inheritedLabels) == 0 {
-		inheritedLabels = append(inheritedLabels, "[None]")
-	}
-
 	result := fmt.Sprintf(`Cluster:
 %s
 
@@ -79,8 +63,8 @@ Events:
 		clusterTable,
 		clusterHealthTable,
 		nodeDeploymentTable,
-		strings.Join(inheritedLabels, "; "),
-		strings.Join(labels, "; "),
+		utils.MergeLabels(cluster.InheritedLabels),
+		utils.MergeLabels(cluster.Labels),
 		clusterEventTable,
 	)
 

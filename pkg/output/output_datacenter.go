@@ -20,13 +20,27 @@ type datacenterRender struct {
 	Country  string `header:"Country"`
 }
 
-func parseDatacenter(object models.Datacenter, output string) (string, error) {
-	return parseDatacenters([]models.Datacenter{object}, output, Name)
+func (r datacenterRender) ParseObject(inputObject interface{}, output string) (string, error) {
+	switch object := inputObject.(type) {
+	case models.Datacenter:
+		return r.ParseCollection([]models.Datacenter{object}, output, Name)
+
+	case *models.Datacenter:
+		return r.ParseCollection([]models.Datacenter{*object}, output, Name)
+
+	default:
+		return "", fmt.Errorf("inputObj is neighter a models.Datacenter nor a *models.Datacenter")
+	}
 }
 
-func parseDatacenters(objects []models.Datacenter, output string, sortBy string) (string, error) {
+func (r datacenterRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
 	var err error
 	var parsedOutput []byte
+
+	objects, ok := inputObj.([]models.Datacenter)
+	if !ok {
+		return "", fmt.Errorf("inputObj is not a []models.Datacenter")
+	}
 
 	switch output {
 	case JSON:

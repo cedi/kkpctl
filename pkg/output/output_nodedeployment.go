@@ -25,13 +25,27 @@ type nodeDeploymentRender struct {
 	CreationTimestamp string `header:"Created"`
 }
 
-func parseNodeDeployment(object models.NodeDeployment, output string) (string, error) {
-	return parseNodeDeployments([]models.NodeDeployment{object}, output, Name)
+func (r nodeDeploymentRender) ParseObject(inputObj interface{}, output string) (string, error) {
+	switch object := inputObj.(type) {
+	case models.NodeDeployment:
+		return r.ParseCollection([]models.NodeDeployment{object}, output, Name)
+
+	case *models.NodeDeployment:
+		return r.ParseCollection([]models.NodeDeployment{*object}, output, Name)
+
+	default:
+		return "", fmt.Errorf("inputObj is neighter a models.NodeDeployment nor a *models.NodeDeployment")
+	}
 }
 
-func parseNodeDeployments(objects []models.NodeDeployment, output string, sortBy string) (string, error) {
+func (r nodeDeploymentRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
 	var err error
 	var parsedOutput []byte
+
+	objects, ok := inputObj.([]models.NodeDeployment)
+	if !ok {
+		return "", fmt.Errorf("inputObj is not a []models.NodeDeployment")
+	}
 
 	switch output {
 	case JSON:

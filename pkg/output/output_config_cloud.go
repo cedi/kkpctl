@@ -18,20 +18,32 @@ type configCloudRender struct {
 	URL  string `header:"Url"`
 }
 
-func parseConfigCloud(object config.CloudConfig, output string) (string, error) {
+func (r configCloudRender) ParseObject(inputObj interface{}, output string) (string, error) {
 	var err error
 	var parsedOutput []byte
+	var cfg config.CloudConfig
+
+	switch object := inputObj.(type) {
+	case config.CloudConfig:
+		cfg = object
+
+	case *config.CloudConfig:
+		cfg = *object
+
+	default:
+		return "", fmt.Errorf("inputObj is neighter a config.CloudConfig nor a *config.CloudConfig")
+	}
 
 	switch output {
 	case JSON:
-		parsedOutput, err = json.MarshalIndent(object, "", "  ")
+		parsedOutput, err = json.MarshalIndent(cfg, "", "  ")
 
 	case YAML:
-		parsedOutput, err = yaml.Marshal(object)
+		parsedOutput, err = yaml.Marshal(cfg)
 
 	case Text:
 		rendered := make([]configCloudRender, 0)
-		for key, value := range object {
+		for key, value := range cfg {
 			rendered = append(rendered, configCloudRender{
 				Name: key,
 				URL:  value.URL,

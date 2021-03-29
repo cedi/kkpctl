@@ -54,7 +54,8 @@
 			}
 		},
 		"codeQL.runningQueries.memory": 2048,
-        "codeQL.runningQueries.debug": true
+        "codeQL.runningQueries.debug": true,
+		"git.autofetch": true
 	},
 
 	// Add the IDs of extensions you want installed when the container is created.

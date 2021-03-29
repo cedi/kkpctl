@@ -20,15 +20,30 @@ type nodeRender struct {
 	ContainerRuntimeVersion string   `header:"ContainerRuntimeVersion"`
 	KernelVersion           string   `header:"KernelVersion"`
 	KubeletVersion          string   `header:"KubeletVersion"`
+	CreationTimestamp       string   `header:"Created"`
 }
 
-func parseNode(object models.Node, output string) (string, error) {
-	return parseNodes([]models.Node{object}, output)
+func (r nodeRender) ParseObject(inputObj interface{}, output string) (string, error) {
+	switch object := inputObj.(type) {
+	case models.Node:
+		return r.ParseCollection([]models.Node{object}, output, Name)
+
+	case *models.Node:
+		return r.ParseCollection([]models.Node{*object}, output, Name)
+
+	default:
+		return "", fmt.Errorf("inputObj is neighter a models.Node nor a *models.Node")
+	}
 }
 
-func parseNodes(objects []models.Node, output string) (string, error) {
+func (r nodeRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
 	var err error
 	var parsedOutput []byte
+
+	objects, ok := inputObj.([]models.Node)
+	if !ok {
+		return "", fmt.Errorf("inputObj is not a []models.Node")
+	}
 
 	switch output {
 	case JSON:
@@ -52,11 +67,16 @@ func parseNodes(objects []models.Node, output string) (string, error) {
 				ContainerRuntimeVersion: node.Status.NodeInfo.ContainerRuntimeVersion,
 				KernelVersion:           node.Status.NodeInfo.KernelVersion,
 				KubeletVersion:          node.Status.NodeInfo.KubeletVersion,
+				CreationTimestamp:       node.CreationTimestamp.String(),
 			})
 		}
 
 		sort.Slice(rendered, func(i, j int) bool {
-			return rendered[j].Name < rendered[i].Name
+			if sortBy == Date {
+				return rendered[j].CreationTimestamp < rendered[i].CreationTimestamp
+			}
+
+			return rendered[j].Name > rendered[i].Name
 		})
 
 		var bodyBuf io.ReadWriter

@@ -23,9 +23,14 @@ type clusterHealthRender struct {
 	UserClusterControllerManager string `header:"userClusterControllerManager"`
 }
 
-func parseClusterHealth(object *models.ClusterHealth, output string) (string, error) {
+func (rendered clusterHealthRender) ParseObject(inputObj interface{}, output string) (string, error) {
 	var err error
 	var parsedOutput []byte
+
+	object, ok := inputObj.(*models.ClusterHealth)
+	if !ok {
+		return "", fmt.Errorf("inputObj is not a *models.ClusterHealth")
+	}
 
 	switch output {
 	case JSON:
@@ -35,14 +40,14 @@ func parseClusterHealth(object *models.ClusterHealth, output string) (string, er
 		parsedOutput, err = yaml.Marshal(object)
 
 	case Text:
-		rendered := clusterHealthRender{
-			Apiserver:                    getHealthStatus(object.Apiserver),
-			CloudProviderInfrastructure:  getHealthStatus(object.CloudProviderInfrastructure),
-			Controller:                   getHealthStatus(object.Controller),
-			Etcd:                         getHealthStatus(object.Etcd),
-			MachineController:            getHealthStatus(object.MachineController),
-			Scheduler:                    getHealthStatus(object.Scheduler),
-			UserClusterControllerManager: getHealthStatus(object.UserClusterControllerManager),
+		rendered = clusterHealthRender{
+			Apiserver:                    getHealthStatusString(object.Apiserver),
+			CloudProviderInfrastructure:  getHealthStatusString(object.CloudProviderInfrastructure),
+			Controller:                   getHealthStatusString(object.Controller),
+			Etcd:                         getHealthStatusString(object.Etcd),
+			MachineController:            getHealthStatusString(object.MachineController),
+			Scheduler:                    getHealthStatusString(object.Scheduler),
+			UserClusterControllerManager: getHealthStatusString(object.UserClusterControllerManager),
 		}
 
 		var bodyBuf io.ReadWriter
@@ -58,7 +63,7 @@ func parseClusterHealth(object *models.ClusterHealth, output string) (string, er
 	return string(parsedOutput), err
 }
 
-func getHealthStatus(status models.HealthStatus) string {
+func getHealthStatusString(status models.HealthStatus) string {
 	switch status {
 	case 0: //kubermaticv1.HealthStatusDown:
 		return "Down"

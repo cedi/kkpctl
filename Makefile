@@ -39,7 +39,7 @@ clean:
 fmt:
 	gofmt -w -s -d .
 
-vet: lint
+vet: lint cyclo
 	go vet ./...
 
 tidy:
@@ -48,6 +48,9 @@ tidy:
 
 lint:
 	golint ./...
+
+cyclo:
+	gocyclo -avg -over 15 -ignore "_test|Godeps|vendor/" -total .
 
 build_dir:
 	mkdir -p ./build/

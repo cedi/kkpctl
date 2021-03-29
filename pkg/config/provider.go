@@ -74,6 +74,7 @@ func NewProvider() ProviderConfig {
 }
 
 // GetProviderCloudSpec returns a models.CloudSpec object with the correct CloudProvider filled
+//gocyclo:ignore
 func (p *ProviderConfig) GetProviderCloudSpec(providerName string, datacenter string) *models.CloudSpec {
 	cs := &models.CloudSpec{
 		DatacenterName: datacenter,
@@ -132,6 +133,7 @@ func (p *ProviderConfig) GetProviderCloudSpec(providerName string, datacenter st
 }
 
 // GetAllProviderNames returns a list of all provider names in use by the config
+//gocyclo:ignore
 func (p *ProviderConfig) GetAllProviderNames() []string {
 	providerNames := make([]string, 0)
 
@@ -178,6 +180,7 @@ func (p *ProviderConfig) GetAllProviderNames() []string {
 // AddProviderConfig adds a new provider to the configuration
 //	Note: Name must be unique
 //	Returns an error, if the name is already in use to avoid ambigous naming.
+//gocyclo:ignore
 func (p *ProviderConfig) AddProviderConfig(name string, provider interface{}) error {
 	if utils.IsOneOf(name, p.GetAllProviderNames()) {
 		return fmt.Errorf("the provider name '%s' is already used", name)

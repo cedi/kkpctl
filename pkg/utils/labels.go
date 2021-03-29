@@ -1,6 +1,9 @@
 package utils
 
-import "strings"
+import (
+	"fmt"
+	"strings"
+)
 
 // SplitLabelString splits a string in the format `key=value` to map[string]string
 func SplitLabelString(labels string) map[string]string {
@@ -25,4 +28,18 @@ func SplitLabelString(labels string) map[string]string {
 	}
 
 	return mapLabels
+}
+
+// MergeLabels merges a map[string]string to a comma separated string in the format `key=value`
+func MergeLabels(labelsMap map[string]string) string {
+	labels := make([]string, 0)
+	for key, value := range labelsMap {
+		labels = append(labels, fmt.Sprintf("%s=%s", key, value))
+	}
+
+	if len(labels) == 0 {
+		labels = append(labels, "[None]")
+	}
+
+	return strings.Join(labels, ",")
 }

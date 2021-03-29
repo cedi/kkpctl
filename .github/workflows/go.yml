@@ -22,6 +22,7 @@ jobs:
         go get -u golang.org/x/lint/golint
         go get -u github.com/cweill/gotests/...
         go get -u golang.org/x/tools/cmd/benchcmp
+        go get -u github.com/fzipp/gocyclo/cmd/gocyclo
 
     - uses: actions/checkout@v2
     - name: Build

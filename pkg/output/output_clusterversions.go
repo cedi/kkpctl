@@ -18,13 +18,28 @@ type clusterVersionRender struct {
 	Version string `header:"Version"`
 }
 
-func parseClusterVersion(object model.Version, output string) (string, error) {
-	return parseClusterVersions(model.VersionList{object}, output)
+func (r clusterVersionRender) ParseObject(inputObj interface{}, output string) (string, error) {
+
+	switch clusterVersion := inputObj.(type) {
+	case model.Version:
+		return r.ParseCollection(model.VersionList{clusterVersion}, output, Name)
+
+	case *model.Version:
+		return r.ParseCollection(model.VersionList{*clusterVersion}, output, Name)
+
+	default:
+		return "", fmt.Errorf("inputObj is neighter a models.Version nor a *models.Version")
+	}
 }
 
-func parseClusterVersions(objects model.VersionList, output string) (string, error) {
+func (r clusterVersionRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
 	var err error
 	var parsedOutput []byte
+
+	objects, ok := inputObj.(model.VersionList)
+	if !ok {
+		return "", fmt.Errorf("inputObj is not a model.VersionList")
+	}
 
 	switch output {
 	case JSON:

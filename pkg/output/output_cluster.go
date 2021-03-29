@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"sort"
 
+	"github.com/cedi/kkpctl/pkg/model"
 	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/lensesio/tableprinter"
 	"gopkg.in/yaml.v3"
@@ -23,13 +24,27 @@ type clusterRender struct {
 	Provider          string `header:"Provider"`
 }
 
-func parseCluster(object models.Cluster, output string) (string, error) {
-	return parseClusters([]models.Cluster{object}, output, Name)
+func (r clusterRender) ParseObject(inputObj interface{}, output string) (string, error) {
+	switch cluster := inputObj.(type) {
+	case models.Cluster:
+		return r.ParseCollection([]models.Cluster{cluster}, output, Name)
+
+	case *models.Cluster:
+		return r.ParseCollection([]models.Cluster{*cluster}, output, Name)
+
+	default:
+		return "", fmt.Errorf("inputObj is neighter a models.Cluster nor a *models.Cluster")
+	}
 }
 
-func parseClusters(objects []models.Cluster, output string, sortBy string) (string, error) {
+func (r clusterRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
 	var err error
 	var parsedOutput []byte
+
+	objects, ok := inputObj.([]models.Cluster)
+	if !ok {
+		return "", fmt.Errorf("inputObj is not a []models.Cluster")
+	}
 
 	switch output {
 	case JSON:
@@ -46,12 +61,12 @@ func parseClusters(objects []models.Cluster, output string, sortBy string) (stri
 				Name:              object.Name,
 				CreationTimestamp: object.CreationTimestamp.String(),
 				Datacenter:        object.Spec.Cloud.DatacenterName,
-				Provider:          getProviderName(object.Spec.Cloud),
+				Provider:          model.GetProviderNameFromCloudSpec(object.Spec.Cloud),
 			}
 
 			version, ok := object.Status.Version.(string)
 			if !ok {
-				// Honestly, I don't know wht to do here^^
+				// Honestly, I don't know what to do here^^
 				continue
 			}
 
@@ -77,48 +92,4 @@ func parseClusters(objects []models.Cluster, output string, sortBy string) (stri
 	}
 
 	return string(parsedOutput), err
-}
-
-func getProviderName(cloudSpec *models.CloudSpec) string {
-	if cloudSpec.Alibaba != nil {
-		return "Alibaba"
-	}
-	if cloudSpec.Anexia != nil {
-		return "Anexia"
-	}
-	if cloudSpec.Aws != nil {
-		return "AWS"
-	}
-	if cloudSpec.Azure != nil {
-		return "Azure"
-	}
-	if cloudSpec.Bringyourown != nil {
-		return "BringYourOwn"
-	}
-	if cloudSpec.Digitalocean != nil {
-		return "DigitalOcean"
-	}
-	if cloudSpec.Fake != nil {
-		return "Fake"
-	}
-	if cloudSpec.Gcp != nil {
-		return "GCP"
-	}
-	if cloudSpec.Hetzner != nil {
-		return "Hetzner"
-	}
-	if cloudSpec.Kubevirt != nil {
-		return "Kubevirt"
-	}
-	if cloudSpec.Openstack != nil {
-		return "OpenStack"
-	}
-	if cloudSpec.Packet != nil {
-		return "Packet"
-	}
-	if cloudSpec.Vsphere != nil {
-		return "Vsphere"
-	}
-
-	return ""
 }
