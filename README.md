@@ -111,6 +111,7 @@ $EDITOR ~/.config/kkpctl/config.yaml
 ## Add your KKP Cloud
 
 ```bash
+# Add the kkp cloud with a name
 kkpctl config add cloud imke_prod https://imke.cloud/
 
 # Note: This is a work around, until we have oidc-login available in kkpctl
