@@ -7,33 +7,32 @@
 [![workflow status](https://github.com/cedi/kkpctl/actions/workflows/go.yml/badge.svg)](https://github.com/cedi/kkpctl/actions)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 
-
 # kkpctl
 
 This tool aims to implement the [KKP](https://github.com/kubermatic/kubermatic) API as a useful CLI tool.
 The usage should remind of kubectl.
 
-
 # Install from source
 
 Pre-Requirement:
+
 * Having the `go` installed
 * your `$GOPATH` environment variable is set
 * `$GOPATH/bin` is part of your `$PATH` environment variable
 * Having `git` installed
 
-```
-$ mkdir -p $GOPATH/src/github.com/cedi/
-$ git clone https://github.com/cedi/kkpctl.git $GOPATH/src/github.com/cedi/kkpctl
-$ cd $GOPATH/src/github.com/cedi/kkpctl
-$ make install_release
+```bash
+mkdir -p $GOPATH/src/github.com/cedi/
+git clone https://github.com/cedi/kkpctl.git $GOPATH/src/github.com/cedi/kkpctl
+cd $GOPATH/src/github.com/cedi/kkpctl
+make install_release
 ```
 
 ## Shell Completion
 
 `kkpctl` comes with auto-completion right out of the box for bash, zsh, fish, and PowerShell.
 
-```
+```bash
 $ kkpctl completion --help
 To load completions:
 
@@ -87,56 +86,97 @@ For the full usage documentation see the [docs](docs/commandline-usage.md)
 
 ## Quick-Start
 
-1. Setup `kkpctl`
+### Configuration
+
+Currently there are two ways to configure your `kkpctl`.
+The easiest option is to use `kkpctl config`, however due to the early stage of this project, this only works for the openstack cloudprovider for now.
+
+#### Openstack
+
+```bash
+# Add your first cloudprovider
+kkpctl config add provider openstack --username "user@email.de" --password "my-super-secure-password" --tenant "internal-openstack-tenant" optimist
 ```
-# Add your first cloud
-$ kkpctl config add cloud imke_prod https://imke.cloud/
+
+#### Manually configure
+
+```bash
+# Create an empty configuration
+kkpctl config generate -w
+# Edit the just created configuration with your favorite Editor and fill in the details yourself
+editor ~/.config/kkpctl/config.yaml
+```
+
+### Add your KKP Cloud
+
+```bash
+kkpctl config add cloud imke_prod https://imke.cloud/
 
 # Note: This is a work around, until we have oidc-login available in kkpctl
-$ kkpctl config set cloud imke_prod berer ey....
-
-# Add your first cloudprovider
-$ kkpctl config add provider openstack --username "user@email.de" --password "my-super-secure-password" --tenant "internal-openstack-tenant" optimist
+kkpctl config set cloud imke_prod berer ey....
 
 # Set your context to use the freshly added cloud
-$ kkpctl ctx set cloud imke_prod
+kkpctl ctx set cloud imke_prod
 ```
 
-2. Create your first project
-```
-$ kkpctl add project testproject
+### Work with projects
+
+1. Create your first project
+
+```bash
+kkpctl add project testproject
 ```
 
-3. Display your newly created project
-```
-$ kkpctl describe project 6tmbnhdl7h
+1. List your projects
+
+```bash
+kkpctl get project
 ```
 
-4. Create your first cluster
-```
-$ kkpctl add cluster --project 6tmbnhdl7h --datacenter ix2 --provider optimist --version 1.18.13 --labels stage=dev kkpctltest
+1. Display your newly created project
+
+```bash
+kkpctl describe project 6tmbnhdl7h
 ```
 
-5. Describe your first cluster
-```
-$ kkpctl describe cluster --project 6tmbnhdl7h qvjdddt72t
+### Working with clusters
+
+1. Create your first cluster
+
+```bash
+kkpctl add cluster --project 6tmbnhdl7h --datacenter ix2 --provider optimist --version 1.18.13 --labels stage=dev kkpctltest
 ```
 
-6. Connect to your cluster, once it's ready
+1. List your clusters
+
+```bash
+kkpctl get cluster --project 6tmbnhdl7h
 ```
-$ kkpctl get kubeconfig --project testproject qvjdddt72t -w 
-$ export KUBECONFIG=./kubeconfig-admin-qvjdddt72t
-$ kubectl get pods -A
+
+1. Describe your first cluster
+
+```bash
+kkpctl describe cluster --project 6tmbnhdl7h qvjdddt72t
+```
+
+1. Connect to your cluster, once it's ready
+
+```bash
+kkpctl get kubeconfig --project testproject qvjdddt72t -w
+export KUBECONFIG=./kubeconfig-admin-qvjdddt72t
+kubectl get pods -A
 ```
 
 # Contributing
 
 ## devcontainer
+
 The easiest way to get your development enviroment up and running is using the [devcontainer](https://code.visualstudio.com/docs/remote/containers-tutorial).
-Simply clone the repository, open the folder in your VSCode and accept the popup which asks if VSCode should restart in the dev-container. 
+Simply clone the repository, open the folder in your VSCode and accept the popup which asks if VSCode should restart in the dev-container.
 
 ## Repository layout
-```
+
+```bash
 ├── .devcontainer   # the kkpctl repository comes with a devcontainer, so you can easily get started using VSCode
 ├── .github         # all github related configuration lays here
 │   └── workflows   # contains the CI pipelines for kkpctl
@@ -144,7 +184,7 @@ Simply clone the repository, open the folder in your VSCode and accept the popup
 ├── Makefile        # all the usefull aliases to build and test the project
 ├── cmd             # everything related to command line parsing is located in here. This is where you probably wanna start looking at
 ├── docs            # contains documentation
-├── hack            # contains scripts for development 
+├── hack            # contains scripts for development
 ├── main.go         # the main entry point to the application
 ├── pkg             # most of the code is located here
 │   ├── client      # the code that connects to the KKP API is here
@@ -157,15 +197,18 @@ Simply clone the repository, open the folder in your VSCode and accept the popup
 
 ```
 
-## Makefile 
+## Makefile
+
 The repository ships with a makefile which makes it easier to build and install the application.
 Useful Makefile targets are `build`, `release`, `test`, `test_all`, `install`, `install_release`, `clean`, and `vet`.
 
 Most of them are self-explaining. I just want to point out the difference between a "development" and a "release" build.
+
 * The development build is a regular `go build` with the `-race` flag enabled to detect race conditions easier.
 * The release build is a regular `go build` withouth the `-race` flag, but with `-ldflags "-s -w"` to strip the debug symbols from the binary.
 
 The `build` and `release` targets depend on `fmt` and `tidy`, so your code is always formated and your `go.mod` file is always tidy.
 
 ## Pull requests
-We welcome pull requests. Feel free to dig through the [issues](https://github.com/cedi/kkpctl/issues) and jump in.
+
+We welcome pull requests. Feel free to dig through the [issues](https://github.com/cedi/kkpctl/issues) and jump in
