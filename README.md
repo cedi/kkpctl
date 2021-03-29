@@ -98,7 +98,7 @@ The easiest option is to use `kkpctl config`, however due to the early stage of 
 kkpctl config add provider openstack --username "user@email.de" --password "my-super-secure-password" --tenant "internal-openstack-tenant" optimist
 ```
 
-#### Manually configure
+#### Configure `kkpctl` manualy
 
 ```bash
 # Create an empty configuration
@@ -107,7 +107,7 @@ kkpctl config generate -w
 editor ~/.config/kkpctl/config.yaml
 ```
 
-### Add your KKP Cloud
+## Add your KKP Cloud
 
 ```bash
 kkpctl config add cloud imke_prod https://imke.cloud/
@@ -119,7 +119,7 @@ kkpctl config set cloud imke_prod berer ey....
 kkpctl ctx set cloud imke_prod
 ```
 
-### Work with projects
+## Work with projects
 
 1. Create your first project
 
@@ -139,7 +139,7 @@ kkpctl get project
 kkpctl describe project 6tmbnhdl7h
 ```
 
-### Working with clusters
+## Working with clusters
 
 1. Create your first cluster
 
@@ -158,6 +158,8 @@ kkpctl get cluster --project 6tmbnhdl7h
 ```bash
 kkpctl describe cluster --project 6tmbnhdl7h qvjdddt72t
 ```
+
+## Connecting your `kubectl` to one of the KKP Clusters
 
 1. Connect to your cluster, once it's ready
 
