@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/cedi/kkpctl/cmd/completion"
 	"github.com/spf13/cobra"
 )
 
@@ -27,7 +28,7 @@ var ctxSetCloudCmd = &cobra.Command{
 	Short:             "Set the cloud which you want to connect to",
 	Args:              cobra.ExactArgs(1),
 	Example:           "kkpctl ctx set cloud imke",
-	ValidArgsFunction: getValidCloudContextArgs,
+	ValidArgsFunction: completion.GetValidCloudContextArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		cloudName := args[0]
 
@@ -46,7 +47,7 @@ var ctxGetCloudCmd = &cobra.Command{
 	Short:             "Get the cloud which you want to connect to",
 	Args:              cobra.ExactArgs(0),
 	Example:           "kkpctl ctx get cloud",
-	ValidArgsFunction: getValidCloudContextArgs,
+	ValidArgsFunction: completion.GetValidCloudContextArgs,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(Config.Context.CloudName)
 	},

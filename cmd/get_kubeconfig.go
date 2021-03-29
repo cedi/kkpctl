@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 
+	"github.com/cedi/kkpctl/cmd/completion"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
@@ -18,7 +19,7 @@ var getKubeconfigCmd = &cobra.Command{
 	Short:             "Gets the kubeconfig of a cluster",
 	Example:           "kkpctl get kubeconfig --project x5zvx9bcx6 -w",
 	Args:              cobra.ExactArgs(1),
-	ValidArgsFunction: getValidClusterArgs,
+	ValidArgsFunction: completion.GetValidClusterArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		clusterID := args[0]
 
@@ -54,10 +55,10 @@ func init() {
 	getCmd.AddCommand(getKubeconfigCmd)
 	getKubeconfigCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project.")
 	describeClusterCmd.MarkFlagRequired("project")
-	getClustersCmd.RegisterFlagCompletionFunc("project", getValidProjectArgs)
+	getClustersCmd.RegisterFlagCompletionFunc("project", completion.GetValidProjectArgs)
 
 	getKubeconfigCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter.")
-	getClustersCmd.RegisterFlagCompletionFunc("datacenter", getValidDatacenterArgs)
+	getClustersCmd.RegisterFlagCompletionFunc("datacenter", completion.GetValidDatacenterArgs)
 
 	getKubeconfigCmd.Flags().BoolVarP(&writeConfig, "write", "w", false, "write the kubeconfig to the local directory")
 }

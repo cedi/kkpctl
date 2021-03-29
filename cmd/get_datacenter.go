@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/cedi/kkpctl/cmd/completion"
 	"github.com/cedi/kkpctl/pkg/output"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -14,7 +15,7 @@ var getDatacenterCmd = &cobra.Command{
 	Short:             "Lists available datacenters",
 	Example:           "kkpctl get datacenter",
 	Args:              cobra.MaximumNArgs(1),
-	ValidArgsFunction: getValidDatacenterArgs,
+	ValidArgsFunction: completion.GetValidDatacenterArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		dc := ""
 		if len(args) == 1 {

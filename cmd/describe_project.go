@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/cedi/kkpctl/cmd/completion"
 	"github.com/cedi/kkpctl/pkg/describe"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -14,7 +15,7 @@ var describeProjectsCmd = &cobra.Command{
 	Short:             "Describe a project",
 	Example:           "kkpctl describe project dw2s9jk28z",
 	Args:              cobra.ExactArgs(1),
-	ValidArgsFunction: getValidProjectArgs,
+	ValidArgsFunction: completion.GetValidProjectArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		projectID := args[0]
 

@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/cedi/kkpctl/cmd/completion"
 	"github.com/cedi/kkpctl/pkg/output"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -18,7 +19,7 @@ var editClusterUpgradeCmd = &cobra.Command{
 	Short:             "Upgrades a clusters",
 	Example:           "kkpctl edit cluster upgrade --project dw2s9jk28z x5zvx9bcx6 --to-version 1.18.13",
 	Args:              cobra.ExactArgs(1),
-	ValidArgsFunction: getValidClusterArgs,
+	ValidArgsFunction: completion.GetValidClusterArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		clusterID := args[0]
 
@@ -59,14 +60,14 @@ func init() {
 
 	editClusterUpgradeCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project to list clusters for.")
 	editClusterUpgradeCmd.MarkFlagRequired("project")
-	editClusterUpgradeCmd.RegisterFlagCompletionFunc("project", getValidProjectArgs)
+	editClusterUpgradeCmd.RegisterFlagCompletionFunc("project", completion.GetValidProjectArgs)
 
 	editClusterUpgradeCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter to list clusters for.")
-	editClusterUpgradeCmd.RegisterFlagCompletionFunc("datacenter", getValidDatacenterArgs)
+	editClusterUpgradeCmd.RegisterFlagCompletionFunc("datacenter", completion.GetValidDatacenterArgs)
 
 	editClusterUpgradeCmd.Flags().StringVar(&toVersion, "to-version", "", "To which Version should the cluster be updated")
 	editClusterUpgradeCmd.MarkFlagRequired("to-version")
-	editClusterUpgradeCmd.RegisterFlagCompletionFunc("to-version", getValidToVersionArgs)
+	editClusterUpgradeCmd.RegisterFlagCompletionFunc("to-version", completion.GetValidToVersionArgs)
 
 	editClusterUpgradeCmd.Flags().BoolVar(&noUpgradeWorkers, "no-upgrade-workers", false, "Do not automatically upgrade the workers kubelet version")
 }

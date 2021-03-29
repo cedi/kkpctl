@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/cedi/kkpctl/cmd/completion"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
@@ -18,7 +19,7 @@ var delClusterCmd = &cobra.Command{
 	Short:             "Delete a cluster",
 	Example:           "kkpctl delete cluster rbw47nm2h8 --project dw2s9jk28z",
 	Args:              cobra.ExactArgs(1),
-	ValidArgsFunction: getValidClusterArgs,
+	ValidArgsFunction: completion.GetValidClusterArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		clusterID := args[0]
 
@@ -53,10 +54,10 @@ func init() {
 
 	delClusterCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project to list clusters for")
 	delClusterCmd.MarkFlagRequired("project")
-	delClusterCmd.RegisterFlagCompletionFunc("project", getValidProjectArgs)
+	delClusterCmd.RegisterFlagCompletionFunc("project", completion.GetValidProjectArgs)
 
 	delClusterCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter to delete the cluster in")
-	delClusterCmd.RegisterFlagCompletionFunc("datacenter", getValidDatacenterArgs)
+	delClusterCmd.RegisterFlagCompletionFunc("datacenter", completion.GetValidDatacenterArgs)
 
 	delClusterCmd.Flags().BoolVar(&noDeleteVolumes, "no-delete-volumes", false, "Do not cleanup connected volumes (PVs and PCVs)")
 	delClusterCmd.Flags().BoolVar(&noDeleteLoadBalancers, "no-delete-loadbalancers", false, "Do not cleanup connected Load Balancers")

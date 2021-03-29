@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/cedi/kkpctl/cmd/completion"
 	"github.com/cedi/kkpctl/pkg/output"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -14,7 +15,7 @@ var getClusterVersionCmd = &cobra.Command{
 	Short:             "Lists all available Kubernetes Versions in your KKP installation",
 	Example:           "kkpctl get version",
 	Args:              cobra.ExactArgs(0),
-	ValidArgsFunction: getValidDatacenterArgs,
+	ValidArgsFunction: completion.GetValidDatacenterArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		kkp, err := Config.GetKKPClient()
 		if err != nil {

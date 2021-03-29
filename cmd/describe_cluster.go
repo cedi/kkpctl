@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/cedi/kkpctl/cmd/completion"
 	"github.com/cedi/kkpctl/pkg/describe"
 	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/pkg/errors"
@@ -14,7 +15,7 @@ var describeClusterCmd = &cobra.Command{
 	Short:             "Describe a cluster",
 	Example:           "kkpctl describe cluster rbw47nm2h8 --project dw2s9jk28z",
 	Args:              cobra.ExactArgs(1),
-	ValidArgsFunction: getValidClusterArgs,
+	ValidArgsFunction: completion.GetValidClusterArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		clusterID := args[0]
 
@@ -68,10 +69,10 @@ func init() {
 
 	describeClusterCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project to list clusters for.")
 	describeClusterCmd.MarkFlagRequired("project")
-	describeClusterCmd.RegisterFlagCompletionFunc("project", getValidProjectArgs)
+	describeClusterCmd.RegisterFlagCompletionFunc("project", completion.GetValidProjectArgs)
 
 	describeClusterCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter to list clusters for.")
-	describeClusterCmd.RegisterFlagCompletionFunc("datacenter", getValidDatacenterArgs)
+	describeClusterCmd.RegisterFlagCompletionFunc("datacenter", completion.GetValidDatacenterArgs)
 
 	describeClusterCmd.Flags().BoolVarP(&listAll, "all", "a", false, "To list all clusters in all projects if the users is allowed to see.")
 }

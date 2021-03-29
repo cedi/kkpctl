@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/cedi/kkpctl/cmd/completion"
 	"github.com/cedi/kkpctl/pkg/model"
 	"github.com/cedi/kkpctl/pkg/utils"
 	"github.com/pkg/errors"
@@ -57,21 +58,21 @@ func init() {
 
 	createClusterCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project.")
 	createClusterCmd.MarkFlagRequired("project")
-	createClusterCmd.RegisterFlagCompletionFunc("project", getValidProjectArgs)
+	createClusterCmd.RegisterFlagCompletionFunc("project", completion.GetValidProjectArgs)
 
 	createClusterCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter.")
 	createClusterCmd.MarkFlagRequired("datacenter")
-	createClusterCmd.RegisterFlagCompletionFunc("datacenter", getValidDatacenterArgs)
+	createClusterCmd.RegisterFlagCompletionFunc("datacenter", completion.GetValidDatacenterArgs)
 
 	createClusterCmd.Flags().StringVar(&clusterType, "type", "kubernetes", "Type of the cluster (kubernetes or openshift)")
-	createClusterCmd.RegisterFlagCompletionFunc("type", getValidClusterTypes)
+	createClusterCmd.RegisterFlagCompletionFunc("type", completion.GetValidClusterTypes)
 
 	createClusterCmd.Flags().StringVarP(&k8sVersion, "version", "v", "", "Name of the datacenter")
 	createClusterCmd.MarkFlagRequired("version")
-	createClusterCmd.RegisterFlagCompletionFunc("version", getValidKubernetesVersions)
+	createClusterCmd.RegisterFlagCompletionFunc("version", completion.GetValidKubernetesVersions)
 
 	createClusterCmd.Flags().StringVar(&providerName, "provider", "", "Which provider should be used")
-	createClusterCmd.RegisterFlagCompletionFunc("provider", getValidProvider)
+	createClusterCmd.RegisterFlagCompletionFunc("provider", completion.GetValidProvider)
 	createClusterCmd.MarkFlagRequired("provider")
 
 	createClusterCmd.Flags().BoolVar(&enableAuditLogging, "audit-logging", false, "Enable audit logging")

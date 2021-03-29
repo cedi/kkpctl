@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/cedi/kkpctl/cmd/completion"
 	"github.com/cedi/kkpctl/pkg/output"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -16,7 +17,7 @@ var getProjectsCmd = &cobra.Command{
 	Short:             "List a project",
 	Example:           "kkpctl get project",
 	Args:              cobra.MaximumNArgs(1),
-	ValidArgsFunction: getValidProjectArgs,
+	ValidArgsFunction: completion.GetValidProjectArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		projectID := ""
 		if len(args) == 1 {

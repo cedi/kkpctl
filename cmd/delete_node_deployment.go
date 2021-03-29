@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/cedi/kkpctl/cmd/completion"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
@@ -12,7 +13,7 @@ var deleteNodeDeploymentCmd = &cobra.Command{
 	Short:             "Delete a node deployment from a cluster",
 	Args:              cobra.ExactArgs(1),
 	Example:           "kkpctl delete nodedeployment --project 6tmbnhdl7h --cluster qvjdddt72t my_first_nodedeployment",
-	ValidArgsFunction: getValidNodeDeploymentArgs,
+	ValidArgsFunction: completion.GetValidNodeDeploymentArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		nodeDeploymentName := args[0]
 		kkp, err := Config.GetKKPClient()
@@ -45,12 +46,12 @@ func init() {
 
 	deleteNodeDeploymentCmd.Flags().StringVarP(&clusterID, "cluster", "c", "", "ID of the cluster")
 	deleteNodeDeploymentCmd.MarkFlagRequired("cluster")
-	deleteNodeDeploymentCmd.RegisterFlagCompletionFunc("cluster", getValidClusterArgs)
+	deleteNodeDeploymentCmd.RegisterFlagCompletionFunc("cluster", completion.GetValidClusterArgs)
 
 	deleteNodeDeploymentCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project")
 	deleteNodeDeploymentCmd.MarkFlagRequired("project")
-	deleteNodeDeploymentCmd.RegisterFlagCompletionFunc("project", getValidProjectArgs)
+	deleteNodeDeploymentCmd.RegisterFlagCompletionFunc("project", completion.GetValidProjectArgs)
 
 	deleteNodeDeploymentCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter")
-	deleteNodeDeploymentCmd.RegisterFlagCompletionFunc("datacenter", getValidDatacenterArgs)
+	deleteNodeDeploymentCmd.RegisterFlagCompletionFunc("datacenter", completion.GetValidDatacenterArgs)
 }

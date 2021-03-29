@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/cedi/kkpctl/cmd/completion"
 	"github.com/cedi/kkpctl/pkg/config"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -21,7 +22,7 @@ var configSetBearerCmd = &cobra.Command{
 	Short:             "Set the bearer token for a cloud",
 	Args:              cobra.ExactArgs(2),
 	Example:           "kkpctl config set cloud bearer imke_prod sdfhjsldkfjsdklfhj...",
-	ValidArgsFunction: getValidCloudContextArgs,
+	ValidArgsFunction: completion.GetValidCloudContextArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		cloudName := args[0]
 		bearer := args[1]

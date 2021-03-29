@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/cedi/kkpctl/cmd/completion"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
@@ -13,7 +14,7 @@ var delProjectsCmd = &cobra.Command{
 	Short:             "Delete a project",
 	Example:           "kkpctl delete project dw2s9jk28z",
 	Args:              cobra.ExactArgs(1),
-	ValidArgsFunction: getValidProjectArgs,
+	ValidArgsFunction: completion.GetValidProjectArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		projectID := args[0]
 

@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/cedi/kkpctl/cmd/completion"
 	"github.com/cedi/kkpctl/pkg/describe"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -14,7 +15,7 @@ var describeNodeDeploymentCmd = &cobra.Command{
 	Short:             "Describes a node deployment",
 	Example:           "kkpctl describe nodedeployment --project 6tmbnhdl7h --cluster qvjdddt72t hallowelt",
 	Args:              cobra.ExactArgs(1),
-	ValidArgsFunction: getValidNodeDeploymentArgs,
+	ValidArgsFunction: completion.GetValidNodeDeploymentArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		nodeDeploymentName := args[0]
 
@@ -65,12 +66,12 @@ func init() {
 
 	describeNodeDeploymentCmd.Flags().StringVarP(&clusterID, "cluster", "c", "", "ID of the cluster")
 	describeNodeDeploymentCmd.MarkFlagRequired("cluster")
-	describeNodeDeploymentCmd.RegisterFlagCompletionFunc("cluster", getValidClusterArgs)
+	describeNodeDeploymentCmd.RegisterFlagCompletionFunc("cluster", completion.GetValidClusterArgs)
 
 	describeNodeDeploymentCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project")
 	describeNodeDeploymentCmd.MarkFlagRequired("project")
-	describeNodeDeploymentCmd.RegisterFlagCompletionFunc("project", getValidProjectArgs)
+	describeNodeDeploymentCmd.RegisterFlagCompletionFunc("project", completion.GetValidProjectArgs)
 
 	describeNodeDeploymentCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter")
-	describeNodeDeploymentCmd.RegisterFlagCompletionFunc("datacenter", getValidDatacenterArgs)
+	describeNodeDeploymentCmd.RegisterFlagCompletionFunc("datacenter", completion.GetValidDatacenterArgs)
 }

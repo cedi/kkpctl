@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/cedi/kkpctl/cmd/completion"
 	"github.com/cedi/kkpctl/pkg/config"
 	"github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
@@ -36,6 +37,8 @@ func Execute() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+
+	completion.Config = Config
 
 	err = rootCmd.Execute()
 	if err != nil {

@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/cedi/kkpctl/cmd/completion"
 	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -48,7 +49,7 @@ func init() {
 
 	configAddOSNodeSpecCmd.Flags().StringVar(&flavor, "flavor", "", "The OS Flavor to use")
 	configAddOSNodeSpecCmd.MarkFlagRequired("flavor")
-	configAddOSNodeSpecCmd.RegisterFlagCompletionFunc("flavor", getValidFlavorArgs)
+	configAddOSNodeSpecCmd.RegisterFlagCompletionFunc("flavor", completion.GetValidFlavorArgs)
 
 	configAddOSNodeSpecCmd.Flags().StringVar(&image, "image", "", "The OS image to use")
 	configAddOSNodeSpecCmd.MarkFlagRequired("image")

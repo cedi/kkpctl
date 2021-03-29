@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/cedi/kkpctl/cmd/completion"
 	"github.com/cedi/kkpctl/pkg/model"
 	"github.com/cedi/kkpctl/pkg/utils"
 	"github.com/pkg/errors"
@@ -66,25 +67,25 @@ func init() {
 
 	createNodeDeploymentCmd.Flags().StringVarP(&clusterID, "cluster", "c", "", "ID of the cluster")
 	createNodeDeploymentCmd.MarkFlagRequired("cluster")
-	createNodeDeploymentCmd.RegisterFlagCompletionFunc("cluster", getValidClusterArgs)
+	createNodeDeploymentCmd.RegisterFlagCompletionFunc("cluster", completion.GetValidClusterArgs)
 
 	createNodeDeploymentCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project")
 	createNodeDeploymentCmd.MarkFlagRequired("project")
-	createNodeDeploymentCmd.RegisterFlagCompletionFunc("project", getValidProjectArgs)
+	createNodeDeploymentCmd.RegisterFlagCompletionFunc("project", completion.GetValidProjectArgs)
 
 	createNodeDeploymentCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter")
-	createNodeDeploymentCmd.RegisterFlagCompletionFunc("datacenter", getValidDatacenterArgs)
+	createNodeDeploymentCmd.RegisterFlagCompletionFunc("datacenter", completion.GetValidDatacenterArgs)
 
 	createNodeDeploymentCmd.Flags().StringVar(&providerName, "provider", "", "Which provider should be used")
-	createNodeDeploymentCmd.RegisterFlagCompletionFunc("provider", getValidProvider)
+	createNodeDeploymentCmd.RegisterFlagCompletionFunc("provider", completion.GetValidProvider)
 	createNodeDeploymentCmd.MarkFlagRequired("provider")
 
 	createNodeDeploymentCmd.Flags().StringVar(&operatingSystem, "operatingsystem", "", "Which operating system should be used")
-	createNodeDeploymentCmd.RegisterFlagCompletionFunc("operatingsystem", getValidOperatingSystem)
+	createNodeDeploymentCmd.RegisterFlagCompletionFunc("operatingsystem", completion.GetValidOperatingSystem)
 	createNodeDeploymentCmd.MarkFlagRequired("operatingsystem")
 
 	createNodeDeploymentCmd.Flags().StringVar(&nodeSpecName, "nodespec", "", "Which node spec should be used")
-	createNodeDeploymentCmd.RegisterFlagCompletionFunc("nodespec", getValidNodeSpecArgs)
+	createNodeDeploymentCmd.RegisterFlagCompletionFunc("nodespec", completion.GetValidNodeSpecArgs)
 	createNodeDeploymentCmd.MarkFlagRequired("nodespec")
 
 	createNodeDeploymentCmd.Flags().BoolVar(&dynamicConfig, "dynamic_config", false, "Dynamic kubelet config")
