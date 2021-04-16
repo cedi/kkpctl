@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"reflect"
 	"sort"
 
 	"github.com/kubermatic/go-kubermatic/models"
@@ -34,7 +35,7 @@ func (r taintRender) ParseObject(inputObj interface{}, output string) (string, e
 
 func (r taintRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
 	var err error
-	parsedOutput := make([]byte, 0)
+	var parsedOutput []byte
 
 	objects, ok := inputObj.([]models.TaintSpec)
 	if !ok {
@@ -73,4 +74,10 @@ func (r taintRender) ParseCollection(inputObj interface{}, output string, sortBy
 	}
 
 	return string(parsedOutput), err
+}
+
+func init() {
+	parser := GetParserFactory()
+	parser.AddCollectionParser(reflect.TypeOf([]*models.TaintSpec{}), taintRender{})
+	parser.AddObjectParser(reflect.TypeOf(&models.TaintSpec{}), taintRender{})
 }

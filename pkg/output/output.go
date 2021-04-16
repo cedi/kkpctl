@@ -4,10 +4,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/cedi/kkpctl/pkg/config"
-	"github.com/cedi/kkpctl/pkg/model"
 	"github.com/cedi/kkpctl/pkg/utils"
-	"github.com/kubermatic/go-kubermatic/models"
 )
 
 const (
@@ -28,54 +25,14 @@ const (
 )
 
 // make the parser factory a singleton
-var parser *ParserFactory
+var parserFactory *ParserFactory
 
-func init() {
-	parser = NewParserFactory()
+func GetParserFactory() *ParserFactory {
+	if parserFactory == nil {
+		parserFactory = NewParserFactory()
+	}
 
-	// KKP Project
-	parser.AddCollectionParser(reflect.TypeOf([]models.Project{}), projectRender{})
-	parser.AddObjectParser(reflect.TypeOf(models.Project{}), projectRender{})
-	parser.AddObjectParser(reflect.TypeOf(&models.Project{}), projectRender{})
-
-	// Datacenter
-	parser.AddCollectionParser(reflect.TypeOf([]models.Datacenter{}), datacenterRender{})
-	parser.AddObjectParser(reflect.TypeOf(models.Datacenter{}), datacenterRender{})
-	parser.AddObjectParser(reflect.TypeOf(&models.Datacenter{}), datacenterRender{})
-
-	// KKP Clusters
-	parser.AddCollectionParser(reflect.TypeOf([]models.Cluster{}), clusterRender{})
-	parser.AddObjectParser(reflect.TypeOf(models.Cluster{}), clusterRender{})
-	parser.AddObjectParser(reflect.TypeOf(&models.Cluster{}), clusterRender{})
-
-	// Cluster Versions
-	parser.AddCollectionParser(reflect.TypeOf(model.VersionList{}), clusterVersionRender{})
-	parser.AddObjectParser(reflect.TypeOf(model.Version{}), clusterVersionRender{})
-	parser.AddObjectParser(reflect.TypeOf(&model.Version{}), clusterVersionRender{})
-
-	// ClusterHealth
-	parser.AddObjectParser(reflect.TypeOf(&models.ClusterHealth{}), clusterHealthRender{})
-
-	// Events
-	parser.AddCollectionParser(reflect.TypeOf([]models.Event{}), eventRender{})
-
-	// Node Deployments
-	parser.AddCollectionParser(reflect.TypeOf([]models.NodeDeployment{}), nodeDeploymentRender{})
-	parser.AddObjectParser(reflect.TypeOf(models.NodeDeployment{}), nodeDeploymentRender{})
-	parser.AddObjectParser(reflect.TypeOf(&models.NodeDeployment{}), nodeDeploymentRender{})
-
-	// Node
-	parser.AddCollectionParser(reflect.TypeOf([]models.Node{}), nodeRender{})
-	parser.AddObjectParser(reflect.TypeOf(models.Node{}), nodeRender{})
-	parser.AddObjectParser(reflect.TypeOf(&models.Node{}), nodeRender{})
-
-	// Node Taints
-	parser.AddCollectionParser(reflect.TypeOf([]*models.TaintSpec{}), taintRender{})
-	parser.AddObjectParser(reflect.TypeOf(&models.TaintSpec{}), taintRender{})
-
-	// Config
-	parser.AddObjectParser(reflect.TypeOf(config.CloudConfig{}), configCloudRender{})
-	parser.AddObjectParser(reflect.TypeOf(&config.CloudConfig{}), configCloudRender{})
+	return parserFactory
 }
 
 // ParseOutput takes any KKP Object as an input and then parses it to the appropriate output format
@@ -90,6 +47,8 @@ func ParseOutput(object interface{}, output string, sortBy string) (string, erro
 	if err != nil {
 		return "", err
 	}
+
+	parser := GetParserFactory()
 
 	collectionsParser, ok := parser.GetCollectionParser(reflect.TypeOf(object))
 	if ok {

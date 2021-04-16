@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"reflect"
 	"sort"
 
 	"github.com/kubermatic/go-kubermatic/models"
@@ -35,7 +36,7 @@ func (r datacenterRender) ParseObject(inputObject interface{}, output string) (s
 
 func (r datacenterRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
 	var err error
-	parsedOutput := make([]byte, 0)
+	var parsedOutput []byte
 
 	objects, ok := inputObj.([]models.Datacenter)
 	if !ok {
@@ -78,4 +79,11 @@ func (r datacenterRender) ParseCollection(inputObj interface{}, output string, s
 	}
 
 	return string(parsedOutput), err
+}
+
+func init() {
+	parser := GetParserFactory()
+	parser.AddCollectionParser(reflect.TypeOf([]models.Datacenter{}), datacenterRender{})
+	parser.AddObjectParser(reflect.TypeOf(models.Datacenter{}), datacenterRender{})
+	parser.AddObjectParser(reflect.TypeOf(&models.Datacenter{}), datacenterRender{})
 }

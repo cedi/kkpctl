@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"reflect"
 
 	"github.com/cedi/kkpctl/pkg/config"
 	"github.com/lensesio/tableprinter"
@@ -20,7 +21,7 @@ type configCloudRender struct {
 
 func (r configCloudRender) ParseObject(inputObj interface{}, output string) (string, error) {
 	var err error
-	parsedOutput := make([]byte, 0)
+	var parsedOutput []byte
 	var cfg config.CloudConfig
 
 	switch object := inputObj.(type) {
@@ -61,4 +62,10 @@ func (r configCloudRender) ParseObject(inputObj interface{}, output string) (str
 	}
 
 	return string(parsedOutput), err
+}
+
+func init() {
+	parser := GetParserFactory()
+	parser.AddObjectParser(reflect.TypeOf(config.CloudConfig{}), configCloudRender{})
+	parser.AddObjectParser(reflect.TypeOf(&config.CloudConfig{}), configCloudRender{})
 }

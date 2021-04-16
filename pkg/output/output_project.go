@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"reflect"
 	"sort"
 	"strings"
 
@@ -39,7 +40,7 @@ func (r projectRender) ParseObject(inputObj interface{}, output string) (string,
 
 func (r projectRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
 	var err error
-	parsedOutput := make([]byte, 0)
+	var parsedOutput []byte
 
 	objects, ok := inputObj.([]models.Project)
 	if !ok {
@@ -90,4 +91,11 @@ func (r projectRender) ParseCollection(inputObj interface{}, output string, sort
 	}
 
 	return string(parsedOutput), err
+}
+
+func init() {
+	parser := GetParserFactory()
+	parser.AddCollectionParser(reflect.TypeOf([]models.Project{}), projectRender{})
+	parser.AddObjectParser(reflect.TypeOf(models.Project{}), projectRender{})
+	parser.AddObjectParser(reflect.TypeOf(&models.Project{}), projectRender{})
 }

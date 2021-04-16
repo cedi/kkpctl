@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"reflect"
 	"sort"
 
 	"github.com/kubermatic/go-kubermatic/models"
@@ -23,7 +24,7 @@ type eventRender struct {
 
 func (r eventRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
 	var err error
-	parsedOutput := make([]byte, 0)
+	var parsedOutput []byte
 
 	objects, ok := inputObj.([]models.Event)
 	if !ok {
@@ -68,4 +69,9 @@ func (r eventRender) ParseCollection(inputObj interface{}, output string, sortBy
 	}
 
 	return string(parsedOutput), err
+}
+
+func init() {
+	parser := GetParserFactory()
+	parser.AddCollectionParser(reflect.TypeOf([]models.Event{}), eventRender{})
 }

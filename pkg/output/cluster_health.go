@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"reflect"
 
 	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/lensesio/tableprinter"
@@ -25,7 +26,7 @@ type clusterHealthRender struct {
 
 func (rendered clusterHealthRender) ParseObject(inputObj interface{}, output string) (string, error) {
 	var err error
-	parsedOutput := make([]byte, 0)
+	var parsedOutput []byte
 
 	object, ok := inputObj.(*models.ClusterHealth)
 	if !ok {
@@ -75,4 +76,9 @@ func getHealthStatusString(status models.HealthStatus) string {
 		return "Provisioning"
 	}
 	return "Unknown"
+}
+
+func init() {
+	parser := GetParserFactory()
+	parser.AddObjectParser(reflect.TypeOf(&models.ClusterHealth{}), clusterHealthRender{})
 }

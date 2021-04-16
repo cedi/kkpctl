@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"reflect"
 	"sort"
 
 	"github.com/kubermatic/go-kubermatic/models"
@@ -40,7 +41,7 @@ func (r nodeDeploymentRender) ParseObject(inputObj interface{}, output string) (
 
 func (r nodeDeploymentRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
 	var err error
-	parsedOutput := make([]byte, 0)
+	var parsedOutput []byte
 
 	objects, ok := inputObj.([]models.NodeDeployment)
 	if !ok {
@@ -107,4 +108,11 @@ func getOperatingSystem(osSpec *models.OperatingSystemSpec) string {
 		return "Ubuntu"
 	}
 	return ""
+}
+
+func init() {
+	parser := GetParserFactory()
+	parser.AddCollectionParser(reflect.TypeOf([]models.NodeDeployment{}), nodeDeploymentRender{})
+	parser.AddObjectParser(reflect.TypeOf(models.NodeDeployment{}), nodeDeploymentRender{})
+	parser.AddObjectParser(reflect.TypeOf(&models.NodeDeployment{}), nodeDeploymentRender{})
 }

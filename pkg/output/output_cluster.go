@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"reflect"
 	"sort"
 
 	"github.com/cedi/kkpctl/pkg/model"
@@ -39,7 +40,7 @@ func (r clusterRender) ParseObject(inputObj interface{}, output string) (string,
 
 func (r clusterRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
 	var err error
-	parsedOutput := make([]byte, 0)
+	var parsedOutput []byte
 
 	objects, ok := inputObj.([]models.Cluster)
 	if !ok {
@@ -92,4 +93,11 @@ func (r clusterRender) ParseCollection(inputObj interface{}, output string, sort
 	}
 
 	return string(parsedOutput), err
+}
+
+func init() {
+	parser := GetParserFactory()
+	parser.AddCollectionParser(reflect.TypeOf([]models.Cluster{}), clusterRender{})
+	parser.AddObjectParser(reflect.TypeOf(models.Cluster{}), clusterRender{})
+	parser.AddObjectParser(reflect.TypeOf(&models.Cluster{}), clusterRender{})
 }
