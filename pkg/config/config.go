@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"strings"
 
 	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/pkg/errors"
@@ -63,6 +64,15 @@ func Read() (*Config, error) {
 	config := &Config{}
 	if err := yaml.Unmarshal(data, config); err != nil {
 		return NewConfig(), errors.Wrap(err, "Failed to parse kkpctl config")
+	}
+
+	// fix a bug where cluster creation does not work when the URL contains a trailing slash
+	for _, cloud := range config.Cloud {
+		if cloud == nil {
+			continue
+		}
+
+		cloud.URL = strings.TrimSuffix(cloud.URL, "/")
 	}
 
 	return config, nil
