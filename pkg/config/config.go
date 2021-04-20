@@ -68,6 +68,7 @@ func Read() (*Config, error) {
 	return config, nil
 }
 
+// EnsureConfig ensures that the configuration file is there and if not, it will create an empty config file
 func EnsureConfig() error {
 	if _, err := os.Stat(ConfigPath); os.IsNotExist(err) {
 		path, _ := path.Split(ConfigPath)

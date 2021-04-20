@@ -86,6 +86,33 @@ For the full usage documentation see the [docs](docs/commandline-usage.md)
 
 ## Quick-Start
 
+### Login
+
+`kkpctl` uses OIDC to login to the KKP cloud.
+Before getting startet, you need to either configure a new static client in your dex configuration, or obtain the clientID and the clientSecret from the kubermatic dashboard.
+The later one is the easiest one.
+To get the oidc client id and secret from your KKP installation, simply run the following command
+
+```bash
+$ k get cm -n oauth dex -ojson | jq '.data["config.yaml"]' -r | yq '.staticClients[] | select(.id | contains("kubermatic"))'
+{
+  "RedirectURIs": [
+    "http://localhost:8000",
+    "https://your.cloud",
+    "http://localhost:8000/clusters",
+    "https://your.cloud/clusters",
+    "http://localhost:8000/projects",
+    "https://your.cloud/projects",
+    "https://your.cloud/api/v1/kubeconfig"
+  ],
+  "id": "kubermatic",
+  "name": "Kubermatic",
+  "secret": "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+}
+```
+
+configure the id and the secret
+
 ### Configuration
 
 Currently there are two ways to configure your `kkpctl`.

@@ -5,10 +5,17 @@ import "fmt"
 // CloudConfig is the key-value store from the cloud name to it's URL
 type CloudConfig map[string]*Cloud
 
+// CloudOIDCSettings stores the OIDC Client settings
+type CloudOIDCSettings struct {
+	ClientID     string `yaml:"client_id"`
+	ClientSecret string `yaml:"client_secret"`
+}
+
 // Cloud is a cloud object
 type Cloud struct {
-	URL    string `yaml:"url"`
-	Bearer string `yaml:"bearer"`
+	URL    string            `yaml:"url"`
+	Bearer string            `yaml:"bearer"`
+	OIDC   CloudOIDCSettings `yaml:"oidc"`
 }
 
 // NewCloud creates a new Cloud object
@@ -16,6 +23,10 @@ func NewCloud(url, bearer string) *Cloud {
 	return &Cloud{
 		URL:    url,
 		Bearer: bearer,
+		OIDC: CloudOIDCSettings{
+			ClientID:     "",
+			ClientSecret: "",
+		},
 	}
 }
 
