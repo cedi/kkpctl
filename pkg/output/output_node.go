@@ -22,6 +22,7 @@ type nodeRender struct {
 	KernelVersion           string   `header:"KernelVersion"`
 	KubeletVersion          string   `header:"KubeletVersion"`
 	CreationTimestamp       string   `header:"Created"`
+	ErrorMessage            string   `header:"ErrorMessage"`
 }
 
 func (r nodeRender) ParseObject(inputObj interface{}, output string) (string, error) {
@@ -61,7 +62,7 @@ func (r nodeRender) ParseCollection(inputObj interface{}, output string, sortBy 
 				addressRender = append(addressRender, fmt.Sprintf("%s/%s", address.Type, address.Address))
 			}
 
-			rendered = append(rendered, nodeRender{
+			nr := nodeRender{
 				Name:                    node.Name,
 				Addresses:               addressRender,
 				Architecture:            node.Status.NodeInfo.Architecture,
@@ -69,7 +70,14 @@ func (r nodeRender) ParseCollection(inputObj interface{}, output string, sortBy 
 				KernelVersion:           node.Status.NodeInfo.KernelVersion,
 				KubeletVersion:          node.Status.NodeInfo.KubeletVersion,
 				CreationTimestamp:       node.CreationTimestamp.String(),
-			})
+				ErrorMessage:            node.Status.ErrorMessage,
+			}
+
+			if nr.ErrorMessage == "" {
+				nr.ErrorMessage = "None"
+			}
+
+			rendered = append(rendered, nr)
 		}
 
 		sort.Slice(rendered, func(i, j int) bool {
