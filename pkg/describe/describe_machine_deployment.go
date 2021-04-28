@@ -8,21 +8,21 @@ import (
 	"github.com/kubermatic/go-kubermatic/models"
 )
 
-// NodeDeploymentDescribeMeta contains all the necessary fields to describe a cluster
-type NodeDeploymentDescribeMeta struct {
-	NodeDeployment *models.NodeDeployment
-	Nodes          []models.Node
-	NodeEvents     []models.Event
+// MachineDeploymentDescribeMeta contains all the necessary fields to describe a cluster
+type MachineDeploymentDescribeMeta struct {
+	MachineDeployment *models.NodeDeployment
+	Nodes             []models.Node
+	NodeEvents        []models.Event
 }
 
 // describeProject takes any KKP Cluster and describes it
-func describeNodeDeployment(meta *NodeDeploymentDescribeMeta) (string, error) {
-	nd := meta.NodeDeployment
+func describeNodeDeployment(meta *MachineDeploymentDescribeMeta) (string, error) {
+	nd := meta.MachineDeployment
 	evnt := meta.NodeEvents
 	nodes := meta.Nodes
 
-	nodeDeploymentTable, err := output.ParseOutput(nd, output.Text, output.Name)
-	if err != nil || len(nodeDeploymentTable) == 0 {
+	machineDeploymentTable, err := output.ParseOutput(nd, output.Text, output.Name)
+	if err != nil || len(machineDeploymentTable) == 0 {
 		return "", err
 	}
 
@@ -41,7 +41,7 @@ func describeNodeDeployment(meta *NodeDeploymentDescribeMeta) (string, error) {
 		nodeEventTable = "[None]"
 	}
 
-	result := fmt.Sprintf(`Node Deployment:
+	result := fmt.Sprintf(`Machine Deployment:
 %s
 
 Nodes:
@@ -55,7 +55,7 @@ Labels:
 
 Events:
 %s`,
-		nodeDeploymentTable,
+		machineDeploymentTable,
 		nodeTable,
 		nodeTaintsTable,
 		utils.MergeLabels(nd.Spec.Template.Labels),

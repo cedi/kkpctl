@@ -6,7 +6,7 @@ import (
 	"github.com/kubermatic/go-kubermatic/models"
 )
 
-// ListDatacenter lists all node deployments for a cluster
+// ListDatacenter lists all datacenters available in KKP
 func (c *Client) ListDatacenter() ([]models.Datacenter, error) {
 	var err error
 	result := make([]models.Datacenter, 0)
@@ -16,7 +16,7 @@ func (c *Client) ListDatacenter() ([]models.Datacenter, error) {
 	return result, err
 }
 
-// GetDatacenter lists all node deployments for a cluster
+// GetDatacenter gets a specific datacenter
 func (c *Client) GetDatacenter(name string) (*models.Datacenter, error) {
 	var err error
 	result := &models.Datacenter{}

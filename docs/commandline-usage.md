@@ -200,7 +200,7 @@ kkpctl add cluster $cluster_name
 #	--features				# Enable certain features. Currently supported: "AuditLogging, PodSecurityPolicy, PodNodeSelector"
 #	--provider				# Use the provider-name you specified in your configuration
 #	--datacenter			# Select in wich datacenter to deploy your cluster
-#	--node-name				# Define a custom name-prefix for your node deployment (Optional. Default uses server-side generation)
+#	--node-name				# Define a custom name-prefix for your machine deployment (Optional. Default uses server-side generation)
 #	--node-flavor			# Specify the node-flavor to use
 #	--node-replica			# Specify how many nodes should be deployed
 #	--os-flavor				# Specify which Operating System to use. The Image has to be defined in your clouds config.
@@ -239,7 +239,7 @@ kkpctl delete cluster $cluster_id
 
 ### Describe
 
-To Describe a cluster. This is similar to `get`, however it includes some additional informations about the cluster, like control plane status, node deployment status, and events
+To Describe a cluster. This is similar to `get`, however it includes some additional informations about the cluster, like control plane status, machine deployment status, and events
 
 ```
 kkpctl describe cluster $cluster_id

@@ -15,7 +15,7 @@ func Object(object interface{}) (string, error) {
 	case *ClusterDescribeMeta:
 		return describeCluster(describeObj)
 
-	case *NodeDeploymentDescribeMeta:
+	case *MachineDeploymentDescribeMeta:
 		return describeNodeDeployment(describeObj)
 
 	default:

@@ -44,9 +44,9 @@
                 //"get", "version"
                 //"config", "get", "cloud"
                 //"config", "add", "node", "openstack", "--flavor", "m1.micro", "--image", "Flatcar_Production 2020 - Latest", "flatcar1"
-                //"add", "nodedeployment", "--project", "6tmbnhdl7h", "--cluster", "qvjdddt72t", "--nodespec", "flatcar1", "--operatingsystem", "flatcar", "--provider", "optimist", "first_node_deployment"
-                //"get", "nodedeployment", "--project", "6tmbnhdl7h", "--cluster", "qvjdddt72t"
-                //"describe", "nodedeployment", "--project", "6tmbnhdl7h", "--cluster", "qvjdddt72t", "hallowelt"
+                //"add", "machinedeployment", "--project", "6tmbnhdl7h", "--cluster", "qvjdddt72t", "--nodespec", "flatcar1", "--operatingsystem", "flatcar", "--provider", "optimist", "first_node_deployment"
+                //"get", "machinedeployment", "--project", "6tmbnhdl7h", "--cluster", "qvjdddt72t"
+                //"describe", "machinedeployment", "--project", "6tmbnhdl7h", "--cluster", "qvjdddt72t", "hallowelt"
                 //"edit", "cluster", "upgrade", "--project", "6tmbnhdl7h", "bwbnnh6874", "--to-version", "1.18.13"
                 "config", "generate", "-w"
           ]

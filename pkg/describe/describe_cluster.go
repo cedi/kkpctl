@@ -10,16 +10,16 @@ import (
 
 // ClusterDescribeMeta contains all the necessary fields to describe a cluster
 type ClusterDescribeMeta struct {
-	Cluster         *models.Cluster
-	NodeDeployments []models.NodeDeployment
-	ClusterHealth   *models.ClusterHealth
-	ClusterEvents   []models.Event
+	Cluster            *models.Cluster
+	MachineDeployments []models.NodeDeployment
+	ClusterHealth      *models.ClusterHealth
+	ClusterEvents      []models.Event
 }
 
 // describeProject takes any KKP Cluster and describes it
 func describeCluster(meta *ClusterDescribeMeta) (string, error) {
 	cluster := meta.Cluster
-	nd := meta.NodeDeployments
+	nd := meta.MachineDeployments
 	ch := meta.ClusterHealth
 	evnt := meta.ClusterEvents
 
@@ -33,9 +33,9 @@ func describeCluster(meta *ClusterDescribeMeta) (string, error) {
 		return "", err
 	}
 
-	nodeDeploymentTable, err := output.ParseOutput(nd, output.Text, output.Name)
-	if err != nil || len(nodeDeploymentTable) == 0 {
-		nodeDeploymentTable = "[None]"
+	machineDeploymentTable, err := output.ParseOutput(nd, output.Text, output.Name)
+	if err != nil || len(machineDeploymentTable) == 0 {
+		machineDeploymentTable = "[None]"
 	}
 
 	clusterEventTable, err := output.ParseOutput(evnt, output.Text, output.Name)
@@ -49,7 +49,7 @@ func describeCluster(meta *ClusterDescribeMeta) (string, error) {
 Health Status:
 %s
 
-Node Deployments:
+Machine Deployments:
 %s
 
 Inherited Labels:
@@ -62,7 +62,7 @@ Events:
 %s`,
 		clusterTable,
 		clusterHealthTable,
-		nodeDeploymentTable,
+		machineDeploymentTable,
 		utils.MergeLabels(cluster.InheritedLabels),
 		utils.MergeLabels(cluster.Labels),
 		clusterEventTable,

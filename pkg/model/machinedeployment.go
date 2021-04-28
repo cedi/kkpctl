@@ -4,8 +4,8 @@ import (
 	"github.com/kubermatic/go-kubermatic/models"
 )
 
-// NewNodeDeployment creates a new models.NodeDeployment
-func NewNodeDeployment(name string, version string, replicas int32, dynamicConfig bool, cloudSpec *models.NodeCloudSpec, osSpec *models.OperatingSystemSpec, labels map[string]string) *models.NodeDeployment {
+// NewMachineDeployment creates a new models.NodeDeployment
+func NewMachineDeployment(name string, version string, replicas int32, dynamicConfig bool, cloudSpec *models.NodeCloudSpec, osSpec *models.OperatingSystemSpec, labels map[string]string) *models.NodeDeployment {
 	return &models.NodeDeployment{
 		Name: name,
 		Spec: &models.NodeDeploymentSpec{

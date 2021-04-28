@@ -29,10 +29,10 @@ var describeClusterCmd = &cobra.Command{
 			return errors.Wrapf(err, "failed to get cluster %s in project %s", clusterID, projectID)
 		}
 
-		nodeDeployments, err := kkp.GetNodeDeployments(cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
+		machineDeployments, err := kkp.GetMachineDeployments(cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
 		if err != nil {
-			// If we couldn't fetch the NodeDeployments that shouldn't bother us, just use a empty array instead
-			nodeDeployments = make([]models.NodeDeployment, 0)
+			// If we couldn't fetch the MachineDeployments that shouldn't bother us, just use a empty array instead
+			machineDeployments = make([]models.NodeDeployment, 0)
 		}
 
 		clusterHealth, err := kkp.GetClusterHealth(cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
@@ -48,10 +48,10 @@ var describeClusterCmd = &cobra.Command{
 
 		// this meta object contains all the information about one specific cluster
 		meta := describe.ClusterDescribeMeta{
-			Cluster:         cluster,
-			NodeDeployments: nodeDeployments,
-			ClusterHealth:   clusterHealth,
-			ClusterEvents:   clusterEvents,
+			Cluster:            cluster,
+			MachineDeployments: machineDeployments,
+			ClusterHealth:      clusterHealth,
+			ClusterEvents:      clusterEvents,
 		}
 
 		parsed, err := describe.Object(&meta)

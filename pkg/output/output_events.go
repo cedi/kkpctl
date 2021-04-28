@@ -65,7 +65,7 @@ func (r eventRender) ParseCollection(inputObj interface{}, output string, sortBy
 		parsedOutput, err = ioutil.ReadAll(bodyBuf)
 
 	default:
-		return "", fmt.Errorf("unable to parse node deployment")
+		return "", fmt.Errorf("unable to parse events")
 	}
 
 	return string(parsedOutput), err

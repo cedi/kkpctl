@@ -75,7 +75,7 @@ func (r datacenterRender) ParseCollection(inputObj interface{}, output string, s
 		parsedOutput, err = ioutil.ReadAll(bodyBuf)
 
 	default:
-		return "", fmt.Errorf("unable to parse node deployment")
+		return "", fmt.Errorf("unable to parse datacenter")
 	}
 
 	return string(parsedOutput), err

@@ -217,8 +217,8 @@ func GetValidNodeSpecArgs(cmd *cobra.Command, args []string, toComplete string) 
 	return completions, cobra.ShellCompDirectiveNoFileComp
 }
 
-// GetValidNodeDeploymentArgs TODO
-func GetValidNodeDeploymentArgs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+// GetValidMachineDeploymentArgs TODO
+func GetValidMachineDeploymentArgs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 	completions := make([]string, 0)
 
 	kkp, err := Config.GetKKPClient()
@@ -252,13 +252,13 @@ func GetValidNodeDeploymentArgs(cmd *cobra.Command, args []string, toComplete st
 		return completions, cobra.ShellCompDirectiveNoFileComp
 	}
 
-	nodeDeployments, err := kkp.GetNodeDeployments(cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
+	machineDeployments, err := kkp.GetMachineDeployments(cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
 	if err != nil {
 		return completions, cobra.ShellCompDirectiveNoFileComp
 	}
 
 	toCompleteRegexp := regexp.MustCompile(fmt.Sprintf("^%s.*$", toComplete))
-	for _, nd := range nodeDeployments {
+	for _, nd := range machineDeployments {
 		if toCompleteRegexp.MatchString(nd.ID) {
 			completions = append(completions, nd.ID)
 		}

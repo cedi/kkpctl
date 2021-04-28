@@ -14,8 +14,8 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-// nodeDeploymentRender is a intermediate struct to make use of lensesio/tableprinter, which relies on the header anotation
-type nodeDeploymentRender struct {
+// machineDeploymentRender is a intermediate struct to make use of lensesio/tableprinter, which relies on the header anotation
+type machineDeploymentRender struct {
 	ID                string `header:"NodeDeploymentID"`
 	Name              string `header:"Name"`
 	Version           string `header:"Version"`
@@ -26,7 +26,7 @@ type nodeDeploymentRender struct {
 	CreationTimestamp string `header:"Created"`
 }
 
-func (r nodeDeploymentRender) ParseObject(inputObj interface{}, output string) (string, error) {
+func (r machineDeploymentRender) ParseObject(inputObj interface{}, output string) (string, error) {
 	switch object := inputObj.(type) {
 	case models.NodeDeployment:
 		return r.ParseCollection([]models.NodeDeployment{object}, output, Name)
@@ -39,7 +39,7 @@ func (r nodeDeploymentRender) ParseObject(inputObj interface{}, output string) (
 	}
 }
 
-func (r nodeDeploymentRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
+func (r machineDeploymentRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
 	var err error
 	var parsedOutput []byte
 
@@ -56,9 +56,9 @@ func (r nodeDeploymentRender) ParseCollection(inputObj interface{}, output strin
 		parsedOutput, err = yaml.Marshal(objects)
 
 	case Text:
-		rendered := make([]nodeDeploymentRender, len(objects))
+		rendered := make([]machineDeploymentRender, len(objects))
 		for idx, object := range objects {
-			rendered[idx] = nodeDeploymentRender{
+			rendered[idx] = machineDeploymentRender{
 				ID:                object.ID,
 				Name:              object.Name,
 				CreationTimestamp: object.CreationTimestamp.String(),
@@ -85,7 +85,7 @@ func (r nodeDeploymentRender) ParseCollection(inputObj interface{}, output strin
 		parsedOutput, err = ioutil.ReadAll(bodyBuf)
 
 	default:
-		return "", fmt.Errorf("unable to parse node deployment")
+		return "", fmt.Errorf("unable to parse machine deployment")
 	}
 
 	return string(parsedOutput), err
@@ -112,7 +112,7 @@ func getOperatingSystem(osSpec *models.OperatingSystemSpec) string {
 
 func init() {
 	parser := GetParserFactory()
-	parser.AddCollectionParser(reflect.TypeOf([]models.NodeDeployment{}), nodeDeploymentRender{})
-	parser.AddObjectParser(reflect.TypeOf(models.NodeDeployment{}), nodeDeploymentRender{})
-	parser.AddObjectParser(reflect.TypeOf(&models.NodeDeployment{}), nodeDeploymentRender{})
+	parser.AddCollectionParser(reflect.TypeOf([]models.NodeDeployment{}), machineDeploymentRender{})
+	parser.AddObjectParser(reflect.TypeOf(models.NodeDeployment{}), machineDeploymentRender{})
+	parser.AddObjectParser(reflect.TypeOf(&models.NodeDeployment{}), machineDeploymentRender{})
 }

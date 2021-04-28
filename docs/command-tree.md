@@ -5,7 +5,7 @@
 In the following tree, you can see how the commands are structured. The first command is always the verb, while the second is always a noun.
 
 The verbs are `add`, `delete`, `describe`, `edit`, and `get`.
-The nouns are `cluster`, `nodedeployment`, and `project`. You can use them together with all verbs.
+The nouns are `cluster`, `machinedeployment`, and `project`. You can use them together with all verbs.
 Some verbs do more advanced operations - like `edit`. This makes it necessary to specify a _adjective_ - like `upgrade`. This may seem confusing, but think of it as "What do I need to do? -> Edit. What do I want to edit? -> The Cluster. What do I want to do with the cluster? -> upgrading it."
 
 
@@ -18,15 +18,15 @@ They are not related to any objects inside KKP, this is why they are not accessi
 │
 ├── add # <------------------ verb
 │   ├── cluster # <---------- noun
-│   ├── nodedeployment
+│   ├── machinedeployment
 │   └── project
 ├── delete
 │   ├── cluster
-│   ├── nodedeployment
+│   ├── machinedeployment
 │   └── project
 ├── describe
 │   ├── cluster
-│   ├── nodedeployment
+│   ├── machinedeployment
 │   └── project
 ├── edit
 │   └── cluster
@@ -35,7 +35,7 @@ They are not related to any objects inside KKP, this is why they are not accessi
 │   ├── cluster
 │   ├── datacenter
 │   ├── kubeconfig
-│   ├── nodedeployment
+│   ├── machinedeployment
 │   ├── project
 │   └── version
 │
