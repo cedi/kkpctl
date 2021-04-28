@@ -47,8 +47,8 @@ func (c *Client) GetNodeDeployment(nodeDeploymentID string, clusterID string, pr
 }
 
 // CreateNodeDeployment creates a new node deployment on a cluster
-func (c *Client) CreateNodeDeployment(newNodeDeployment *models.NodeDeployment, clusterID string, projectID string, dc string) (models.NodeDeployment, error) {
-	result := models.NodeDeployment{}
+func (c *Client) CreateNodeDeployment(newNodeDeployment *models.NodeDeployment, clusterID string, projectID string, dc string) (*models.NodeDeployment, error) {
+	result := &models.NodeDeployment{}
 
 	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s",
 		projectPath,

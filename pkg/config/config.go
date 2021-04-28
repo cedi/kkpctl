@@ -78,6 +78,7 @@ func Read() (*Config, error) {
 	return config, nil
 }
 
+// EnsureConfig ensures that the config is there and exists using the correct permissions.
 func EnsureConfig() error {
 	if _, err := os.Stat(ConfigPath); os.IsNotExist(err) {
 		path, _ := path.Split(ConfigPath)

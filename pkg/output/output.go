@@ -27,6 +27,7 @@ const (
 // make the parser factory a singleton
 var parserFactory *ParserFactory
 
+// GetParserFactory returns a singleton instance for the parser factory
 func GetParserFactory() *ParserFactory {
 	if parserFactory == nil {
 		parserFactory = NewParserFactory()
