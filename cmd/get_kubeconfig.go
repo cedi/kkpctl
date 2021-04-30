@@ -53,12 +53,9 @@ var getKubeconfigCmd = &cobra.Command{
 
 func init() {
 	getCmd.AddCommand(getKubeconfigCmd)
-	getKubeconfigCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project.")
-	describeClusterCmd.MarkFlagRequired("project")
-	getClustersCmd.RegisterFlagCompletionFunc("project", completion.GetValidProjectArgs)
 
-	getKubeconfigCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter.")
-	getClustersCmd.RegisterFlagCompletionFunc("datacenter", completion.GetValidDatacenterArgs)
+	AddProjectFlag(getKubeconfigCmd)
+	AddDatacenterFlag(getKubeconfigCmd, false)
 
 	getKubeconfigCmd.Flags().BoolVarP(&writeConfig, "write", "w", false, "write the kubeconfig to the local directory")
 }

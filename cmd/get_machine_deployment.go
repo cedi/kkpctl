@@ -56,14 +56,7 @@ var getMachineDeploymentCmd = &cobra.Command{
 func init() {
 	getCmd.AddCommand(getMachineDeploymentCmd)
 
-	getMachineDeploymentCmd.Flags().StringVarP(&clusterID, "cluster", "c", "", "ID of the cluster")
-	getMachineDeploymentCmd.MarkFlagRequired("cluster")
-	getMachineDeploymentCmd.RegisterFlagCompletionFunc("cluster", completion.GetValidClusterArgs)
-
-	getMachineDeploymentCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project")
-	getMachineDeploymentCmd.MarkFlagRequired("project")
-	getMachineDeploymentCmd.RegisterFlagCompletionFunc("project", completion.GetValidProjectArgs)
-
-	getMachineDeploymentCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter")
-	getMachineDeploymentCmd.RegisterFlagCompletionFunc("datacenter", completion.GetValidDatacenterArgs)
+	AddProjectFlag(getMachineDeploymentCmd)
+	AddDatacenterFlag(getMachineDeploymentCmd, false)
+	AddClusterFlag(getMachineDeploymentCmd)
 }

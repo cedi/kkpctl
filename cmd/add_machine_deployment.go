@@ -64,16 +64,10 @@ var createMachineDeploymentCmd = &cobra.Command{
 func init() {
 	addCmd.AddCommand(createMachineDeploymentCmd)
 
-	createMachineDeploymentCmd.Flags().StringVarP(&clusterID, "cluster", "c", "", "ID of the cluster")
-	createMachineDeploymentCmd.MarkFlagRequired("cluster")
-	createMachineDeploymentCmd.RegisterFlagCompletionFunc("cluster", completion.GetValidClusterArgs)
-
-	createMachineDeploymentCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project")
-	createMachineDeploymentCmd.MarkFlagRequired("project")
-	createMachineDeploymentCmd.RegisterFlagCompletionFunc("project", completion.GetValidProjectArgs)
-
-	createMachineDeploymentCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter")
-	createMachineDeploymentCmd.RegisterFlagCompletionFunc("datacenter", completion.GetValidDatacenterArgs)
+	AddProjectFlag(createMachineDeploymentCmd)
+	AddDatacenterFlag(createMachineDeploymentCmd, false)
+	AddLabelsFlag(createMachineDeploymentCmd)
+	AddClusterFlag(createMachineDeploymentCmd)
 
 	createMachineDeploymentCmd.Flags().StringVar(&providerName, "provider", "", "Which provider should be used")
 	createMachineDeploymentCmd.RegisterFlagCompletionFunc("provider", completion.GetValidProvider)
@@ -89,6 +83,4 @@ func init() {
 
 	createMachineDeploymentCmd.Flags().BoolVar(&dynamicConfig, "dynamic_config", false, "Dynamic kubelet config")
 	createMachineDeploymentCmd.Flags().Int32Var(&nodeReplica, "replica", 1, "Number of node replicas")
-	createMachineDeploymentCmd.Flags().StringVarP(&labels, "labels", "l", "", "A comma separated list of labels in the format key=value")
-
 }

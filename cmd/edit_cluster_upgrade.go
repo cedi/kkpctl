@@ -58,12 +58,8 @@ var editClusterUpgradeCmd = &cobra.Command{
 func init() {
 	editClusterCmd.AddCommand(editClusterUpgradeCmd)
 
-	editClusterUpgradeCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project to list clusters for.")
-	editClusterUpgradeCmd.MarkFlagRequired("project")
-	editClusterUpgradeCmd.RegisterFlagCompletionFunc("project", completion.GetValidProjectArgs)
-
-	editClusterUpgradeCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter to list clusters for.")
-	editClusterUpgradeCmd.RegisterFlagCompletionFunc("datacenter", completion.GetValidDatacenterArgs)
+	AddProjectFlag(editClusterUpgradeCmd)
+	AddDatacenterFlag(editClusterUpgradeCmd, false)
 
 	editClusterUpgradeCmd.Flags().StringVar(&toVersion, "to-version", "", "To which Version should the cluster be updated")
 	editClusterUpgradeCmd.MarkFlagRequired("to-version")

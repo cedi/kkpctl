@@ -44,14 +44,7 @@ var deleteMachineDeploymentCmd = &cobra.Command{
 func init() {
 	deleteCmd.AddCommand(deleteMachineDeploymentCmd)
 
-	deleteMachineDeploymentCmd.Flags().StringVarP(&clusterID, "cluster", "c", "", "ID of the cluster")
-	deleteMachineDeploymentCmd.MarkFlagRequired("cluster")
-	deleteMachineDeploymentCmd.RegisterFlagCompletionFunc("cluster", completion.GetValidClusterArgs)
-
-	deleteMachineDeploymentCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project")
-	deleteMachineDeploymentCmd.MarkFlagRequired("project")
-	deleteMachineDeploymentCmd.RegisterFlagCompletionFunc("project", completion.GetValidProjectArgs)
-
-	deleteMachineDeploymentCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter")
-	deleteMachineDeploymentCmd.RegisterFlagCompletionFunc("datacenter", completion.GetValidDatacenterArgs)
+	AddClusterFlag(deleteMachineDeploymentCmd)
+	AddProjectFlag(deleteMachineDeploymentCmd)
+	AddDatacenterFlag(deleteMachineDeploymentCmd, false)
 }

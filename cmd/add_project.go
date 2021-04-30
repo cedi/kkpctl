@@ -43,5 +43,5 @@ var createProjectCmd = &cobra.Command{
 
 func init() {
 	addCmd.AddCommand(createProjectCmd)
-	createProjectCmd.Flags().StringVarP(&labels, "labels", "l", "", "A comma separated list of labels in the format key=value")
+	AddLabelsFlag(createProjectCmd)
 }
