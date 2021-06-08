@@ -22,7 +22,7 @@ func (c *Client) GetMachineDeployments(clusterID string, projectID string) ([]mo
 		clusterID,
 		machineDeploymentPath,
 	)
-	_, err := c.Get(requestURL, &result)
+	_, err := c.Get(requestURL, &result, V2API)
 	return result, err
 }
 
@@ -38,7 +38,7 @@ func (c *Client) GetMachineDeployment(id string, clusterID string, projectID str
 		machineDeploymentPath,
 		id,
 	)
-	_, err := c.Get(requestURL, &result)
+	_, err := c.Get(requestURL, &result, V2API)
 	return result, err
 }
 
@@ -54,7 +54,7 @@ func (c *Client) CreateMachineDeployment(new *models.NodeDeployment, clusterID s
 		machineDeploymentPath,
 	)
 
-	_, err := c.Post(requestURL, contentTypeJSON, new, result)
+	_, err := c.Post(requestURL, contentTypeJSON, new, result, V2API)
 	return result, err
 }
 
@@ -69,7 +69,7 @@ func (c *Client) DeleteMachineDeployment(id string, clusterID string, projectID 
 		id,
 	)
 
-	_, err := c.Delete(requestURL)
+	_, err := c.Delete(requestURL, V2API)
 	return err
 }
 
@@ -87,7 +87,7 @@ func (c *Client) GetMachineDeploymentNodes(id string, clusterID string, projectI
 		nodePath,
 	)
 
-	_, err := c.Get(requestURL, &result)
+	_, err := c.Get(requestURL, &result, V2API)
 	return result, err
 }
 
@@ -105,7 +105,7 @@ func (c *Client) GetMachineDeploymentEvents(id string, clusterID string, project
 		nodePath,
 		eventsPath,
 	)
-	_, err := c.Get(requestURL, &result)
+	_, err := c.Get(requestURL, &result, V2API)
 	return result, err
 }
 
@@ -126,7 +126,7 @@ func (c *Client) UpgradeWorkerDeploymentVersion(toVersion string, clusterID stri
 		Version:                    toVersion,
 	}
 
-	_, err := c.Put(requestURL, contentTypeJSON, updateVersion, nil)
+	_, err := c.Put(requestURL, contentTypeJSON, updateVersion, nil, V2API)
 	return err
 }
 

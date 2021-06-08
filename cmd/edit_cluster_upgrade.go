@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/cedi/kkpctl/cmd/completion"
-	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/cedi/kkpctl/pkg/output"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -24,28 +23,23 @@ var editClusterUpgradeCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		clusterID := args[0]
 
-		kkp, err := Config.GetKKPClient(client.V1API)
+		kkp, err := Config.GetKKPClient()
 		if err != nil {
 			return err
 		}
 
-		kkp2, err := Config.GetKKPClient(client.V1API)
-		if err != nil {
-			return err
-		}
-
-		cluster, err := kkp.GetClusterInProjectInDC(clusterID, projectID, datacenter)
+		cluster, err := kkp.GetCluster(clusterID, projectID)
 		if err != nil {
 			return errors.Wrapf(err, "failed to get cluster %s in project %s", clusterID, projectID)
 		}
 
-		result, err := kkp.UpgradeCluster(toVersion, cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
+		result, err := kkp.UpgradeCluster(toVersion, cluster.ID, projectID)
 		if err != nil {
 			return errors.Wrapf(err, "failed to upgrade cluster %s to version %s", clusterID, toVersion)
 		}
 
 		if !noUpgradeWorkers {
-			err = kkp2.UpgradeWorkerDeploymentVersion(toVersion, cluster.ID, projectID)
+			err = kkp.UpgradeWorkerDeploymentVersion(toVersion, cluster.ID, projectID)
 			if err != nil {
 				return errors.Wrapf(err, "failed to upgrade worker-nodes in cluster %s to version %s", clusterID, toVersion)
 			}

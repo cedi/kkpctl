@@ -146,9 +146,9 @@ func (c *Config) getCloudFromContext() (string, string) {
 }
 
 // GetKKPClient returns a KKP Client for the currently configured cloud
-func (c *Config) GetKKPClient(apiVersion client.APIVersion) (*client.Client, error) {
+func (c *Config) GetKKPClient() (*client.Client, error) {
 	baseURL, apiToken := c.getCloudFromContext()
-	kkp, err := client.NewClient(apiVersion, baseURL, apiToken)
+	kkp, err := client.NewClient(baseURL, apiToken)
 	if err != nil {
 		return kkp, errors.Wrap(err, "could not initialize Kubermatic API client")
 	}

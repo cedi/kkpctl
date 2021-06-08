@@ -5,7 +5,6 @@ import (
 	"io/ioutil"
 
 	"github.com/cedi/kkpctl/cmd/completion"
-	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
@@ -24,17 +23,17 @@ var getKubeconfigCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		clusterID := args[0]
 
-		kkp, err := Config.GetKKPClient(client.V1API)
+		kkp, err := Config.GetKKPClient()
 		if err != nil {
 			return err
 		}
 
-		cluster, err := kkp.GetClusterInProjectInDC(clusterID, projectID, datacenter)
+		cluster, err := kkp.GetCluster(clusterID, projectID)
 		if err != nil {
 			return errors.Wrapf(err, "failed to get cluster %s in project %s", clusterID, projectID)
 		}
 
-		result, err := kkp.GetKubeConfig(cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
+		result, err := kkp.GetKubeConfig(cluster.ID, projectID)
 		if err != nil {
 			return errors.Wrapf(err, "failed to get kubeconfig for cluster %s", clusterID)
 		}

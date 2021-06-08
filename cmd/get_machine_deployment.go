@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/cedi/kkpctl/cmd/completion"
-	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/cedi/kkpctl/pkg/output"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -16,6 +15,7 @@ var getMachineDeploymentCmd = &cobra.Command{
 	Short:             "List machinedeployments for a cluster",
 	Example:           "kkpctl describe machinedeployment my_machinedeployment",
 	Args:              cobra.MaximumNArgs(1),
+	Aliases:           []string{"machinedeployments"},
 	ValidArgsFunction: completion.GetValidMachineDeploymentArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		machineDeploymentName := ""
@@ -23,7 +23,7 @@ var getMachineDeploymentCmd = &cobra.Command{
 			machineDeploymentName = args[0]
 		}
 
-		kkp, err := Config.GetKKPClient(client.V2API)
+		kkp, err := Config.GetKKPClient()
 		if err != nil {
 			return err
 		}

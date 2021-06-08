@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/cedi/kkpctl/cmd/completion"
-	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/cedi/kkpctl/pkg/output"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -16,6 +15,7 @@ var getDatacenterCmd = &cobra.Command{
 	Short:             "Lists available datacenters",
 	Example:           "kkpctl get datacenter",
 	Args:              cobra.MaximumNArgs(1),
+	Aliases:           []string{"datacenters"},
 	ValidArgsFunction: completion.GetValidDatacenterArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		dc := ""
@@ -23,7 +23,7 @@ var getDatacenterCmd = &cobra.Command{
 			dc = args[0]
 		}
 
-		kkp, err := Config.GetKKPClient(client.V1API)
+		kkp, err := Config.GetKKPClient()
 		if err != nil {
 			return err
 		}

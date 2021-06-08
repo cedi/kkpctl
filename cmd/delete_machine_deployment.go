@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/cedi/kkpctl/cmd/completion"
-	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
@@ -17,7 +16,7 @@ var deleteMachineDeploymentCmd = &cobra.Command{
 	ValidArgsFunction: completion.GetValidMachineDeploymentArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		machineDeploymentName := args[0]
-		kkp, err := Config.GetKKPClient(client.V2API)
+		kkp, err := Config.GetKKPClient()
 		if err != nil {
 			return err
 		}

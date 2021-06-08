@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/cedi/kkpctl/cmd/completion"
-	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/cedi/kkpctl/pkg/describe"
 	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/pkg/errors"
@@ -20,33 +19,28 @@ var describeClusterCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		clusterID := args[0]
 
-		kkp, err := Config.GetKKPClient(client.V1API)
+		kkp, err := Config.GetKKPClient()
 		if err != nil {
 			return err
 		}
 
-		kkp2, err := Config.GetKKPClient(client.V2API)
-		if err != nil {
-			return err
-		}
-
-		cluster, err := kkp.GetClusterInProjectInDC(clusterID, projectID, datacenter)
+		cluster, err := kkp.GetCluster(clusterID, projectID)
 		if err != nil || cluster.Spec == nil || cluster.Spec.Cloud == nil {
 			return errors.Wrapf(err, "failed to get cluster %s in project %s", clusterID, projectID)
 		}
 
-		machineDeployments, err := kkp2.GetMachineDeployments(cluster.ID, projectID)
+		machineDeployments, err := kkp.GetMachineDeployments(cluster.ID, projectID)
 		if err != nil {
 			// If we couldn't fetch the MachineDeployments that shouldn't bother us, just use a empty array instead
 			machineDeployments = make([]models.NodeDeployment, 0)
 		}
 
-		clusterHealth, err := kkp.GetClusterHealth(cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
+		clusterHealth, err := kkp.GetClusterHealth(cluster.ID, projectID)
 		if err != nil {
 			return errors.Wrapf(err, "failed to get health status for cluster %s in project %s", clusterID, projectID)
 		}
 
-		clusterEvents, err := kkp.GetEvents(cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
+		clusterEvents, err := kkp.GetEvents(cluster.ID, projectID)
 		if err != nil {
 			// If we couldn't fetch the Events that shouldn't bother us, just use a empty array instead
 			clusterEvents = make([]models.Event, 0)

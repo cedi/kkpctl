@@ -5,7 +5,6 @@ import (
 	"regexp"
 	"sort"
 
-	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/cedi/kkpctl/pkg/config"
 	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/spf13/cobra"
@@ -18,7 +17,7 @@ var Config *config.Config
 func GetValidProjectArgs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 	completions := make([]string, 0)
 
-	kkp, err := Config.GetKKPClient(client.V1API)
+	kkp, err := Config.GetKKPClient()
 	if err != nil {
 		return completions, cobra.ShellCompDirectiveError
 	}
@@ -47,7 +46,7 @@ func GetValidProjectArgs(cmd *cobra.Command, args []string, toComplete string) (
 func GetValidClusterArgs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 	completions := make([]string, 0)
 
-	kkp, err := Config.GetKKPClient(client.V1API)
+	kkp, err := Config.GetKKPClient()
 	if err != nil {
 		return completions, cobra.ShellCompDirectiveError
 	}
@@ -74,7 +73,7 @@ func GetValidClusterArgs(cmd *cobra.Command, args []string, toComplete string) (
 	clusters := make([]models.Cluster, 0)
 
 	for _, projectTmp := range projects {
-		clusterTmp, _ := kkp.ListClustersInProject(projectTmp.ID)
+		clusterTmp, _ := kkp.ListClusters(projectTmp.ID)
 		clusters = append(clusters, clusterTmp...)
 	}
 
@@ -92,7 +91,7 @@ func GetValidClusterArgs(cmd *cobra.Command, args []string, toComplete string) (
 func GetValidDatacenterArgs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 	completions := make([]string, 0)
 
-	kkp, err := Config.GetKKPClient(client.V1API)
+	kkp, err := Config.GetKKPClient()
 	if err != nil {
 		return completions, cobra.ShellCompDirectiveError
 	}
@@ -104,7 +103,7 @@ func GetValidDatacenterArgs(cmd *cobra.Command, args []string, toComplete string
 		if projectStr == "" {
 			datacenters, _ = kkp.ListDatacenter()
 		} else {
-			cluster, err := kkp.GetClusterInProject(args[0], projectStr)
+			cluster, err := kkp.GetCluster(args[0], projectStr)
 			if err == nil {
 				datacenter, _ := kkp.GetDatacenter(cluster.Spec.Cloud.DatacenterName)
 				datacenters = append(datacenters, *datacenter)
@@ -143,7 +142,7 @@ func GetValidCloudContextArgs(cmd *cobra.Command, args []string, toComplete stri
 func GetValidKubernetesVersions(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 	completions := make([]string, 0)
 
-	kkp, err := Config.GetKKPClient(client.V1API)
+	kkp, err := Config.GetKKPClient()
 	if err != nil {
 		return completions, cobra.ShellCompDirectiveError
 	}
@@ -222,7 +221,7 @@ func GetValidNodeSpecArgs(cmd *cobra.Command, args []string, toComplete string) 
 func GetValidMachineDeploymentArgs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 	completions := make([]string, 0)
 
-	kkp, err := Config.GetKKPClient(client.V1API)
+	kkp, err := Config.GetKKPClient()
 	if err != nil {
 		return completions, cobra.ShellCompDirectiveError
 	}
@@ -237,17 +236,8 @@ func GetValidMachineDeploymentArgs(cmd *cobra.Command, args []string, toComplete
 		return completions, cobra.ShellCompDirectiveNoFileComp
 	}
 
-	dc, err := cmd.Flags().GetString("datacenter")
-	if err != nil {
-		return completions, cobra.ShellCompDirectiveNoFileComp
-	}
-
 	var cluster *models.Cluster
-	if dc == "" {
-		cluster, err = kkp.GetClusterInProject(clusterID, projectID)
-	} else {
-		cluster, err = kkp.GetClusterInProjectInDC(clusterID, projectID, dc)
-	}
+	cluster, err = kkp.GetCluster(clusterID, projectID)
 
 	if err != nil {
 		return completions, cobra.ShellCompDirectiveNoFileComp
@@ -272,7 +262,7 @@ func GetValidMachineDeploymentArgs(cmd *cobra.Command, args []string, toComplete
 func GetValidToVersionArgs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 	completions := make([]string, 0)
 
-	kkp, err := Config.GetKKPClient(client.V1API)
+	kkp, err := Config.GetKKPClient()
 	if err != nil {
 		return completions, cobra.ShellCompDirectiveError
 	}
@@ -288,23 +278,11 @@ func GetValidToVersionArgs(cmd *cobra.Command, args []string, toComplete string)
 		return completions, cobra.ShellCompDirectiveNoFileComp
 	}
 
-	dc, err := cmd.Flags().GetString("datacenter")
 	if err != nil {
 		return completions, cobra.ShellCompDirectiveNoFileComp
 	}
 
-	var cluster *models.Cluster
-	if dc == "" {
-		cluster, err = kkp.GetClusterInProject(clusterID, projectID)
-	} else {
-		cluster, err = kkp.GetClusterInProjectInDC(clusterID, projectID, dc)
-	}
-
-	if err != nil {
-		return completions, cobra.ShellCompDirectiveNoFileComp
-	}
-
-	upgradeVersions, err := kkp.GetClusterUpgradeVersions(clusterID, projectID, cluster.Spec.Cloud.DatacenterName)
+	upgradeVersions, err := kkp.GetClusterUpgradeVersions(clusterID, projectID)
 	if err != nil {
 		return completions, cobra.ShellCompDirectiveNoFileComp
 	}

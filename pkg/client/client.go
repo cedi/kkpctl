@@ -3,14 +3,12 @@ package client
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 
+	"github.com/cedi/kkpctl/pkg/bearer_client.go"
 	"github.com/pkg/errors"
-	"github.com/savaki/jq"
 )
 
 const (
@@ -22,10 +20,10 @@ type APIVersion string
 
 const (
 	// V1API is the v1 API
-	V1API APIVersion = "/api/v1"
+	V1API APIVersion = "v1"
 
 	// V2API is the v2 API
-	V2API APIVersion = "/api/v2"
+	V2API APIVersion = "v2"
 )
 
 // URLParams is a map of strings which can be added to a Get request
@@ -33,84 +31,44 @@ type URLParams map[string]string
 
 // Client holds all config and the http.Client needed to talk to the Kubermatic API
 type Client struct {
-	BaseURL    *url.URL
-	httpClient *http.Client
-	bearer     string
+	BaseURL *url.URL
+
+	bc *bearer_client.Client
 }
 
 // NewClient creates a new Client for the Kubermatic API
-func NewClient(apiVersion APIVersion, baseURL string, bearer string) (*Client, error) {
-	parsedURL, err := url.Parse(baseURL + string(apiVersion))
+func NewClient(baseURL string, bearer string) (*Client, error) {
+	parsedURL, err := url.Parse(baseURL)
 	if err != nil {
-		return nil, errors.Wrapf(err, "Failed parsing API URL %s%s ", baseURL, apiVersion)
+		return nil, errors.Wrapf(err, "Failed parsing API URL %s ", baseURL)
 	}
 
-	httpClient := &http.Client{}
-
-	client := &Client{}
-	client.BaseURL = parsedURL
-	client.httpClient = httpClient
-	client.bearer = bearer
+	client := &Client{
+		BaseURL: parsedURL,
+		bc:      bearer_client.NewClient(baseURL, bearer),
+	}
 
 	return client, nil
 }
 
-// Do injects the stored token into the provided request then sends it
-// req is the http.Request to execute
-// out can be a pointer to any object to which the result should be de-serialised.
-func (c *Client) Do(req *http.Request, out interface{}) (*http.Response, error) {
-	req.Header.Set("Authorization", "Bearer "+c.bearer) // "/api/v1/projects/6tmbnhdl7h/dc/seed-ix2/clusters/h9dzr6x7wk/node...+11 more"
-
-	resp, err := c.httpClient.Do(req)
-	if err != nil || out == nil {
-		return resp, err
-	}
-
-	if resp.Header.Get("content-type") != "application/json" {
-		return resp, nil
-	}
-
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	if resp.StatusCode >= 299 {
-		op, err := jq.Parse(".error.message")
-		if err != nil {
-			return resp, err
-		}
-
-		value, err := op.Apply(body)
-		if err != nil {
-			return resp, err
-		}
-
-		return resp, fmt.Errorf("%v: %s", resp.Status, string(value))
-	}
-
-	err = json.Unmarshal(body, out)
-	if err != nil {
-		return resp, errors.Wrap(err, "Unable parsing response")
-	}
-
-	return resp, err
+// Do injects the correct API Version Path into the request and executes then bearer_client.Do
+func (c *Client) Do(req *http.Request, out interface{}, apiVersion APIVersion) (*http.Response, error) {
+	req.URL.Path = "/api/" + string(apiVersion) + req.URL.Path
+	return c.bc.Do(req, out)
 }
 
 // Get functions the same as http.Client.Get but injects a stored token into ty header
-func (c *Client) Get(requestURL string, out interface{}) (*http.Response, error) {
+func (c *Client) Get(requestURL string, out interface{}, apiVersion APIVersion) (*http.Response, error) {
 	req, err := http.NewRequest("GET", c.formatURL(requestURL), nil)
 	if err != nil {
 		return nil, err
 	}
 
-	return c.Do(req, out)
+	return c.Do(req, out, apiVersion)
 }
 
 // GetWithQueryParams functions the same as http.Client.Get but injects a stored token into ty header
-func (c *Client) GetWithQueryParams(requestURL string, queryParams URLParams, out interface{}) (*http.Response, error) {
+func (c *Client) GetWithQueryParams(requestURL string, queryParams URLParams, out interface{}, apiVersion APIVersion) (*http.Response, error) {
 	req, err := http.NewRequest("GET", c.formatURL(requestURL), nil)
 	if err != nil {
 		return nil, err
@@ -122,11 +80,11 @@ func (c *Client) GetWithQueryParams(requestURL string, queryParams URLParams, ou
 	}
 	req.URL.RawQuery = params.Encode()
 
-	return c.Do(req, out)
+	return c.Do(req, out, apiVersion)
 }
 
 // Post functions the same as http.Client.Post but injects a stored token into the header
-func (c *Client) Post(requestURL string, contentType string, body interface{}, out interface{}) (*http.Response, error) {
+func (c *Client) Post(requestURL string, contentType string, body interface{}, out interface{}, apiVersion APIVersion) (*http.Response, error) {
 	var bodyBuf io.ReadWriter
 
 	if body != nil {
@@ -142,11 +100,11 @@ func (c *Client) Post(requestURL string, contentType string, body interface{}, o
 		return nil, err
 	}
 	req.Header.Set("Content-Type", contentType)
-	return c.Do(req, out)
+	return c.Do(req, out, apiVersion)
 }
 
 // Patch functions the same as http.Client.Post but injects a stored token into the header
-func (c *Client) Patch(requestURL string, contentType string, body interface{}, out interface{}) (*http.Response, error) {
+func (c *Client) Patch(requestURL string, contentType string, body interface{}, out interface{}, apiVersion APIVersion) (*http.Response, error) {
 	var bodyBuf io.ReadWriter
 
 	if body != nil {
@@ -162,11 +120,11 @@ func (c *Client) Patch(requestURL string, contentType string, body interface{}, 
 		return nil, err
 	}
 	req.Header.Set("Content-Type", contentType)
-	return c.Do(req, out)
+	return c.Do(req, out, apiVersion)
 }
 
 // Put functions the same as http.Client.Put but injects a stored token into the header
-func (c *Client) Put(requestURL string, contentType string, body interface{}, out interface{}) (*http.Response, error) {
+func (c *Client) Put(requestURL string, contentType string, body interface{}, out interface{}, apiVersion APIVersion) (*http.Response, error) {
 	var bodyBuf io.ReadWriter
 
 	if body != nil {
@@ -182,16 +140,16 @@ func (c *Client) Put(requestURL string, contentType string, body interface{}, ou
 		return nil, err
 	}
 	req.Header.Set("Content-Type", contentType)
-	return c.Do(req, out)
+	return c.Do(req, out, apiVersion)
 }
 
 // Delete functions the same as http.Client.Delete but injects a stored token into ty header
-func (c *Client) Delete(requestURL string) (*http.Response, error) {
-	return c.DeleteWithHeader(requestURL, nil)
+func (c *Client) Delete(requestURL string, apiVersion APIVersion) (*http.Response, error) {
+	return c.DeleteWithHeader(requestURL, nil, apiVersion)
 }
 
 // DeleteWithHeader functions the same as http.Client.Delete but injects a stored token into ty header
-func (c *Client) DeleteWithHeader(requestURL string, headers map[string]string) (*http.Response, error) {
+func (c *Client) DeleteWithHeader(requestURL string, headers map[string]string, apiVersion APIVersion) (*http.Response, error) {
 	req, err := http.NewRequest("DELETE", c.formatURL(requestURL), nil)
 	if err != nil {
 		return nil, err
@@ -201,7 +159,7 @@ func (c *Client) DeleteWithHeader(requestURL string, headers map[string]string) 
 		req.Header.Set(header, value)
 	}
 
-	return c.Do(req, nil)
+	return c.Do(req, nil, apiVersion)
 }
 
 func (c *Client) formatURL(requestURL string) string {

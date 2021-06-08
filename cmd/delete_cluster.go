@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/cedi/kkpctl/cmd/completion"
-	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
@@ -24,17 +23,17 @@ var delClusterCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		clusterID := args[0]
 
-		kkp, err := Config.GetKKPClient(client.V1API)
+		kkp, err := Config.GetKKPClient()
 		if err != nil {
 			return err
 		}
 
-		cluster, err := kkp.GetClusterInProject(clusterID, projectID)
+		cluster, err := kkp.GetCluster(clusterID, projectID)
 		if err != nil {
 			return errors.Wrapf(err, "failed to find cluster %s which should be deleted", clusterID)
 		}
 
-		err = kkp.DeleteClusterInDC(clusterID, projectID, datacenter, !noDeleteVolumes, !noDeleteLoadBalancers)
+		err = kkp.DeleteCluster(clusterID, projectID, !noDeleteVolumes, !noDeleteLoadBalancers)
 		if err != nil {
 			return errors.Wrapf(err, "failed to delete cluster %s in project %s", clusterID, projectID)
 		}

@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/cedi/kkpctl/cmd/completion"
-	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/cedi/kkpctl/pkg/output"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -18,6 +17,7 @@ var getProjectsCmd = &cobra.Command{
 	Short:             "List a project",
 	Example:           "kkpctl get project",
 	Args:              cobra.MaximumNArgs(1),
+	Aliases:           []string{"projects"},
 	ValidArgsFunction: completion.GetValidProjectArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		projectID := ""
@@ -25,7 +25,7 @@ var getProjectsCmd = &cobra.Command{
 			projectID = args[0]
 		}
 
-		kkp, err := Config.GetKKPClient(client.V1API)
+		kkp, err := Config.GetKKPClient()
 		if err != nil {
 			return err
 		}

@@ -18,9 +18,9 @@ func (c *Client) ListProjects(all bool) ([]models.Project, error) {
 	result := make([]models.Project, 0)
 
 	if all {
-		_, err = c.GetWithQueryParams(projectPath, URLParams{"displayAll": "true"}, &result)
+		_, err = c.GetWithQueryParams(projectPath, URLParams{"displayAll": "true"}, &result, V1API)
 	} else {
-		_, err = c.GetWithQueryParams(projectPath, URLParams{"displayAll": "false"}, &result)
+		_, err = c.GetWithQueryParams(projectPath, URLParams{"displayAll": "false"}, &result, V1API)
 	}
 
 	if err != nil {
@@ -33,7 +33,8 @@ func (c *Client) ListProjects(all bool) ([]models.Project, error) {
 // GetProject gets a specific project
 func (c *Client) GetProject(projectID string) (*models.Project, error) {
 	result := &models.Project{}
-	_, err := c.Get(fmt.Sprintf("%s/%s", projectPath, projectID), result)
+
+	_, err := c.Get(fmt.Sprintf("%s/%s", projectPath, projectID), result, V1API)
 	if err != nil {
 		return result, err
 	}
@@ -49,7 +50,7 @@ func (c *Client) CreateProject(name string, labels map[string]string) (*models.P
 	}
 
 	result := &models.Project{}
-	_, err := c.Post(projectPath, contentTypeJSON, newProject, result)
+	_, err := c.Post(projectPath, contentTypeJSON, newProject, result, V1API)
 	if err != nil {
 		return &models.Project{}, err
 	}
@@ -59,7 +60,7 @@ func (c *Client) CreateProject(name string, labels map[string]string) (*models.P
 
 // DeleteProject deletes a project identified by id
 func (c *Client) DeleteProject(projectID string) error {
-	_, err := c.Delete(fmt.Sprintf("%s/%s", projectPath, projectID))
+	_, err := c.Delete(fmt.Sprintf("%s/%s", projectPath, projectID), V1API)
 	if err != nil {
 		return err
 	}
@@ -75,7 +76,7 @@ func (c *Client) GetProjectIDForCluster(clusterID string) (string, error) {
 	}
 
 	for _, project := range projects {
-		clusters, err := c.ListClustersInProject(project.ID)
+		clusters, err := c.ListClusters(project.ID)
 		if err != nil {
 			return "", err
 		}

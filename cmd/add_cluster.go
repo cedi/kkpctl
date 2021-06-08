@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/cedi/kkpctl/cmd/completion"
-	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/cedi/kkpctl/pkg/model"
 	"github.com/cedi/kkpctl/pkg/utils"
 	"github.com/pkg/errors"
@@ -28,7 +27,7 @@ var createClusterCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		clusterName := args[0]
 
-		kkp, err := Config.GetKKPClient(client.V1API)
+		kkp, err := Config.GetKKPClient()
 		if err != nil {
 			return err
 		}
@@ -44,7 +43,7 @@ var createClusterCmd = &cobra.Command{
 			enableAuditLogging,
 		)
 
-		result, err := kkp.CreateCluster(newCluster, projectID, datacenter)
+		result, err := kkp.CreateCluster(newCluster, projectID)
 		if err != nil {
 			return errors.Wrapf(err, "failed to create %s cluster %s", clusterType, clusterName)
 		}
