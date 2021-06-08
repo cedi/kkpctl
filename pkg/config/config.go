@@ -1,12 +1,14 @@
 package config
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
 	"strings"
 
 	"github.com/cedi/kkpctl/pkg/client"
+	"github.com/phayes/permbits"
 	"github.com/pkg/errors"
 	"gopkg.in/yaml.v3"
 )
@@ -80,9 +82,10 @@ func Read() (*Config, error) {
 
 // EnsureConfig ensures that the config is there and exists using the correct permissions.
 func EnsureConfig() error {
+	// Create config file if not exists
 	if _, err := os.Stat(ConfigPath); os.IsNotExist(err) {
 		path, _ := path.Split(ConfigPath)
-		os.MkdirAll(path, 0640)
+		os.MkdirAll(path, 0600)
 
 		config := NewConfig()
 		err = config.Save()
@@ -91,6 +94,36 @@ func EnsureConfig() error {
 		}
 	}
 
+	return checkPermissions(ConfigPath)
+}
+
+func checkPermissions(configPath string) error {
+	permissions, err := permbits.Stat(configPath)
+	if err != nil {
+		return errors.Wrap(err, "failed to check file permissions for kkpctl config")
+	}
+
+	if permissions.UserExecute() {
+		fmt.Println("")
+		fmt.Println("!! Configuration anomaly detected")
+		fmt.Println("!! kkpctl config should not be executable")
+		fmt.Println("!! to get rid of this message, run")
+		fmt.Printf("!! $ chmod -R 600 %s\n", configPath)
+		fmt.Println("")
+	}
+
+	if permissions.GroupRead() || permissions.GroupWrite() || permissions.GroupExecute() ||
+		permissions.OtherRead() || permissions.OtherWrite() || permissions.OtherExecute() {
+		fmt.Println("")
+		fmt.Println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+		fmt.Println("!! Security Alert")
+		fmt.Println("!! kkpctl config is world readable!")
+		fmt.Println("!! Since kkpctl contains passwords and OAuth Tokens, this could cause serious security issues!")
+		fmt.Println("!! to get rid of this message, run")
+		fmt.Printf("!! $ chmod -R 600 %s\n", configPath)
+		fmt.Println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+		fmt.Println("")
+	}
 	return nil
 }
 

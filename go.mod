@@ -13,6 +13,7 @@ require (
 	github.com/lensesio/tableprinter v0.0.0-20201125135848-89e81fc956e7
 	github.com/mattn/go-runewidth v0.0.10 // indirect
 	github.com/mitchellh/go-homedir v1.1.0
+	github.com/phayes/permbits v0.0.0-20190612203442-39d7c581d2ee
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.1.3
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
