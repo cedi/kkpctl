@@ -1,4 +1,4 @@
-package bearer_client
+package bearerclient
 
 import (
 	"encoding/json"

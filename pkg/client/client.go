@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/cedi/kkpctl/pkg/bearer_client.go"
+	"github.com/cedi/kkpctl/pkg/bearerclient"
 	"github.com/pkg/errors"
 )
 
@@ -33,7 +33,7 @@ type URLParams map[string]string
 type Client struct {
 	BaseURL *url.URL
 
-	bc *bearer_client.Client
+	bc *bearerclient.Client
 }
 
 // NewClient creates a new Client for the Kubermatic API
@@ -45,13 +45,13 @@ func NewClient(baseURL string, bearer string) (*Client, error) {
 
 	client := &Client{
 		BaseURL: parsedURL,
-		bc:      bearer_client.NewClient(baseURL, bearer),
+		bc:      bearerclient.NewClient(baseURL, bearer),
 	}
 
 	return client, nil
 }
 
-// Do injects the correct API Version Path into the request and executes then bearer_client.Do
+// Do injects the correct API Version Path into the request and executes then bearerclient.Do
 func (c *Client) Do(req *http.Request, out interface{}, apiVersion APIVersion) (*http.Response, error) {
 	req.URL.Path = "/api/" + string(apiVersion) + req.URL.Path
 	return c.bc.Do(req, out)
