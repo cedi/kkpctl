@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/cedi/kkpctl/cmd/completion"
+	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/cedi/kkpctl/pkg/describe"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -19,28 +20,22 @@ var describeMachineDeploymentCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		machineDeploymentName := args[0]
 
-		kkp, err := Config.GetKKPClient()
+		kkp, err := Config.GetKKPClient(client.V2API)
 		if err != nil {
 			return err
 		}
 
-		cluster, err := kkp.GetClusterInProjectInDC(clusterID, projectID, datacenter)
-
-		if err != nil {
-			return errors.Wrapf(err, "failed to get cluster %s in project %s", clusterID, projectID)
-		}
-
-		machineDeployment, err := kkp.GetMachineDeployment(machineDeploymentName, cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
+		machineDeployment, err := kkp.GetMachineDeployment(machineDeploymentName, clusterID, projectID)
 		if err != nil {
 			return errors.Wrapf(err, "failed to get machine deployment %s for cluster %s in project %s", machineDeploymentName, clusterID, projectID)
 		}
 
-		machineDeploymentNodes, err := kkp.GetMachineDeploymentNodes(machineDeployment.ID, cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
+		machineDeploymentNodes, err := kkp.GetMachineDeploymentNodes(machineDeployment.ID, clusterID, projectID)
 		if err != nil {
 			return errors.Wrapf(err, "failed to get machine deployment %s's nodes for cluster %s in project %s", machineDeploymentName, clusterID, projectID)
 		}
 
-		machineDeploymentEvents, err := kkp.GetMachineDeploymentEvents(machineDeployment.ID, cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
+		machineDeploymentEvents, err := kkp.GetMachineDeploymentEvents(machineDeployment.ID, clusterID, projectID)
 		if err != nil {
 			return errors.Wrapf(err, "failed to get machine deployment %s's events for cluster %s in project %s", machineDeploymentName, clusterID, projectID)
 		}

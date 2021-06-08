@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/cedi/kkpctl/cmd/completion"
+	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/cedi/kkpctl/pkg/model"
 	"github.com/cedi/kkpctl/pkg/utils"
 	"github.com/pkg/errors"
@@ -26,14 +27,19 @@ var createMachineDeploymentCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		machineDeploymentName := args[0]
 
-		kkp, err := Config.GetKKPClient()
+		kkp, err := Config.GetKKPClient(client.V1API)
+		if err != nil {
+			return err
+		}
+
+		kkp2, err := Config.GetKKPClient(client.V2API)
 		if err != nil {
 			return err
 		}
 
 		cluster, err := kkp.GetClusterInProjectInDC(clusterID, projectID, datacenter)
 		if err != nil {
-			return errors.Wrapf(err, "failed to find cluster %s in project %s to add a machine deployment", clusterID, projectID)
+			return errors.Wrapf(err, "unable to create machine deployment %s for cluster %s in project %s", machineDeploymentName, clusterID, projectID)
 		}
 
 		clusterVersion, ok := cluster.Spec.Version.(string)
@@ -51,7 +57,7 @@ var createMachineDeploymentCmd = &cobra.Command{
 			utils.SplitLabelString(labels),
 		)
 
-		nodeDp, err := kkp.CreateMachineDeployment(newNodeDp, clusterID, projectID, cluster.Spec.Cloud.DatacenterName)
+		nodeDp, err := kkp2.CreateMachineDeployment(newNodeDp, clusterID, projectID)
 		if err != nil {
 			return errors.Wrapf(err, "unable to create machine deployment %s for cluster %s in project %s", machineDeploymentName, clusterID, projectID)
 		}

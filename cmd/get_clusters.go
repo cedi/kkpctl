@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/cedi/kkpctl/cmd/completion"
+	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/cedi/kkpctl/pkg/output"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -27,7 +28,7 @@ var getClustersCmd = &cobra.Command{
 			clusterID = args[0]
 		}
 
-		kkp, err := Config.GetKKPClient()
+		kkp, err := Config.GetKKPClient(client.V1API)
 		if err != nil {
 			return err
 		}

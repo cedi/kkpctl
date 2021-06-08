@@ -10,11 +10,22 @@ import (
 	"net/url"
 
 	"github.com/pkg/errors"
+	"github.com/savaki/jq"
 )
 
 const (
-	apiV1Path       string = "/api/v1"
 	contentTypeJSON string = "application/json"
+)
+
+// APIVersion is the version type of the KKP API to use
+type APIVersion string
+
+const (
+	// V1API is the v1 API
+	V1API APIVersion = "/api/v1"
+
+	// V2API is the v2 API
+	V2API APIVersion = "/api/v2"
 )
 
 // URLParams is a map of strings which can be added to a Get request
@@ -28,10 +39,10 @@ type Client struct {
 }
 
 // NewClient creates a new Client for the Kubermatic API
-func NewClient(baseURL string, bearer string) (*Client, error) {
-	parsedURL, err := url.Parse(baseURL + apiV1Path)
+func NewClient(apiVersion APIVersion, baseURL string, bearer string) (*Client, error) {
+	parsedURL, err := url.Parse(baseURL + string(apiVersion))
 	if err != nil {
-		return nil, errors.Wrapf(err, "Failed parsing API URL %s%s ", baseURL, apiV1Path)
+		return nil, errors.Wrapf(err, "Failed parsing API URL %s%s ", baseURL, apiVersion)
 	}
 
 	httpClient := &http.Client{}
@@ -55,10 +66,6 @@ func (c *Client) Do(req *http.Request, out interface{}) (*http.Response, error) 
 		return resp, err
 	}
 
-	if resp.StatusCode >= 299 {
-		return resp, fmt.Errorf("%v", resp.Status)
-	}
-
 	if resp.Header.Get("content-type") != "application/json" {
 		return resp, nil
 	}
@@ -68,6 +75,20 @@ func (c *Client) Do(req *http.Request, out interface{}) (*http.Response, error) 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
+	}
+
+	if resp.StatusCode >= 299 {
+		op, err := jq.Parse(".error.message")
+		if err != nil {
+			return resp, err
+		}
+
+		value, err := op.Apply(body)
+		if err != nil {
+			return resp, err
+		}
+
+		return resp, fmt.Errorf("%v: %s", resp.Status, string(value))
 	}
 
 	err = json.Unmarshal(body, out)

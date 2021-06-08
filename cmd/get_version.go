@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/cedi/kkpctl/cmd/completion"
+	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/cedi/kkpctl/pkg/output"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -17,7 +18,7 @@ var getClusterVersionCmd = &cobra.Command{
 	Args:              cobra.ExactArgs(0),
 	ValidArgsFunction: completion.GetValidDatacenterArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		kkp, err := Config.GetKKPClient()
+		kkp, err := Config.GetKKPClient(client.V1API)
 		if err != nil {
 			return err
 		}

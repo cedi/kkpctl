@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"sort"
 
+	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/cedi/kkpctl/pkg/config"
 	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/spf13/cobra"
@@ -17,7 +18,7 @@ var Config *config.Config
 func GetValidProjectArgs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 	completions := make([]string, 0)
 
-	kkp, err := Config.GetKKPClient()
+	kkp, err := Config.GetKKPClient(client.V1API)
 	if err != nil {
 		return completions, cobra.ShellCompDirectiveError
 	}
@@ -46,7 +47,7 @@ func GetValidProjectArgs(cmd *cobra.Command, args []string, toComplete string) (
 func GetValidClusterArgs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 	completions := make([]string, 0)
 
-	kkp, err := Config.GetKKPClient()
+	kkp, err := Config.GetKKPClient(client.V1API)
 	if err != nil {
 		return completions, cobra.ShellCompDirectiveError
 	}
@@ -91,7 +92,7 @@ func GetValidClusterArgs(cmd *cobra.Command, args []string, toComplete string) (
 func GetValidDatacenterArgs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 	completions := make([]string, 0)
 
-	kkp, err := Config.GetKKPClient()
+	kkp, err := Config.GetKKPClient(client.V1API)
 	if err != nil {
 		return completions, cobra.ShellCompDirectiveError
 	}
@@ -142,7 +143,7 @@ func GetValidCloudContextArgs(cmd *cobra.Command, args []string, toComplete stri
 func GetValidKubernetesVersions(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 	completions := make([]string, 0)
 
-	kkp, err := Config.GetKKPClient()
+	kkp, err := Config.GetKKPClient(client.V1API)
 	if err != nil {
 		return completions, cobra.ShellCompDirectiveError
 	}
@@ -221,7 +222,7 @@ func GetValidNodeSpecArgs(cmd *cobra.Command, args []string, toComplete string) 
 func GetValidMachineDeploymentArgs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 	completions := make([]string, 0)
 
-	kkp, err := Config.GetKKPClient()
+	kkp, err := Config.GetKKPClient(client.V1API)
 	if err != nil {
 		return completions, cobra.ShellCompDirectiveError
 	}
@@ -252,7 +253,7 @@ func GetValidMachineDeploymentArgs(cmd *cobra.Command, args []string, toComplete
 		return completions, cobra.ShellCompDirectiveNoFileComp
 	}
 
-	machineDeployments, err := kkp.GetMachineDeployments(cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
+	machineDeployments, err := kkp.GetMachineDeployments(cluster.ID, projectID)
 	if err != nil {
 		return completions, cobra.ShellCompDirectiveNoFileComp
 	}
@@ -271,7 +272,7 @@ func GetValidMachineDeploymentArgs(cmd *cobra.Command, args []string, toComplete
 func GetValidToVersionArgs(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 	completions := make([]string, 0)
 
-	kkp, err := Config.GetKKPClient()
+	kkp, err := Config.GetKKPClient(client.V1API)
 	if err != nil {
 		return completions, cobra.ShellCompDirectiveError
 	}

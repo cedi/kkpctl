@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/cedi/kkpctl/cmd/completion"
+	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/cedi/kkpctl/pkg/model"
 	"github.com/cedi/kkpctl/pkg/utils"
 	"github.com/pkg/errors"
@@ -27,7 +28,7 @@ var createClusterCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		clusterName := args[0]
 
-		kkp, err := Config.GetKKPClient()
+		kkp, err := Config.GetKKPClient(client.V1API)
 		if err != nil {
 			return err
 		}

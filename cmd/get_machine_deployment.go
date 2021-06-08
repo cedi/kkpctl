@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/cedi/kkpctl/cmd/completion"
+	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/cedi/kkpctl/pkg/output"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
@@ -22,21 +23,16 @@ var getMachineDeploymentCmd = &cobra.Command{
 			machineDeploymentName = args[0]
 		}
 
-		kkp, err := Config.GetKKPClient()
+		kkp, err := Config.GetKKPClient(client.V2API)
 		if err != nil {
 			return err
 		}
 
-		cluster, err := kkp.GetClusterInProjectInDC(clusterID, projectID, datacenter)
-		if err != nil {
-			return errors.Wrapf(err, "failed to get cluster %s in project %s", clusterID, projectID)
-		}
-
 		var machineDeployments interface{}
 		if len(args) == 0 {
-			machineDeployments, err = kkp.GetMachineDeployments(clusterID, projectID, cluster.Spec.Cloud.DatacenterName)
+			machineDeployments, err = kkp.GetMachineDeployments(clusterID, projectID)
 		} else {
-			machineDeployments, err = kkp.GetMachineDeployment(machineDeploymentName, clusterID, projectID, cluster.Spec.Cloud.DatacenterName)
+			machineDeployments, err = kkp.GetMachineDeployment(machineDeploymentName, clusterID, projectID)
 		}
 
 		if err != nil {

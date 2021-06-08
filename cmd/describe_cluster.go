@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/cedi/kkpctl/cmd/completion"
+	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/cedi/kkpctl/pkg/describe"
 	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/pkg/errors"
@@ -19,7 +20,12 @@ var describeClusterCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		clusterID := args[0]
 
-		kkp, err := Config.GetKKPClient()
+		kkp, err := Config.GetKKPClient(client.V1API)
+		if err != nil {
+			return err
+		}
+
+		kkp2, err := Config.GetKKPClient(client.V2API)
 		if err != nil {
 			return err
 		}
@@ -29,7 +35,7 @@ var describeClusterCmd = &cobra.Command{
 			return errors.Wrapf(err, "failed to get cluster %s in project %s", clusterID, projectID)
 		}
 
-		machineDeployments, err := kkp.GetMachineDeployments(cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
+		machineDeployments, err := kkp2.GetMachineDeployments(cluster.ID, projectID)
 		if err != nil {
 			// If we couldn't fetch the MachineDeployments that shouldn't bother us, just use a empty array instead
 			machineDeployments = make([]models.NodeDeployment, 0)
