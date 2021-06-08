@@ -34,8 +34,12 @@ var getClustersCmd = &cobra.Command{
 		}
 
 		var result interface{}
-		if clusterID == "" || listAll {
+		if clusterID == "" && projectID == "" {
+			result, err = kkp.ListAllClusters(listAll)
+		} else if clusterID == "" && projectID != "" {
 			result, err = kkp.ListClusters(projectID)
+		} else if clusterID != "" && projectID == "" {
+			result, err = kkp.GetClusterByID(clusterID)
 		} else {
 			result, err = kkp.GetCluster(clusterID, projectID)
 		}
@@ -58,7 +62,6 @@ func init() {
 	getCmd.AddCommand(getClustersCmd)
 
 	getClustersCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project.")
-	getClustersCmd.MarkFlagRequired("project")
 	getClustersCmd.RegisterFlagCompletionFunc("project", completion.GetValidProjectArgs)
 
 	getClustersCmd.Flags().BoolVarP(&listAll, "all", "a", false, "To list all clusters in all projects if the users is allowed to see.")

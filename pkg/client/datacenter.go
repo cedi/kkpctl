@@ -28,7 +28,7 @@ func (c *Client) GetDatacenter(name string) (*models.Datacenter, error) {
 
 // GetDatacenterForCluster gets the datacenter for a cluster
 func (c *Client) GetDatacenterForCluster(clusterID string) (*models.Datacenter, error) {
-	cluster, err := c.GetClusterByID(clusterID, false)
+	cluster, err := c.GetClusterByID(clusterID)
 	if err != nil {
 		return nil, err
 	}
