@@ -55,16 +55,17 @@ func (c *Client) Do(req *http.Request, out interface{}) (*http.Response, error) 
 		// Try parsing the body regardless of the error and see if it contains a error message
 		op, err := jq.Parse(".error.message")
 		if err != nil {
-			return resp, err
+			// If it fails just return the status code then
+			return resp, fmt.Errorf("%v", resp.Status)
 		}
 
 		value, err := op.Apply(body)
-		if err == nil {
-			return resp, fmt.Errorf("%v: %s", resp.Status, string(value))
-		} else {
+		if err != nil {
 			// If it fails to find a error message, just return the status code then
 			return resp, fmt.Errorf("%v", resp.Status)
 		}
+
+		return resp, fmt.Errorf("%v: %s", resp.Status, string(value))
 	}
 
 	err = json.Unmarshal(body, out)
