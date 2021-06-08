@@ -59,14 +59,14 @@ func (c *Client) ListClusters(projectID string) ([]models.Cluster, error) {
 
 // GetClusterByID gets a clusters from any project
 //	clusterID the clusterID to lookup
-func (c *Client) GetClusterByID(clusterID string, listAll bool) (*models.Cluster, error) {
+func (c *Client) GetClusterByID(clusterID string) (*models.Cluster, error) {
 	result := &models.Cluster{}
 
 	if clusterID == "" {
 		return result, fmt.Errorf("failed to get cluster: no clusterID specified")
 	}
 
-	clusters, err := c.ListAllClusters(listAll)
+	clusters, err := c.ListAllClusters(true)
 	if err != nil {
 		return result, errors.Wrapf(err, "failed to get cluster %s", clusterID)
 	}
@@ -80,11 +80,13 @@ func (c *Client) GetClusterByID(clusterID string, listAll bool) (*models.Cluster
 		}
 	}
 
-	if !found {
-		return result, errors.Wrapf(err, "failed to get cluster %s: not found", clusterID)
+	if found {
+		err = nil
+	} else {
+		err = fmt.Errorf("failed to get cluster %s: not found", clusterID)
 	}
 
-	return result, nil
+	return result, err
 }
 
 // GetCluster gets a clusters in a given Project
