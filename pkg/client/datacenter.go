@@ -25,33 +25,3 @@ func (c *Client) GetDatacenter(name string) (*models.Datacenter, error) {
 	_, err = c.Get(requestURL, result, V1API)
 	return result, err
 }
-
-// GetDatacenterForCluster gets the datacenter for a cluster
-func (c *Client) GetDatacenterForCluster(clusterID string) (*models.Datacenter, error) {
-	cluster, err := c.GetClusterByID(clusterID, false)
-	if err != nil {
-		return nil, err
-	}
-
-	datacenter, err := c.GetDatacenter(cluster.Spec.Cloud.DatacenterName)
-	if err != nil {
-		return nil, err
-	}
-
-	return datacenter, nil
-}
-
-// GetDatacenterForClusterInProject gets the datacenter for a cluster
-func (c *Client) GetDatacenterForClusterInProject(clusterID string, projectID string) (*models.Datacenter, error) {
-	cluster, err := c.GetCluster(clusterID, projectID)
-	if err != nil {
-		return nil, err
-	}
-
-	datacenter, err := c.GetDatacenter(cluster.Spec.Cloud.DatacenterName)
-	if err != nil {
-		return nil, err
-	}
-
-	return datacenter, nil
-}
