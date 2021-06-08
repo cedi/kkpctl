@@ -24,23 +24,23 @@ var describeClusterCmd = &cobra.Command{
 			return err
 		}
 
-		cluster, err := kkp.GetClusterInProjectInDC(clusterID, projectID, datacenter)
+		cluster, err := kkp.GetCluster(clusterID, projectID)
 		if err != nil || cluster.Spec == nil || cluster.Spec.Cloud == nil {
 			return errors.Wrapf(err, "failed to get cluster %s in project %s", clusterID, projectID)
 		}
 
-		machineDeployments, err := kkp.GetMachineDeployments(cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
+		machineDeployments, err := kkp.GetMachineDeployments(cluster.ID, projectID)
 		if err != nil {
 			// If we couldn't fetch the MachineDeployments that shouldn't bother us, just use a empty array instead
 			machineDeployments = make([]models.NodeDeployment, 0)
 		}
 
-		clusterHealth, err := kkp.GetClusterHealth(cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
+		clusterHealth, err := kkp.GetClusterHealth(cluster.ID, projectID)
 		if err != nil {
 			return errors.Wrapf(err, "failed to get health status for cluster %s in project %s", clusterID, projectID)
 		}
 
-		clusterEvents, err := kkp.GetEvents(cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
+		clusterEvents, err := kkp.GetEvents(cluster.ID, projectID)
 		if err != nil {
 			// If we couldn't fetch the Events that shouldn't bother us, just use a empty array instead
 			clusterEvents = make([]models.Event, 0)

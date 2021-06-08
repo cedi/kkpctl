@@ -20,6 +20,7 @@ var getClustersCmd = &cobra.Command{
 	Short:             "Lists clusters for a given project or datacenter",
 	Example:           "kkpctl get cluster --project dw2s9jk28z",
 	Args:              cobra.MaximumNArgs(1),
+	Aliases:           []string{"clusters"},
 	ValidArgsFunction: completion.GetValidClusterArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		clusterID := ""
@@ -34,9 +35,9 @@ var getClustersCmd = &cobra.Command{
 
 		var result interface{}
 		if clusterID == "" || listAll {
-			result, err = kkp.ListClustersInProjectInDC(projectID, datacenter)
+			result, err = kkp.ListClusters(projectID)
 		} else {
-			result, err = kkp.GetClusterInProjectInDC(clusterID, projectID, datacenter)
+			result, err = kkp.GetCluster(clusterID, projectID)
 		}
 
 		if err != nil {
@@ -59,9 +60,6 @@ func init() {
 	getClustersCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project.")
 	getClustersCmd.MarkFlagRequired("project")
 	getClustersCmd.RegisterFlagCompletionFunc("project", completion.GetValidProjectArgs)
-
-	getClustersCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter.")
-	getClustersCmd.RegisterFlagCompletionFunc("datacenter", completion.GetValidDatacenterArgs)
 
 	getClustersCmd.Flags().BoolVarP(&listAll, "all", "a", false, "To list all clusters in all projects if the users is allowed to see.")
 }

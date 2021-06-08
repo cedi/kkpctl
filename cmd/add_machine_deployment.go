@@ -31,9 +31,9 @@ var createMachineDeploymentCmd = &cobra.Command{
 			return err
 		}
 
-		cluster, err := kkp.GetClusterInProjectInDC(clusterID, projectID, datacenter)
+		cluster, err := kkp.GetCluster(clusterID, projectID)
 		if err != nil {
-			return errors.Wrapf(err, "failed to find cluster %s in project %s to add a machine deployment", clusterID, projectID)
+			return errors.Wrapf(err, "unable to create machine deployment %s for cluster %s in project %s", machineDeploymentName, clusterID, projectID)
 		}
 
 		clusterVersion, ok := cluster.Spec.Version.(string)
@@ -51,7 +51,7 @@ var createMachineDeploymentCmd = &cobra.Command{
 			utils.SplitLabelString(labels),
 		)
 
-		nodeDp, err := kkp.CreateMachineDeployment(newNodeDp, clusterID, projectID, cluster.Spec.Cloud.DatacenterName)
+		nodeDp, err := kkp.CreateMachineDeployment(newNodeDp, clusterID, projectID)
 		if err != nil {
 			return errors.Wrapf(err, "unable to create machine deployment %s for cluster %s in project %s", machineDeploymentName, clusterID, projectID)
 		}

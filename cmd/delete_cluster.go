@@ -28,12 +28,12 @@ var delClusterCmd = &cobra.Command{
 			return err
 		}
 
-		cluster, err := kkp.GetClusterInProject(clusterID, projectID)
+		cluster, err := kkp.GetCluster(clusterID, projectID)
 		if err != nil {
 			return errors.Wrapf(err, "failed to find cluster %s which should be deleted", clusterID)
 		}
 
-		err = kkp.DeleteClusterInDC(clusterID, projectID, datacenter, !noDeleteVolumes, !noDeleteLoadBalancers)
+		err = kkp.DeleteCluster(clusterID, projectID, !noDeleteVolumes, !noDeleteLoadBalancers)
 		if err != nil {
 			return errors.Wrapf(err, "failed to delete cluster %s in project %s", clusterID, projectID)
 		}

@@ -17,6 +17,7 @@ var getProjectsCmd = &cobra.Command{
 	Short:             "List a project",
 	Example:           "kkpctl get project",
 	Args:              cobra.MaximumNArgs(1),
+	Aliases:           []string{"projects"},
 	ValidArgsFunction: completion.GetValidProjectArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		projectID := ""

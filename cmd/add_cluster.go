@@ -43,7 +43,7 @@ var createClusterCmd = &cobra.Command{
 			enableAuditLogging,
 		)
 
-		result, err := kkp.CreateCluster(newCluster, projectID, datacenter)
+		result, err := kkp.CreateCluster(newCluster, projectID)
 		if err != nil {
 			return errors.Wrapf(err, "failed to create %s cluster %s", clusterType, clusterName)
 		}

@@ -15,6 +15,7 @@ var getClusterVersionCmd = &cobra.Command{
 	Short:             "Lists all available Kubernetes Versions in your KKP installation",
 	Example:           "kkpctl get version",
 	Args:              cobra.ExactArgs(0),
+	Aliases:           []string{"versions"},
 	ValidArgsFunction: completion.GetValidDatacenterArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		kkp, err := Config.GetKKPClient()

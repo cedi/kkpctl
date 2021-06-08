@@ -7,108 +7,97 @@ import (
 )
 
 const (
-	machineDeploymentPath string = "nodedeployments"
+	machineDeploymentPath string = "machinedeployments"
 	nodePath              string = "nodes"
 )
 
 // GetMachineDeployments lists all machine deployments for a cluster
-func (c *Client) GetMachineDeployments(clusterID string, projectID string, dc string) ([]models.NodeDeployment, error) {
+func (c *Client) GetMachineDeployments(clusterID string, projectID string) ([]models.NodeDeployment, error) {
 	result := make([]models.NodeDeployment, 0)
 
-	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s",
+	requestURL := fmt.Sprintf("%s/%s/%s/%s/%s",
 		projectPath,
 		projectID,
-		datacenterPath,
-		dc,
 		clusterPath,
 		clusterID,
 		machineDeploymentPath,
 	)
-	_, err := c.Get(requestURL, &result)
+	_, err := c.Get(requestURL, &result, V2API)
 	return result, err
 }
 
 // GetMachineDeployment lists all machine deployments for a cluster
-func (c *Client) GetMachineDeployment(machineDeploymentID string, clusterID string, projectID string, dc string) (*models.NodeDeployment, error) {
+func (c *Client) GetMachineDeployment(id string, clusterID string, projectID string) (*models.NodeDeployment, error) {
 	result := &models.NodeDeployment{}
 
-	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s/%s",
+	requestURL := fmt.Sprintf("%s/%s/%s/%s/%s/%s",
 		projectPath,
 		projectID,
-		datacenterPath,
-		dc,
 		clusterPath,
 		clusterID,
 		machineDeploymentPath,
-		machineDeploymentID,
+		id,
 	)
-	_, err := c.Get(requestURL, result)
+	_, err := c.Get(requestURL, &result, V2API)
 	return result, err
 }
 
 // CreateMachineDeployment creates a new machine deployment on a cluster
-func (c *Client) CreateMachineDeployment(new *models.NodeDeployment, clusterID string, projectID string, dc string) (*models.NodeDeployment, error) {
+func (c *Client) CreateMachineDeployment(new *models.NodeDeployment, clusterID string, projectID string) (*models.NodeDeployment, error) {
 	result := &models.NodeDeployment{}
 
-	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s",
+	requestURL := fmt.Sprintf("%s/%s/%s/%s/%s",
 		projectPath,
 		projectID,
-		datacenterPath,
-		dc,
 		clusterPath,
 		clusterID,
 		machineDeploymentPath,
 	)
 
-	_, err := c.Post(requestURL, contentTypeJSON, new, result)
+	_, err := c.Post(requestURL, contentTypeJSON, new, result, V2API)
 	return result, err
 }
 
 // DeleteMachineDeployment delets a machine deployment from a cluster
-func (c *Client) DeleteMachineDeployment(id string, clusterID string, projectID string, dc string) error {
-	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s/%s",
+func (c *Client) DeleteMachineDeployment(id string, clusterID string, projectID string) error {
+	requestURL := fmt.Sprintf("%s/%s/%s/%s/%s/%s",
 		projectPath,
 		projectID,
-		datacenterPath,
-		dc,
 		clusterPath,
 		clusterID,
 		machineDeploymentPath,
 		id,
 	)
 
-	_, err := c.Delete(requestURL)
+	_, err := c.Delete(requestURL, V2API)
 	return err
 }
 
 // GetMachineDeploymentNodes gets all nodes in a machine deployment
-func (c *Client) GetMachineDeploymentNodes(id string, clusterID string, projectID string, dc string) ([]models.Node, error) {
+func (c *Client) GetMachineDeploymentNodes(id string, clusterID string, projectID string) ([]models.Node, error) {
 	result := make([]models.Node, 0)
 
-	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s/%s/%s",
+	requestURL := fmt.Sprintf("%s/%s/%s/%s/%s/%s/%s",
 		projectPath,
 		projectID,
-		datacenterPath,
-		dc,
 		clusterPath,
 		clusterID,
 		machineDeploymentPath,
 		id,
 		nodePath,
 	)
-	_, err := c.Get(requestURL, &result)
+
+	_, err := c.Get(requestURL, &result, V2API)
 	return result, err
 }
 
 // GetMachineDeploymentEvents gets all nodes in a machine deployment
-func (c *Client) GetMachineDeploymentEvents(id string, clusterID string, projectID string, dc string) ([]models.Event, error) {
+func (c *Client) GetMachineDeploymentEvents(id string, clusterID string, projectID string) ([]models.Event, error) {
 	result := make([]models.Event, 0)
 
-	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s/%s/%s/%s",
+	requestURL := fmt.Sprintf("%s/%s/%s/%s/%s/%s/%s/%s",
 		projectPath,
 		projectID,
-		datacenterPath,
-		dc,
 		clusterPath,
 		clusterID,
 		machineDeploymentPath,
@@ -116,18 +105,15 @@ func (c *Client) GetMachineDeploymentEvents(id string, clusterID string, project
 		nodePath,
 		eventsPath,
 	)
-	_, err := c.Get(requestURL, &result)
+	_, err := c.Get(requestURL, &result, V2API)
 	return result, err
 }
 
-// UpgradeWorkerDeploymentVersion gets all versions which are valid to upgrade to from a machine deployment
-func (c *Client) UpgradeWorkerDeploymentVersion(toVersion string, clusterID string, projectID string, dc string) error {
-
-	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s/%s",
+// UpgradeWorkerDeploymentVersion upgrades node deployments in a cluster
+func (c *Client) UpgradeWorkerDeploymentVersion(toVersion string, clusterID string, projectID string) error {
+	requestURL := fmt.Sprintf("%s/%s/%s/%s/%s/%s",
 		projectPath,
 		projectID,
-		datacenterPath,
-		dc,
 		clusterPath,
 		clusterID,
 		nodePath,
@@ -140,26 +126,14 @@ func (c *Client) UpgradeWorkerDeploymentVersion(toVersion string, clusterID stri
 		Version:                    toVersion,
 	}
 
-	_, err := c.Put(requestURL, contentTypeJSON, updateVersion, nil)
+	_, err := c.Put(requestURL, contentTypeJSON, updateVersion, nil, V2API)
 	return err
 }
 
 // AreAllWorkerDeploymentsReady gets all worker deployments and checks if their unavailable replica count is 0
 //	returns true if all WorkerDeployments are ready
-func (c *Client) AreAllWorkerDeploymentsReady(clusterID string, projectID string, dc string) (bool, error) {
-	machineDeployments := make([]models.NodeDeployment, 0)
-
-	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s",
-		projectPath,
-		projectID,
-		datacenterPath,
-		dc,
-		clusterPath,
-		clusterID,
-		machineDeploymentPath,
-	)
-
-	_, err := c.Get(requestURL, &machineDeployments)
+func (c *Client) AreAllWorkerDeploymentsReady(clusterID string, projectID string) (bool, error) {
+	machineDeployments, err := c.GetMachineDeployments(clusterID, projectID)
 	if err != nil {
 		return false, err
 	}
@@ -174,21 +148,8 @@ func (c *Client) AreAllWorkerDeploymentsReady(clusterID string, projectID string
 }
 
 // IsWorkerDeploymentsReady gets the specified worker deployment and checks if the unavailable replica count is 0
-func (c *Client) IsWorkerDeploymentsReady(id string, clusterID string, projectID string, dc string) (bool, error) {
-	machineDeployment := &models.NodeDeployment{}
-
-	requestURL := fmt.Sprintf("%s/%s/%s/seed-%s/%s/%s/%s/%s",
-		projectPath,
-		projectID,
-		datacenterPath,
-		dc,
-		clusterPath,
-		clusterID,
-		machineDeploymentPath,
-		id,
-	)
-
-	_, err := c.Get(requestURL, machineDeployment)
+func (c *Client) IsWorkerDeploymentsReady(id string, clusterID string, projectID string) (bool, error) {
+	machineDeployment, err := c.GetMachineDeployment(id, clusterID, projectID)
 	if err != nil {
 		return false, err
 	}

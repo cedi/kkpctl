@@ -28,18 +28,18 @@ var editClusterUpgradeCmd = &cobra.Command{
 			return err
 		}
 
-		cluster, err := kkp.GetClusterInProjectInDC(clusterID, projectID, datacenter)
+		cluster, err := kkp.GetCluster(clusterID, projectID)
 		if err != nil {
 			return errors.Wrapf(err, "failed to get cluster %s in project %s", clusterID, projectID)
 		}
 
-		result, err := kkp.UpgradeCluster(toVersion, cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
+		result, err := kkp.UpgradeCluster(toVersion, cluster.ID, projectID)
 		if err != nil {
 			return errors.Wrapf(err, "failed to upgrade cluster %s to version %s", clusterID, toVersion)
 		}
 
 		if !noUpgradeWorkers {
-			err = kkp.UpgradeWorkerDeploymentVersion(toVersion, cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
+			err = kkp.UpgradeWorkerDeploymentVersion(toVersion, cluster.ID, projectID)
 			if err != nil {
 				return errors.Wrapf(err, "failed to upgrade worker-nodes in cluster %s to version %s", clusterID, toVersion)
 			}

@@ -21,17 +21,12 @@ var deleteMachineDeploymentCmd = &cobra.Command{
 			return err
 		}
 
-		cluster, err := kkp.GetClusterInProjectInDC(clusterID, projectID, datacenter)
-		if err != nil {
-			return errors.Wrapf(err, "failed to find cluster %s in project %s", clusterID, projectID)
-		}
-
-		machineDeployment, err := kkp.GetMachineDeployment(machineDeploymentName, clusterID, projectID, cluster.Spec.Cloud.DatacenterName)
+		machineDeployment, err := kkp.GetMachineDeployment(machineDeploymentName, clusterID, projectID)
 		if err != nil {
 			return errors.Wrapf(err, "failed to get machine deployment %s in cluster %s", machineDeploymentName, clusterID)
 		}
 
-		err = kkp.DeleteMachineDeployment(machineDeployment.ID, clusterID, projectID, cluster.Spec.Cloud.DatacenterName)
+		err = kkp.DeleteMachineDeployment(machineDeployment.ID, clusterID, projectID)
 		if err != nil {
 			return errors.Wrapf(err, "failed to delete machine deployment %s (%s) in cluster %s", machineDeployment.Name, machineDeployment.ID, clusterID)
 		}

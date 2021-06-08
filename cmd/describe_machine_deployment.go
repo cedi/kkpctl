@@ -24,23 +24,17 @@ var describeMachineDeploymentCmd = &cobra.Command{
 			return err
 		}
 
-		cluster, err := kkp.GetClusterInProjectInDC(clusterID, projectID, datacenter)
-
-		if err != nil {
-			return errors.Wrapf(err, "failed to get cluster %s in project %s", clusterID, projectID)
-		}
-
-		machineDeployment, err := kkp.GetMachineDeployment(machineDeploymentName, cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
+		machineDeployment, err := kkp.GetMachineDeployment(machineDeploymentName, clusterID, projectID)
 		if err != nil {
 			return errors.Wrapf(err, "failed to get machine deployment %s for cluster %s in project %s", machineDeploymentName, clusterID, projectID)
 		}
 
-		machineDeploymentNodes, err := kkp.GetMachineDeploymentNodes(machineDeployment.ID, cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
+		machineDeploymentNodes, err := kkp.GetMachineDeploymentNodes(machineDeployment.ID, clusterID, projectID)
 		if err != nil {
 			return errors.Wrapf(err, "failed to get machine deployment %s's nodes for cluster %s in project %s", machineDeploymentName, clusterID, projectID)
 		}
 
-		machineDeploymentEvents, err := kkp.GetMachineDeploymentEvents(machineDeployment.ID, cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
+		machineDeploymentEvents, err := kkp.GetMachineDeploymentEvents(machineDeployment.ID, clusterID, projectID)
 		if err != nil {
 			return errors.Wrapf(err, "failed to get machine deployment %s's events for cluster %s in project %s", machineDeploymentName, clusterID, projectID)
 		}

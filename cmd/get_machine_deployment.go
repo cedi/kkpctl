@@ -15,6 +15,7 @@ var getMachineDeploymentCmd = &cobra.Command{
 	Short:             "List machinedeployments for a cluster",
 	Example:           "kkpctl describe machinedeployment my_machinedeployment",
 	Args:              cobra.MaximumNArgs(1),
+	Aliases:           []string{"machinedeployments"},
 	ValidArgsFunction: completion.GetValidMachineDeploymentArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		machineDeploymentName := ""
@@ -27,16 +28,11 @@ var getMachineDeploymentCmd = &cobra.Command{
 			return err
 		}
 
-		cluster, err := kkp.GetClusterInProjectInDC(clusterID, projectID, datacenter)
-		if err != nil {
-			return errors.Wrapf(err, "failed to get cluster %s in project %s", clusterID, projectID)
-		}
-
 		var machineDeployments interface{}
 		if len(args) == 0 {
-			machineDeployments, err = kkp.GetMachineDeployments(clusterID, projectID, cluster.Spec.Cloud.DatacenterName)
+			machineDeployments, err = kkp.GetMachineDeployments(clusterID, projectID)
 		} else {
-			machineDeployments, err = kkp.GetMachineDeployment(machineDeploymentName, clusterID, projectID, cluster.Spec.Cloud.DatacenterName)
+			machineDeployments, err = kkp.GetMachineDeployment(machineDeploymentName, clusterID, projectID)
 		}
 
 		if err != nil {

@@ -15,6 +15,7 @@ var getDatacenterCmd = &cobra.Command{
 	Short:             "Lists available datacenters",
 	Example:           "kkpctl get datacenter",
 	Args:              cobra.MaximumNArgs(1),
+	Aliases:           []string{"datacenters"},
 	ValidArgsFunction: completion.GetValidDatacenterArgs,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		dc := ""

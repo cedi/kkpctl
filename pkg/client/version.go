@@ -8,7 +8,7 @@ import (
 func (c *Client) ListClusterVersions() (model.VersionList, error) {
 	result := make([]model.Version, 0)
 
-	_, err := c.Get("/upgrades/cluster", &result)
+	_, err := c.Get("/upgrades/cluster", &result, V1API)
 	if err != nil {
 		return result, err
 	}

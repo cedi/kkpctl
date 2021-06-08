@@ -73,7 +73,7 @@ func GetValidClusterArgs(cmd *cobra.Command, args []string, toComplete string) (
 	clusters := make([]models.Cluster, 0)
 
 	for _, projectTmp := range projects {
-		clusterTmp, _ := kkp.ListClustersInProject(projectTmp.ID)
+		clusterTmp, _ := kkp.ListClusters(projectTmp.ID)
 		clusters = append(clusters, clusterTmp...)
 	}
 
@@ -103,7 +103,7 @@ func GetValidDatacenterArgs(cmd *cobra.Command, args []string, toComplete string
 		if projectStr == "" {
 			datacenters, _ = kkp.ListDatacenter()
 		} else {
-			cluster, err := kkp.GetClusterInProject(args[0], projectStr)
+			cluster, err := kkp.GetCluster(args[0], projectStr)
 			if err == nil {
 				datacenter, _ := kkp.GetDatacenter(cluster.Spec.Cloud.DatacenterName)
 				datacenters = append(datacenters, *datacenter)
@@ -236,23 +236,14 @@ func GetValidMachineDeploymentArgs(cmd *cobra.Command, args []string, toComplete
 		return completions, cobra.ShellCompDirectiveNoFileComp
 	}
 
-	dc, err := cmd.Flags().GetString("datacenter")
-	if err != nil {
-		return completions, cobra.ShellCompDirectiveNoFileComp
-	}
-
 	var cluster *models.Cluster
-	if dc == "" {
-		cluster, err = kkp.GetClusterInProject(clusterID, projectID)
-	} else {
-		cluster, err = kkp.GetClusterInProjectInDC(clusterID, projectID, dc)
-	}
+	cluster, err = kkp.GetCluster(clusterID, projectID)
 
 	if err != nil {
 		return completions, cobra.ShellCompDirectiveNoFileComp
 	}
 
-	machineDeployments, err := kkp.GetMachineDeployments(cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
+	machineDeployments, err := kkp.GetMachineDeployments(cluster.ID, projectID)
 	if err != nil {
 		return completions, cobra.ShellCompDirectiveNoFileComp
 	}
@@ -287,23 +278,11 @@ func GetValidToVersionArgs(cmd *cobra.Command, args []string, toComplete string)
 		return completions, cobra.ShellCompDirectiveNoFileComp
 	}
 
-	dc, err := cmd.Flags().GetString("datacenter")
 	if err != nil {
 		return completions, cobra.ShellCompDirectiveNoFileComp
 	}
 
-	var cluster *models.Cluster
-	if dc == "" {
-		cluster, err = kkp.GetClusterInProject(clusterID, projectID)
-	} else {
-		cluster, err = kkp.GetClusterInProjectInDC(clusterID, projectID, dc)
-	}
-
-	if err != nil {
-		return completions, cobra.ShellCompDirectiveNoFileComp
-	}
-
-	upgradeVersions, err := kkp.GetClusterUpgradeVersions(clusterID, projectID, cluster.Spec.Cloud.DatacenterName)
+	upgradeVersions, err := kkp.GetClusterUpgradeVersions(clusterID, projectID)
 	if err != nil {
 		return completions, cobra.ShellCompDirectiveNoFileComp
 	}

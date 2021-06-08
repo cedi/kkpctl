@@ -60,7 +60,7 @@ func (r clusterVersionRender) ParseCollection(inputObj interface{}, output strin
 			})
 
 			if version.Default {
-				rendered[idx].Version = fmt.Sprintf("%s *", rendered[idx].Version)
+				rendered[idx].Version = fmt.Sprintf("%s (default)", rendered[idx].Version)
 			}
 		}
 

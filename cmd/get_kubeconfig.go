@@ -28,12 +28,12 @@ var getKubeconfigCmd = &cobra.Command{
 			return err
 		}
 
-		cluster, err := kkp.GetClusterInProjectInDC(clusterID, projectID, datacenter)
+		cluster, err := kkp.GetCluster(clusterID, projectID)
 		if err != nil {
 			return errors.Wrapf(err, "failed to get cluster %s in project %s", clusterID, projectID)
 		}
 
-		result, err := kkp.GetKubeConfig(cluster.ID, projectID, cluster.Spec.Cloud.DatacenterName)
+		result, err := kkp.GetKubeConfig(cluster.ID, projectID)
 		if err != nil {
 			return errors.Wrapf(err, "failed to get kubeconfig for cluster %s", clusterID)
 		}
