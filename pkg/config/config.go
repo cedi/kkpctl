@@ -7,6 +7,7 @@ import (
 	"path"
 	"strings"
 
+	"github.com/cedi/kkpctl/pkg/bearerclient"
 	"github.com/cedi/kkpctl/pkg/client"
 	"github.com/phayes/permbits"
 	"github.com/pkg/errors"
@@ -148,7 +149,10 @@ func (c *Config) getCloudFromContext() (string, string) {
 // GetKKPClient returns a KKP Client for the currently configured cloud
 func (c *Config) GetKKPClient() (*client.Client, error) {
 	baseURL, apiToken := c.getCloudFromContext()
-	kkp, err := client.NewClient(baseURL, apiToken)
+
+	bc := bearerclient.NewClient(baseURL, apiToken)
+
+	kkp, err := client.NewClient(baseURL, bc)
 	if err != nil {
 		return kkp, errors.Wrap(err, "could not initialize Kubermatic API client")
 	}

@@ -33,11 +33,11 @@ type URLParams map[string]string
 type Client struct {
 	BaseURL *url.URL
 
-	bc *bearerclient.Client
+	bc bearerclient.BearerClient
 }
 
 // NewClient creates a new Client for the Kubermatic API
-func NewClient(baseURL string, bearer string) (*Client, error) {
+func NewClient(baseURL string, bc bearerclient.BearerClient) (*Client, error) {
 	parsedURL, err := url.Parse(baseURL)
 	if err != nil {
 		return nil, errors.Wrapf(err, "Failed parsing API URL %s ", baseURL)
@@ -45,7 +45,7 @@ func NewClient(baseURL string, bearer string) (*Client, error) {
 
 	client := &Client{
 		BaseURL: parsedURL,
-		bc:      bearerclient.NewClient(baseURL, bearer),
+		bc:      bc,
 	}
 
 	return client, nil

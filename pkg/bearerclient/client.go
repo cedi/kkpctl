@@ -10,6 +10,11 @@ import (
 	"github.com/savaki/jq"
 )
 
+// BearerClient is a simple http.Client that always injects a Bearer Auth token to an Request
+type BearerClient interface {
+	Do(req *http.Request, out interface{}) (*http.Response, error)
+}
+
 // Client holds all config and the http.Client needed to talk to the Kubermatic API
 type Client struct {
 	httpClient *http.Client
@@ -28,7 +33,7 @@ func NewClient(baseURL string, bearer string) *Client {
 // req is the http.Request to execute
 // out can be a pointer to any object to which the result should be de-serialised.
 func (c *Client) Do(req *http.Request, out interface{}) (*http.Response, error) {
-	req.Header.Set("Authorization", "Bearer "+c.bearer) // "/api/v1/projects/6tmbnhdl7h/dc/seed-ix2/clusters/h9dzr6x7wk/node...+11 more"
+	req.Header.Set("Authorization", "Bearer "+c.bearer)
 
 	resp, err := c.httpClient.Do(req)
 	if err != nil || out == nil {
