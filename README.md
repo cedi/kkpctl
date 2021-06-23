@@ -33,51 +33,7 @@ make install_release
 `kkpctl` comes with auto-completion right out of the box for bash, zsh, fish, and PowerShell.
 
 ```bash
-$ kkpctl completion --help
-To load completions:
-
-Bash:
-
-  $ source <(kkpctl completion bash)
-
-  # To load completions for each session, execute once:
-  # Linux:
-  $ kkpctl completion bash > /etc/bash_completion.d/kkpctl
-  # macOS:
-  $ kkpctl completion bash > /usr/local/etc/bash_completion.d/kkpctl
-
-Zsh:
-
-  # If shell completion is not already enabled in your environment,
-  # you will need to enable it.  You can execute the following once:
-
-  $ echo "autoload -U compinit; compinit" >> ~/.zshrc
-
-  # To load completions for each session, execute once:
-  $ kkpctl completion zsh > "${fpath[1]}/_kkpctl"
-
-  # You will need to start a new shell for this setup to take effect.
-
-fish:
-
-  $ kkpctl completion fish | source
-
-  # To load completions for each session, execute once:
-  $ kkpctl completion fish > ~/.config/fish/completions/kkpctl.fish
-
-PowerShell:
-
-  PS> kkpctl completion powershell | Out-String | Invoke-Expression
-
-  # To load completions for every new session, run:
-  PS> kkpctl completion powershell > kkpctl.ps1
-  # and source this file from your PowerShell profile.
-
-Usage:
-  kkpctl completion [bash|zsh|fish|powershell]
-
-Flags:
-  -h, --help   help for completion
+kkpctl completion --help
 ```
 
 # Usage
