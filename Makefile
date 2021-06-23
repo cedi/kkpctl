@@ -27,10 +27,10 @@ test_all: test
 	go test all
 
 install: build
-	cp ./build/kkpctl ${GOPATH}/bin
+	cp ./build/kkpctl ${GOPATH}/bin/
 
 install_release: release
-	cp ./build/kkpctl ${GOPATH}/bin
+	cp ./build/kkpctl ${GOPATH}/bin/
 
 clean:
 	rm -rf ./build
