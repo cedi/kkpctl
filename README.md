@@ -68,13 +68,13 @@ $EDITOR ~/.config/kkpctl/config.yaml
 
 ```bash
 # Add the kkp cloud with a name
-kkpctl config add cloud imke_prod https://imke.cloud/
+kkpctl config add cloud kubermatic_dev https://dev.kubermatic.io
 
 # Note: This is a work around, until we have oidc-login available in kkpctl
-kkpctl config set cloud imke_prod berer ey....
+kkpctl config set cloud kubermatic_dev berer ey....
 
 # Set your context to use the freshly added cloud
-kkpctl ctx set cloud imke_prod
+kkpctl ctx set cloud kubermatic_dev
 ```
 
 ## Work with projects
