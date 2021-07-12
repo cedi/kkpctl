@@ -68,9 +68,13 @@ $EDITOR ~/.config/kkpctl/config.yaml
 
 ### Retrieve OIDC ClientID and Secret from your KKP installation
 
+__NOTE:__ Make sure, that `http://localhost:8000` is a valid RedirectURI in your dex configuration for the `kubermatic` client if you use this method.
+
 ```bash
 kubectl get configmap -n oauth dex -ojson | jq '.data."config.yaml"' --raw-output | yq eval --tojson | jq '.staticClients | [ .[] | select( .id | contains("kubermatic")) ] | .[].secret' --raw-output
 ```
+
+__Security Advise:__ It is better, if you register a separate OIDC Application for `kkpctl` that only allows redirect to `http://localhost:8080`. This is just meant a quick demo! Never do this in production!
 
 ### Configuring kkpctl
 
