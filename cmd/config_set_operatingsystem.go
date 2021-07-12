@@ -12,6 +12,11 @@ var (
 	distUpgradeOnBoot bool
 )
 
+var configSetCmd = &cobra.Command{
+	Use:   "set",
+	Short: "Set values in your configuration",
+}
+
 var configSetOperatingSystemCmd = &cobra.Command{
 	Use:       "operatingsystem {flatcar|ubuntu}",
 	Short:     "Configure operation system behaviour",
@@ -58,6 +63,8 @@ var configSetOSUbuntuCmd = &cobra.Command{
 }
 
 func init() {
+	configCmd.AddCommand(configSetCmd)
+
 	configSetCmd.AddCommand(configSetOperatingSystemCmd)
 
 	// Flatcar

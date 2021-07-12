@@ -66,15 +66,29 @@ $EDITOR ~/.config/kkpctl/config.yaml
 
 ## Add your KKP Cloud
 
+### Retrieve OIDC ClientID and Secret from your KKP installation
+
+```bash
+kubectl get configmap -n oauth dex -ojson | jq '.data."config.yaml"' --raw-output | yq eval --tojson | jq '.staticClients | [ .[] | select( .id | contains("kubermatic")) ] | .[].secret' --raw-output
+```
+
+### Configuring kkpctl
+
 ```bash
 # Add the kkp cloud with a name
-kkpctl config add cloud kubermatic_dev https://dev.kubermatic.io
-
-# Note: This is a work around, until we have oidc-login available in kkpctl
-kkpctl config set cloud kubermatic_dev berer ey....
+kkpctl config add cloud kubermatic_dev --url https://dev.kubermatic.io --client_id kubermatic --client_secret dGVzdDEyMw==
 
 # Set your context to use the freshly added cloud
 kkpctl ctx set cloud kubermatic_dev
+```
+
+### Login to your kkp cloud
+
+```bash
+$ kkpctl oidc-login
+You will now be taken to your browser for authentication
+Authentication URL: https://dev.kubermatic.io/dex/auth?access_type=offline&client_id=kubermatic&redirect_uri=http%3A%2F%2Flocalhost%3A8000&response_type=code&scope=openid+email+profile&state=state
+Authentication successful
 ```
 
 ## Work with projects
