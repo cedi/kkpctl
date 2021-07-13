@@ -21,19 +21,7 @@ type VersionRender struct {
 	Commit    string `header:"Commit"`
 }
 
-func (r VersionRender) ParseObject(inputObj interface{}, output string) (string, error) {
-	switch object := inputObj.(type) {
-	case VersionRender:
-		return r.ParseCollection([]VersionRender{object}, output, Name)
-
-	case *VersionRender:
-		return r.ParseCollection([]VersionRender{*object}, output, Name)
-
-	default:
-		return "", fmt.Errorf("inputObj is neighter a VersionRender nor a *VersionRender")
-	}
-}
-
+// ParseCollection parses the version of KKPCTL
 func (r VersionRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
 	var err error
 	var parsedOutput []byte
@@ -71,6 +59,4 @@ func (r VersionRender) ParseCollection(inputObj interface{}, output string, sort
 func init() {
 	parser := GetParserFactory()
 	parser.AddCollectionParser(reflect.TypeOf([]VersionRender{}), VersionRender{})
-	parser.AddObjectParser(reflect.TypeOf(VersionRender{}), VersionRender{})
-	parser.AddObjectParser(reflect.TypeOf(&VersionRender{}), VersionRender{})
 }
