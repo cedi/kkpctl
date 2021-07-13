@@ -7,17 +7,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var (
-	// Version represents the Version of the kkpctl binary, should be set via ldflags -X
-	Version string
-
-	// Date represents the Date of when the kkpctl binary was build, should be set via ldflags -X
-	Date string
-
-	// Commit represents the Commit-hash from which kkpctl binary was build, should be set via ldflags -X
-	Commit string
-)
-
 var versionCMD = &cobra.Command{
 	Use:     "version",
 	Short:   "Shows version information",
@@ -40,6 +29,7 @@ var versionCMD = &cobra.Command{
 			Version:   Version,
 			Date:      Date,
 			Commit:    Commit,
+			BuiltBy:   BuiltBy,
 		})
 
 		// Prepare KKP Server Version

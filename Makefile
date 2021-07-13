@@ -5,9 +5,10 @@ BUILD=`date +%FT%T%z`
 COMMIT=`git rev-parse HEAD`
 
 # Setup the -ldflags option for go build here, interpolate the variable values
-LDFLAGS="-X github.com/cedi/kkpctl/cmd.Version=${VERSION} \
-	-X github.com/cedi/kkpctl/cmd.Date=${BUILD} \
-	-X github.com/cedi/kkpctl/cmd.Commit=${COMMIT}"
+LDFLAGS="-X main.version=${VERSION} \
+	-X main.date=${BUILD} \
+	-X main.commit=${COMMIT} \
+	-X main.builtBy=Makefile"
 LDFLAGS_BUILD=-ldflags ${LDFLAGS}
 LDFLAGS_RELEASE=-ldflags "-s -w" ${LDFLAGS}
 

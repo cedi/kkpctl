@@ -14,6 +14,18 @@ var (
 	// Config holds the global configuration for kkpctl
 	Config *config.Config
 
+	// Version represents the Version of the kkpctl binary, should be set via ldflags -X
+	Version string
+
+	// Date represents the Date of when the kkpctl binary was build, should be set via ldflags -X
+	Date string
+
+	// Commit represents the Commit-hash from which kkpctl binary was build, should be set via ldflags -X
+	Commit string
+
+	// BuildBy represents who build the binary, should be set via ldflags -X
+	BuiltBy string
+
 	configPath string
 	outputType string
 	sortBy     string
@@ -28,7 +40,13 @@ var rootCmd = &cobra.Command{
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
+func Execute(version, commit, date, builtBy string) {
+
+	// asign build flags for version info
+	Version = version
+	Date = date
+	Commit = commit
+	BuiltBy = builtBy
 
 	var err error
 	config.ConfigPath = configPath

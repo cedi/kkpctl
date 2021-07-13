@@ -19,6 +19,7 @@ type VersionRender struct {
 	Version   string `header:"Version"`
 	Date      string `header:"Date"`
 	Commit    string `header:"Commit"`
+	BuiltBy   string `header:"BuiltBy"`
 }
 
 // ParseCollection parses the version of KKPCTL
