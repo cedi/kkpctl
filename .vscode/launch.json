@@ -10,6 +10,7 @@
             "request": "launch",
             "mode": "debug",
             "program": "${workspaceFolder}/main.go",
+            "buildFlags": "-ldflags \"-X github.com/cedi/kkpctl/cmd.Version=`git describe --tags` -X github.com/cedi/kkpctl/cmd.Date=`date +%FT%T%z` -X github.com/cedi/kkpctl/cmd.Commit=`git rev-parse HEAD`\"",
             "args": [
                 //"get", "project", "--all"
                 //"get", "project"

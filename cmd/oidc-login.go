@@ -11,7 +11,6 @@ import (
 
 	"golang.org/x/oauth2"
 
-	"github.com/cedi/kkpctl/cmd/completion"
 	"github.com/fatih/color"
 	"github.com/skratchdot/open-golang/open"
 	"github.com/spf13/cobra"
@@ -25,12 +24,11 @@ var (
 )
 
 var oidcLoginCommand = &cobra.Command{
-	Use:               "oidc-login [cloudName]",
-	Short:             "Uses OIDC to login to your KKP Cloud",
-	Example:           "kkpctl oidc-login imke",
-	Args:              cobra.MaximumNArgs(1),
-	Aliases:           []string{"login"},
-	ValidArgsFunction: completion.GetValidDatacenterArgs,
+	Use:     "oidc-login [cloudName]",
+	Short:   "Uses OIDC to login to your KKP Cloud",
+	Example: "kkpctl oidc-login imke",
+	Args:    cobra.MaximumNArgs(1),
+	Aliases: []string{"login"},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 1 {
 			kkpCloudName = args[0]

@@ -1,12 +1,23 @@
 .PHONY: all
 
+VERSION=`git describe --tags`
+BUILD=`date +%FT%T%z`
+COMMIT=`git rev-parse HEAD`
+
+# Setup the -ldflags option for go build here, interpolate the variable values
+LDFLAGS="-X github.com/cedi/kkpctl/cmd.Version=${VERSION} \
+	-X github.com/cedi/kkpctl/cmd.Date=${BUILD} \
+	-X github.com/cedi/kkpctl/cmd.Commit=${COMMIT}"
+LDFLAGS_BUILD=-ldflags ${LDFLAGS}
+LDFLAGS_RELEASE=-ldflags "-s -w" ${LDFLAGS}
+
 all: build
 
 build: build_dir fmt tidy vet
-	go build -race -o build/kkpctl ./main.go
+	go build ${LDFLAGS_BUILD} -race -o build/kkpctl ./main.go
 
 release: clean build_dir
-	go build -ldflags "-s -w" -o build/kkpctl ./main.go
+	go build ${LDFLAGS_BUILD} -o build/kkpctl ./main.go
 
 test: build_dir fmt tidy vet
 	go test -covermode=count -coverprofile=./build/profile.out ./...
