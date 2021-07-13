@@ -23,7 +23,7 @@ var (
 	// Commit represents the Commit-hash from which kkpctl binary was build, should be set via ldflags -X
 	Commit string
 
-	// BuildBy represents who build the binary, should be set via ldflags -X
+	// BuiltBy represents who build the binary, should be set via ldflags -X
 	BuiltBy string
 
 	configPath string

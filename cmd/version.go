@@ -44,7 +44,7 @@ var versionCMD = &cobra.Command{
 		}
 
 		render = append(render, output.VersionRender{
-			Component: "KKP API",
+			Component: "kkp api",
 			Version:   versions["api"],
 		})
 	},

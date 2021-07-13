@@ -41,7 +41,7 @@ func (r VersionRender) ParseCollection(inputObj interface{}, output string, sort
 
 	case Text:
 		sort.Slice(objects, func(i, j int) bool {
-			return objects[j].Component > objects[i].Component
+			return objects[j].Component < objects[i].Component
 		})
 
 		var bodyBuf io.ReadWriter
