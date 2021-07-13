@@ -4,7 +4,7 @@ go 1.16
 
 require (
 	github.com/dustin/go-humanize v1.0.0 // indirect
-	github.com/fatih/color v1.7.0
+	github.com/fatih/color v1.12.0
 	github.com/go-openapi/errors v0.20.0 // indirect
 	github.com/go-openapi/validate v0.20.2 // indirect
 	github.com/google/go-cmp v0.5.6 // indirect
