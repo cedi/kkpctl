@@ -58,7 +58,7 @@ var oidcLoginCommand = &cobra.Command{
 
 		// add transport for self-signed certificate to context
 		tr := &http.Transport{
-			TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
+			TLSClientConfig: &tls.Config{InsecureSkipVerify: false},
 		}
 		sslcli := &http.Client{Transport: tr}
 		ctx = context.WithValue(ctx, oauth2.HTTPClient, sslcli)
