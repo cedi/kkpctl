@@ -1,18 +1,87 @@
+# kkpctl
 [![GitHub license](https://img.shields.io/github/license/cedi/kkpctl.svg)](https://github.com/cedi/kkpctl/blob/main/LICENSE)
-[![made-with-Go](https://img.shields.io/badge/Made%20with-Go-1f425f.svg)](http://golang.org)
 [![GitHub go.mod Go version of a Go module](https://img.shields.io/github/go-mod/go-version/cedi/kkpctl.svg)](https://github.com/cedi/kkpctl)
 [![GoDoc reference example](https://img.shields.io/badge/godoc-reference-blue.svg)](https://pkg.go.dev/github.com/cedi/kkpctl)
 [![GoReportCard example](https://goreportcard.com/badge/github.com/cedi/kkpctl)](https://goreportcard.com/report/github.com/cedi/kkpctl)
 [![Total alerts](https://img.shields.io/lgtm/alerts/g/cedi/kkpctl.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/cedi/kkpctl/alerts/)
 [![workflow status](https://github.com/cedi/kkpctl/actions/workflows/go.yml/badge.svg)](https://github.com/cedi/kkpctl/actions)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
-
-# kkpctl
 
 This tool aims to implement the [KKP](https://github.com/kubermatic/kubermatic) API as a useful CLI tool.
 The usage should remind of kubectl.
 
-# Install from source
+## Usage
+
+The usage of `kkpctl` should remind of `kubectl`.
+For the full usage documentation see the [docs](docs/).
+
+`kkpctl` comes with auto-completion right out of the box for bash, zsh, fish, and PowerShell.
+
+```bash
+kkpctl completion --help
+```
+
+## Quick-Start
+
+### Download `kkpctl` and install it to your `$GOPATH/bin` folder
+
+```bash
+pushd /tmp
+
+# Get the Download URL for your system
+DOWNLOAD_PATH=$(curl -s https://api.github.com/repos/cedi/kkpctl/releases/latest | jq -r ".assets[]?.browser_download_url" | grep --color=never --ignore-case $(uname -s) | grep --color=never $(uname -m | sed 's/x86_64/amd64/g'))
+
+FILENAME=$(echo $DOWNLOAD_PATH | awk -F'/' '{print $NF}')
+FOLDER_NAME=$(echo $FILENAME | sed 's/.tar.gz//g')
+
+# Download the tar.gz archive
+curl -s -L $DOWNLOAD_PATH -o $FILENAME
+
+# unpack the tar.gz archive
+mkdir $FOLDER_NAME
+tar -xzf $FILENAME -C $FOLDER_NAME
+
+# install kkpctl to $GOPATH/bin/
+cp $FOLDER_NAME/kkpctl $GOPATH/bin/kkpctl
+
+popd
+```
+
+### Configure your KKP Cloud
+
+Retrieve OIDC ClientID and Secret from your KKP installation
+
+> __NOTE:__ Make sure, that `http://localhost:8000` is a valid RedirectURI in your dex configuration for the `kubermatic` client if you use this method.
+
+> __Security Advise:__ It is better, if you register a separate OIDC Application for `kkpctl` that only allows redirect to `http://localhost:8080`. This is just meant a quick demo! Never do this in production!
+
+```bash
+# get the kubermatic client-secret
+CLIENT_SECRET=$(kubectl get configmap -n oauth dex -ojson | jq '.data."config.yaml"' --raw-output | yq eval --tojson | jq '.staticClients | [ .[] | select( .id | contains("kubermatic")) ] | .[].secret' --raw-output)
+
+# Add the kkp cloud with a name
+kkpctl config add cloud kubermatic_dev --url https://dev.kubermatic.io --client_id kubermatic --client_secret $CLIENT_SECRET
+
+# Set your context to use the freshly added cloud
+kkpctl ctx set cloud kubermatic_dev
+```
+
+### Login to kkp
+
+```bash
+kkpctl oidc-login
+```
+
+And you're done!
+Now, let's head over to the [working with kkpctl](docs/working-with-kkpctl.md) document where we go into more detail.
+
+## Contributing
+
+### devcontainer
+
+The easiest way to get your development enviroment up and running is using the [devcontainer](https://code.visualstudio.com/docs/remote/containers-tutorial).
+Simply clone the repository, open the folder in your VSCode and accept the popup which asks if VSCode should restart in the dev-container.
+
+### Install from source
 
 Pre-Requirement:
 
@@ -27,132 +96,19 @@ git clone https://github.com/cedi/kkpctl.git $GOPATH/src/github.com/cedi/kkpctl
 cd $GOPATH/src/github.com/cedi/kkpctl
 make install_release
 ```
+### Makefile
 
-## Shell Completion
+The repository ships with a makefile which makes it easier to build and install the application.
+Useful Makefile targets are `build`, `release`, `test`, `test_all`, `install`, `install_release`, `clean`, and `vet`.
 
-`kkpctl` comes with auto-completion right out of the box for bash, zsh, fish, and PowerShell.
+Most of them are self-explaining. I just want to point out the difference between a "development" and a "release" build.
 
-```bash
-kkpctl completion --help
-```
+* The development build is a regular `go build` with the `-race` flag enabled to detect race conditions easier.
+* The release build is a regular `go build` withouth the `-race` flag, but with `-ldflags "-s -w"` to strip the debug symbols from the binary.
 
-# Usage
+The `build` and `release` targets depend on `fmt` and `tidy`, so your code is always formated and your `go.mod` file is always tidy.
 
-For the full usage documentation see the [docs](docs/commandline-usage.md)
-
-## Quick-Start
-
-### Configuration
-
-Currently there are two ways to configure your `kkpctl`.
-The easiest option is to use `kkpctl config`, however due to the early stage of this project, this only works for the openstack cloudprovider for now.
-
-#### Openstack
-
-```bash
-# Add your first cloudprovider
-kkpctl config add provider openstack --username "user@email.de" --password "my-super-secure-password" --tenant "internal-openstack-tenant" optimist
-```
-
-#### Configure `kkpctl` manualy
-
-```bash
-# Create an empty configuration
-kkpctl config generate -w
-
-# Edit the just created configuration with your favorite Editor and fill in the details yourself
-$EDITOR ~/.config/kkpctl/config.yaml
-```
-
-## Add your KKP Cloud
-
-### Retrieve OIDC ClientID and Secret from your KKP installation
-
-__NOTE:__ Make sure, that `http://localhost:8000` is a valid RedirectURI in your dex configuration for the `kubermatic` client if you use this method.
-
-```bash
-kubectl get configmap -n oauth dex -ojson | jq '.data."config.yaml"' --raw-output | yq eval --tojson | jq '.staticClients | [ .[] | select( .id | contains("kubermatic")) ] | .[].secret' --raw-output
-```
-
-__Security Advise:__ It is better, if you register a separate OIDC Application for `kkpctl` that only allows redirect to `http://localhost:8080`. This is just meant a quick demo! Never do this in production!
-
-### Configuring kkpctl
-
-```bash
-# Add the kkp cloud with a name
-kkpctl config add cloud kubermatic_dev --url https://dev.kubermatic.io --client_id kubermatic --client_secret dGVzdDEyMw==
-
-# Set your context to use the freshly added cloud
-kkpctl ctx set cloud kubermatic_dev
-```
-
-### Login to your kkp cloud
-
-```bash
-$ kkpctl oidc-login
-You will now be taken to your browser for authentication
-Authentication URL: https://dev.kubermatic.io/dex/auth?access_type=offline&client_id=kubermatic&redirect_uri=http%3A%2F%2Flocalhost%3A8000&response_type=code&scope=openid+email+profile&state=state
-Authentication successful
-```
-
-## Work with projects
-
-1. Create your first project
-
-```bash
-kkpctl add project testproject
-```
-
-1. List your projects
-
-```bash
-kkpctl get project
-```
-
-1. Display your newly created project
-
-```bash
-kkpctl describe project 6tmbnhdl7h
-```
-
-## Working with clusters
-
-1. Create your first cluster
-
-```bash
-kkpctl add cluster --project 6tmbnhdl7h --datacenter ix2 --provider optimist --version 1.18.13 --labels stage=dev kkpctltest
-```
-
-1. List your clusters
-
-```bash
-kkpctl get cluster --project 6tmbnhdl7h
-```
-
-1. Describe your first cluster
-
-```bash
-kkpctl describe cluster --project 6tmbnhdl7h qvjdddt72t
-```
-
-## Connecting your `kubectl` to one of the KKP Clusters
-
-1. Connect to your cluster, once it's ready
-
-```bash
-kkpctl get kubeconfig --project 6tmbnhdl7h qvjdddt72t -w
-export KUBECONFIG=./kubeconfig-admin-qvjdddt72t
-kubectl get pods -A
-```
-
-# Contributing
-
-## devcontainer
-
-The easiest way to get your development enviroment up and running is using the [devcontainer](https://code.visualstudio.com/docs/remote/containers-tutorial).
-Simply clone the repository, open the folder in your VSCode and accept the popup which asks if VSCode should restart in the dev-container.
-
-## Repository layout
+### Repository layout
 
 ```bash
 ├── .devcontainer   # the kkpctl repository comes with a devcontainer, so you can easily get started using VSCode
@@ -175,18 +131,10 @@ Simply clone the repository, open the folder in your VSCode and accept the popup
 
 ```
 
-## Makefile
-
-The repository ships with a makefile which makes it easier to build and install the application.
-Useful Makefile targets are `build`, `release`, `test`, `test_all`, `install`, `install_release`, `clean`, and `vet`.
-
-Most of them are self-explaining. I just want to point out the difference between a "development" and a "release" build.
-
-* The development build is a regular `go build` with the `-race` flag enabled to detect race conditions easier.
-* The release build is a regular `go build` withouth the `-race` flag, but with `-ldflags "-s -w"` to strip the debug symbols from the binary.
-
-The `build` and `release` targets depend on `fmt` and `tidy`, so your code is always formated and your `go.mod` file is always tidy.
-
 ## Pull requests
 
-We welcome pull requests. Feel free to dig through the [issues](https://github.com/cedi/kkpctl/issues) and jump in
+I warmly welcome pull requests. Feel free to dig through the [issues](https://github.com/cedi/kkpctl/issues) and jump in with whatever you feel comfortable with.
+If you have new feature ideas, feel free to open a new issue and we can have a discussion.
+
+[![made-with-Go](https://img.shields.io/badge/Made%20with-Go-1f425f.svg)](http://golang.org)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)

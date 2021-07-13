@@ -1,4 +1,6 @@
-# Usage
+# Some compiled help-pages
+
+This is probably going to be outdated very fast. Please bear with me and help me keep this file up to date.
 
 `kkpctl --help`
 
