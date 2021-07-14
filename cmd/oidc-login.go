@@ -12,6 +12,7 @@ import (
 	"golang.org/x/oauth2"
 
 	"github.com/fatih/color"
+	"github.com/pkg/errors"
 	"github.com/skratchdot/open-golang/open"
 	"github.com/spf13/cobra"
 )
@@ -87,7 +88,7 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	queryParts, _ := url.ParseQuery(r.URL.RawQuery)
 	accessToken, err := parseToken(queryParts)
 	if err != nil {
-		fmt.Printf("Error: %v", err)
+		fmt.Printf("Error: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -98,7 +99,12 @@ func callbackHandler(w http.ResponseWriter, r *http.Request) {
 	msg = msg + "<p>You are authenticated and can now return to the kkpctl CLI</p>"
 	fmt.Fprint(w, msg)
 
-	saveToken(accessToken)
+	err = saveToken(accessToken)
+	if err != nil {
+		fmt.Printf("Error: %v\n", err.Error())
+		os.Exit(1)
+	}
+
 	os.Exit(0)
 }
 
@@ -115,29 +121,24 @@ func parseToken(queryParts url.Values) (string, error) {
 	token, err := conf.Exchange(ctx, code)
 	if err != nil {
 		fmt.Println(err)
-		os.Exit(1)
+		return "", errors.Wrap(err, "Unable to exchange the OIDC Token")
 	}
-	// The HTTP Client returned by conf.Client will refresh the token as necessary.
-	client := conf.Client(ctx, token)
-
-	resp, err := client.Get(kkpServer)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-	defer resp.Body.Close()
 
 	return token.AccessToken, nil
 }
 
-func saveToken(accessToken string) {
+func saveToken(accessToken string) error {
 	kkpCloud, err := Config.Cloud.Get(kkpCloudName)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		return errors.Wrap(err, "Unable to retrieve kkp cloud configuration")
 	}
 
 	kkpCloud.Bearer = accessToken
 	Config.Cloud.Set(kkpCloudName, kkpCloud)
-	Config.Save()
+	err = Config.Save()
+	if err != nil {
+		return errors.Wrap(err, "Unable to save token")
+	}
+
+	return nil
 }
