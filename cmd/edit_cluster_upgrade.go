@@ -59,7 +59,6 @@ func init() {
 	editClusterCmd.AddCommand(editClusterUpgradeCmd)
 
 	AddProjectFlag(editClusterUpgradeCmd)
-	AddDatacenterFlag(editClusterUpgradeCmd, false)
 
 	editClusterUpgradeCmd.Flags().StringVar(&toVersion, "to-version", "", "To which Version should the cluster be updated")
 	editClusterUpgradeCmd.MarkFlagRequired("to-version")

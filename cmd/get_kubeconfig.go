@@ -55,7 +55,6 @@ func init() {
 	getCmd.AddCommand(getKubeconfigCmd)
 
 	AddProjectFlag(getKubeconfigCmd)
-	AddDatacenterFlag(getKubeconfigCmd, false)
 
 	getKubeconfigCmd.Flags().BoolVarP(&writeConfig, "write", "w", false, "write the kubeconfig to the local directory")
 }

@@ -14,6 +14,7 @@ var (
 	clusterType                         string
 	k8sVersion                          string
 	providerName                        string
+	routerID                            string
 	enableAuditLogging                  bool
 	usePodSecurityPolicyAdmissionPlugin bool
 	usePodNodeSelectorAdmissionPlugin   bool
@@ -36,7 +37,7 @@ var createClusterCmd = &cobra.Command{
 			clusterName,
 			clusterType,
 			k8sVersion,
-			Config.Provider.GetProviderCloudSpec(providerName, datacenter),
+			Config.Provider.GetProviderCloudSpec(providerName, datacenter, routerID),
 			utils.SplitLabelString(labels),
 			usePodNodeSelectorAdmissionPlugin,
 			usePodSecurityPolicyAdmissionPlugin,
@@ -57,8 +58,11 @@ func init() {
 	addCmd.AddCommand(createClusterCmd)
 
 	AddProjectFlag(createClusterCmd)
-	AddDatacenterFlag(createClusterCmd, true)
 	AddLabelsFlag(createClusterCmd)
+
+	createClusterCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter.")
+	createClusterCmd.RegisterFlagCompletionFunc("datacenter", completion.GetValidDatacenterArgs)
+	createClusterCmd.MarkFlagRequired("datacenter")
 
 	createClusterCmd.Flags().StringVar(&clusterType, "type", "kubernetes", "Type of the cluster (kubernetes or openshift)")
 	createClusterCmd.RegisterFlagCompletionFunc("type", completion.GetValidClusterTypes)
@@ -70,6 +74,8 @@ func init() {
 	createClusterCmd.Flags().StringVar(&providerName, "provider", "", "Which provider should be used")
 	createClusterCmd.RegisterFlagCompletionFunc("provider", completion.GetValidProvider)
 	createClusterCmd.MarkFlagRequired("provider")
+
+	createClusterCmd.Flags().StringVar(&routerID, "routerid", "", "Which router should be used. Note: This only works for OpenStack provider")
 
 	createClusterCmd.Flags().BoolVar(&enableAuditLogging, "audit-logging", false, "Enable audit logging")
 	createClusterCmd.Flags().BoolVar(&usePodSecurityPolicyAdmissionPlugin, "pod-security-policy", false, "Pod Security Policies allow detailed authorizatin of pod creation and updates")

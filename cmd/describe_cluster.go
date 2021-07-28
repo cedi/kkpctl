@@ -68,7 +68,6 @@ func init() {
 	describeCmd.AddCommand(describeClusterCmd)
 
 	AddProjectFlag(describeClusterCmd)
-	AddDatacenterFlag(describeClusterCmd, false)
 
 	describeClusterCmd.Flags().BoolVarP(&listAll, "all", "a", false, "To list all clusters in all projects if the users is allowed to see.")
 }

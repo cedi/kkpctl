@@ -90,7 +90,7 @@ func NewProvider() *ProviderConfig {
 
 // GetProviderCloudSpec returns a models.CloudSpec object with the correct CloudProvider filled
 //gocyclo:ignore
-func (p *ProviderConfig) GetProviderCloudSpec(providerName string, datacenter string) *models.CloudSpec {
+func (p *ProviderConfig) GetProviderCloudSpec(providerName string, datacenter string, routerID string) *models.CloudSpec {
 	cs := &models.CloudSpec{
 		DatacenterName: datacenter,
 	}
@@ -134,6 +134,7 @@ func (p *ProviderConfig) GetProviderCloudSpec(providerName string, datacenter st
 	providerOpenstack, ok := p.Openstack[providerName]
 	if ok {
 		cs.Openstack = providerOpenstack
+		cs.Openstack.RouterID = routerID
 	}
 	providerPacket, ok := p.Packet[providerName]
 	if ok {

@@ -41,5 +41,4 @@ func init() {
 
 	AddClusterFlag(deleteMachineDeploymentCmd)
 	AddProjectFlag(deleteMachineDeploymentCmd)
-	AddDatacenterFlag(deleteMachineDeploymentCmd, false)
 }

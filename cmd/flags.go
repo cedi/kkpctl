@@ -23,18 +23,6 @@ func AddClusterFlag(cmd *cobra.Command) {
 	cmd.RegisterFlagCompletionFunc("cluster", completion.GetValidClusterArgs)
 }
 
-// AddDatacenterFlag adds the --datacenter flag to the cobra.Command
-// 	this ensures that the --datacenter flag is always added in the same way and
-// 	having the completion function working
-func AddDatacenterFlag(cmd *cobra.Command, required bool) {
-	cmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter.")
-	cmd.RegisterFlagCompletionFunc("datacenter", completion.GetValidDatacenterArgs)
-
-	if required {
-		cmd.MarkFlagRequired("datacenter")
-	}
-}
-
 // AddLabelsFlag adds the --labels flag to the cobra.Command
 // 	this ensures that the --datacenter flag is always added in the same way
 func AddLabelsFlag(cmd *cobra.Command) {

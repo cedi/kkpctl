@@ -65,7 +65,6 @@ func init() {
 	addCmd.AddCommand(createMachineDeploymentCmd)
 
 	AddProjectFlag(createMachineDeploymentCmd)
-	AddDatacenterFlag(createMachineDeploymentCmd, false)
 	AddLabelsFlag(createMachineDeploymentCmd)
 	AddClusterFlag(createMachineDeploymentCmd)
 
