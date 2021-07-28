@@ -9,6 +9,7 @@ var (
 	cloudURL     string
 	clientID     string
 	clientSecret string
+	authToken    string
 )
 
 // configAddProviderCmd represents the add provider command
@@ -24,7 +25,7 @@ var configAddCloudCmd = &cobra.Command{
 			Config.Cloud = config.NewCloudConfig()
 		}
 
-		Config.Cloud.Set(name, config.NewCloud(cloudURL, clientID, clientSecret))
+		Config.Cloud.Set(name, config.NewCloud(cloudURL, clientID, clientSecret, authToken))
 
 		return Config.Save()
 	},
@@ -39,4 +40,6 @@ func init() {
 
 	configAddCloudCmd.Flags().StringVar(&clientSecret, "client_secret", "", "The ClientSecret to use for OIDC-Login")
 	configAddCloudCmd.MarkFlagRequired("client_secret")
+
+	configAddCloudCmd.Flags().StringVar(&authToken, "auth_token", "", "If you're not using OIDC Login, you can specify a static API Token here")
 }

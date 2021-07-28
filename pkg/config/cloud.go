@@ -14,10 +14,10 @@ type Cloud struct {
 }
 
 // NewCloud creates a new Cloud object
-func NewCloud(url, clientID, clientSecret string) *Cloud {
+func NewCloud(url, clientID, clientSecret, authToken string) *Cloud {
 	return &Cloud{
 		URL:          url,
-		Bearer:       "",
+		Bearer:       authToken,
 		ClientID:     clientID,
 		ClientSecret: clientSecret,
 	}
@@ -26,7 +26,7 @@ func NewCloud(url, clientID, clientSecret string) *Cloud {
 // NewCloudConfig creates a new cloud config object
 func NewCloudConfig() CloudConfig {
 	cloudConfig := make(CloudConfig)
-	cloudConfig["imke"] = NewCloud("https://imke.cloud", "kubermatic", "")
+	cloudConfig["imke"] = NewCloud("https://imke.cloud", "kubermatic", "", "")
 
 	return cloudConfig
 }
