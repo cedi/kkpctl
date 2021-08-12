@@ -65,7 +65,6 @@ kkpctl config add cloud imke --url https://imke.cloud --auth_token akdfjhklqwerh
 Retrieve OIDC ClientID and Secret from your KKP installation
 
 > __NOTE:__ Make sure, that `http://localhost:8000` is a valid RedirectURI in your dex configuration for the `kubermatic` client if you use this method.
-
 > __Security Advise:__ It is better, if you register a separate OIDC Application for `kkpctl` that only allows redirect to `http://localhost:8080`. This is just meant a quick demo! Never do this in production!
 
 ```bash
