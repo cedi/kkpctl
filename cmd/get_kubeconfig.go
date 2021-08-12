@@ -3,8 +3,10 @@ package cmd
 import (
 	"fmt"
 	"io/ioutil"
+	"os"
 
 	"github.com/cedi/kkpctl/cmd/completion"
+	"github.com/cedi/kkpctl/pkg/utils"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 )
@@ -40,12 +42,30 @@ var getKubeconfigCmd = &cobra.Command{
 
 		if !writeConfig {
 			fmt.Print(result)
-		} else {
-			err := ioutil.WriteFile(fmt.Sprintf("kubeconfig-admin-%s", args[0]), []byte(result), 0644)
-			if err != nil {
-				return errors.Wrapf(err, "failed to write kubeconfig to current location")
-			}
+			return nil
 		}
+
+		fileName := fmt.Sprintf("kubeconfig-admin-%s", clusterID)
+
+		currentDir, err := os.Getwd()
+		if err != nil {
+			return errors.Wrapf(err, "failed to retrieve current location")
+		}
+
+		filePath := fmt.Sprintf("%s/%s", currentDir, fileName)
+
+		err = ioutil.WriteFile(filePath, []byte(result), 0644)
+		if err != nil {
+			return errors.Wrapf(err, "failed to write kubeconfig to current location")
+		}
+
+		size, err := utils.GetFileSize(filePath)
+		if err != nil {
+			return errors.Wrapf(err, "failed to retrieve filesize")
+		}
+
+		fmt.Printf("kubeconfig written: %s (%d bytes)\n", filePath, size)
+		fmt.Printf("\nConfigure kubectl using\nexport KUBECONFIG=%s\n", filePath)
 
 		return nil
 	},
