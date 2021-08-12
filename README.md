@@ -1,4 +1,5 @@
 # kkpctl
+
 [![GitHub license](https://img.shields.io/github/license/cedi/kkpctl.svg)](https://github.com/cedi/kkpctl/blob/main/LICENSE)
 [![GitHub go.mod Go version of a Go module](https://img.shields.io/github/go-mod/go-version/cedi/kkpctl.svg)](https://github.com/cedi/kkpctl)
 [![GoDoc reference example](https://img.shields.io/badge/godoc-reference-blue.svg)](https://pkg.go.dev/github.com/cedi/kkpctl)
@@ -48,6 +49,19 @@ popd
 
 ### Configure your KKP Cloud
 
+#### Service Account Token
+
+The simplest way to access your KKP Cloud is trough Service Account Token.
+Please see the [KKP Documentation](https://docs.kubermatic.com/kubermatic/v2.17/guides/service_account/using_service_account/) for how to retrieve a service account token.
+
+Once you got your Token, you can configure `kkpctl` to use the service account token instead of OIDC authentication using
+
+```bash
+kkpctl config add cloud imke --url https://imke.cloud --auth_token akdfjhklqwerhli2uh=
+```
+
+#### OIDC
+
 Retrieve OIDC ClientID and Secret from your KKP installation
 
 > __NOTE:__ Make sure, that `http://localhost:8000` is a valid RedirectURI in your dex configuration for the `kubermatic` client if you use this method.
@@ -96,6 +110,7 @@ git clone https://github.com/cedi/kkpctl.git $GOPATH/src/github.com/cedi/kkpctl
 cd $GOPATH/src/github.com/cedi/kkpctl
 make install_release
 ```
+
 ### Makefile
 
 The repository ships with a makefile which makes it easier to build and install the application.

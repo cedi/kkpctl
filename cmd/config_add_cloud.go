@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/cedi/kkpctl/pkg/config"
 	"github.com/spf13/cobra"
 )
@@ -21,6 +23,14 @@ var configAddCloudCmd = &cobra.Command{
 	RunE: func(cmd *cobra.Command, args []string) error {
 		name := args[0]
 
+		if clientID == "" && clientSecret != "" {
+			return fmt.Errorf("--client_secret was set, but no --client_id")
+		} else if clientID != "" && clientSecret == "" {
+			return fmt.Errorf("--client_id was set, but no --client_secret")
+		} else if clientID == "" && clientSecret == "" && authToken == "" {
+			return fmt.Errorf("OIDC login is not configured (no --client_id and --client_secret), but also no static --auth_token was specified")
+		}
+
 		if Config.Cloud == nil {
 			Config.Cloud = config.NewCloudConfig()
 		}
@@ -37,9 +47,6 @@ func init() {
 	configAddCloudCmd.MarkFlagRequired("url")
 
 	configAddCloudCmd.Flags().StringVar(&clientID, "client_id", "kubermatic", "The ClientID to use for OIDC-Login")
-
 	configAddCloudCmd.Flags().StringVar(&clientSecret, "client_secret", "", "The ClientSecret to use for OIDC-Login")
-	configAddCloudCmd.MarkFlagRequired("client_secret")
-
 	configAddCloudCmd.Flags().StringVar(&authToken, "auth_token", "", "If you're not using OIDC Login, you can specify a static API Token here")
 }
