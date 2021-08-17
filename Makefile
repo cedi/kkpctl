@@ -67,11 +67,11 @@ dep:
 	go get -u .
 
 tools: dep
-	go get -u github.com/cweill/gotests/...
-	go get -u golang.org/x/tools/cmd/benchcmp
-	go get -u golang.org/x/lint/golint
-	go get -u github.com/fzipp/gocyclo/cmd/gocyclo
-	go get -u github.com/amitbet/gorename
+	go install github.com/cweill/gotests/...
+	go install golang.org/x/tools/cmd/benchcmp
+	go install golang.org/x/lint/golint
+	go install github.com/fzipp/gocyclo/cmd/gocyclo
+	go install github.com/amitbet/gorename
 
 build_dir:
 	mkdir -p ./build/
