@@ -17,6 +17,27 @@ var configSetCmd = &cobra.Command{
 	Short: "Set values in your configuration",
 }
 
+var configSetAuthCmd = &cobra.Command{
+	Use:     "auth_token cloud_name token",
+	Short:   "Lets you set the context of which bearer token to use",
+	Args:    cobra.ExactArgs(2),
+	Example: "kkpctl config set auth_token prod sdfhjsldkfjsdklfhj...",
+	RunE: func(cmd *cobra.Command, args []string) error {
+		cloudName := args[0]
+		authToken := args[1]
+
+		cloud, err := Config.Cloud.Get(cloudName)
+		if err != nil {
+			return err
+		}
+
+		cloud.Bearer = authToken
+
+		Config.Cloud.Set(cloudName, cloud)
+		return Config.Save()
+	},
+}
+
 var configSetOperatingSystemCmd = &cobra.Command{
 	Use:       "operatingsystem {flatcar|ubuntu}",
 	Short:     "Configure operation system behaviour",
@@ -66,6 +87,7 @@ func init() {
 	configCmd.AddCommand(configSetCmd)
 
 	configSetCmd.AddCommand(configSetOperatingSystemCmd)
+	configSetCmd.AddCommand(configSetAuthCmd)
 
 	// Flatcar
 	configSetOperatingSystemCmd.AddCommand(configSetOSFlatcarCmd)
