@@ -61,7 +61,6 @@ var getClustersCmd = &cobra.Command{
 func init() {
 	getCmd.AddCommand(getClustersCmd)
 
-	AddProjectFlag(getClustersCmd)
-
-	getClustersCmd.Flags().BoolVarP(&listAll, "all", "a", false, "To list all clusters in all projects if the users is allowed to see.")
+	getClustersCmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project.")
+	getClustersCmd.RegisterFlagCompletionFunc("project", completion.GetValidProjectArgs)
 }
