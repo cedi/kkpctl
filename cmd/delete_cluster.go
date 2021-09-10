@@ -52,7 +52,7 @@ var delClusterCmd = &cobra.Command{
 func init() {
 	deleteCmd.AddCommand(delClusterCmd)
 
-	AddProjectFlag(delClusterCmd)
+	AddProjectFlag(delClusterCmd, true)
 
 	delClusterCmd.Flags().BoolVar(&noDeleteVolumes, "no-delete-volumes", false, "Do not cleanup connected volumes (PVs and PCVs)")
 	delClusterCmd.Flags().BoolVar(&noDeleteLoadBalancers, "no-delete-loadbalancers", false, "Do not cleanup connected Load Balancers")

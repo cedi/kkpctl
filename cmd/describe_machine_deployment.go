@@ -59,5 +59,5 @@ func init() {
 	describeCmd.AddCommand(describeMachineDeploymentCmd)
 
 	AddClusterFlag(describeMachineDeploymentCmd)
-	AddProjectFlag(describeMachineDeploymentCmd)
+	AddProjectFlag(describeMachineDeploymentCmd, true)
 }

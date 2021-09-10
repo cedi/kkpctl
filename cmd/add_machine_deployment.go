@@ -64,7 +64,7 @@ var createMachineDeploymentCmd = &cobra.Command{
 func init() {
 	addCmd.AddCommand(createMachineDeploymentCmd)
 
-	AddProjectFlag(createMachineDeploymentCmd)
+	AddProjectFlag(createMachineDeploymentCmd, true)
 	AddLabelsFlag(createMachineDeploymentCmd)
 	AddClusterFlag(createMachineDeploymentCmd)
 

@@ -74,7 +74,7 @@ var getKubeconfigCmd = &cobra.Command{
 func init() {
 	getCmd.AddCommand(getKubeconfigCmd)
 
-	AddProjectFlag(getKubeconfigCmd)
+	AddProjectFlag(getKubeconfigCmd, true)
 
 	getKubeconfigCmd.Flags().BoolVarP(&writeConfig, "write", "w", false, "write the kubeconfig to the local directory")
 }

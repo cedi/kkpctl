@@ -57,7 +57,7 @@ var createClusterCmd = &cobra.Command{
 func init() {
 	addCmd.AddCommand(createClusterCmd)
 
-	AddProjectFlag(createClusterCmd)
+	AddProjectFlag(createClusterCmd, true)
 	AddLabelsFlag(createClusterCmd)
 
 	createClusterCmd.Flags().StringVarP(&datacenter, "datacenter", "d", "", "Name of the datacenter.")

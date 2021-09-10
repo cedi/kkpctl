@@ -40,5 +40,5 @@ func init() {
 	deleteCmd.AddCommand(deleteMachineDeploymentCmd)
 
 	AddClusterFlag(deleteMachineDeploymentCmd)
-	AddProjectFlag(deleteMachineDeploymentCmd)
+	AddProjectFlag(deleteMachineDeploymentCmd, true)
 }
