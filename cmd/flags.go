@@ -7,7 +7,7 @@ import (
 
 // AddProjectFlag adds the --project flag to the cobra.Command
 // 	this ensures that the --project flag is always added in the same way and
-// 	having the completion functino working
+// 	having the completion function working
 func AddProjectFlag(cmd *cobra.Command) {
 	cmd.Flags().StringVarP(&projectID, "project", "p", "", "ID of the project.")
 	cmd.MarkFlagRequired("project")
