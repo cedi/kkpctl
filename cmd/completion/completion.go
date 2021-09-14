@@ -23,12 +23,7 @@ func GetValidProjectArgs(cmd *cobra.Command, args []string, toComplete string) (
 		return completions, cobra.ShellCompDirectiveError
 	}
 
-	listAll, err := cmd.Flags().GetBool("all")
-	if err != nil {
-		return completions, cobra.ShellCompDirectiveError
-	}
-
-	projects, err := kkp.ListProjects(listAll)
+	projects, err := kkp.ListProjects(false)
 	if err != nil {
 		return completions, cobra.ShellCompDirectiveError
 	}
