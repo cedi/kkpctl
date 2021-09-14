@@ -20,13 +20,12 @@ const (
 // ListAllClusters lists all clusters
 //	all lists all clusters in all projects, if you have the permission to do so
 func (c *Client) ListAllClusters(all bool) ([]model.ProjectCluster, error) {
-	result := make([]model.ProjectCluster, 0)
-
 	projects, err := c.ListProjects(all)
 	if err != nil {
-		return result, errors.Wrap(err, "failed to list all clusters: failed to list all projects")
+		return nil, errors.Wrap(err, "failed to list all clusters: failed to list all projects")
 	}
 
+	projectCluster := make([]model.ProjectCluster, 0)
 	for _, project := range projects {
 		if project.ClustersNumber == 0 {
 			continue
@@ -34,36 +33,35 @@ func (c *Client) ListAllClusters(all bool) ([]model.ProjectCluster, error) {
 
 		clusters, err := c.ListClusters(project.ID)
 		if err != nil {
-			return result, errors.Wrap(err, "failed to list all clusters")
+			return nil, errors.Wrap(err, "failed to list all clusters")
 		}
 
-		result = append(result, clusters...)
+		projectCluster = append(projectCluster, clusters...)
 	}
 
-	return result, nil
+	return projectCluster, nil
 }
 
 // ListClusters lists all clusters for a given Project (identified by ID)
 //	projectID the projectID in which to search clusters in
 func (c *Client) ListClusters(projectID string) ([]model.ProjectCluster, error) {
-	result := make([]model.ProjectCluster, 0)
-
 	if projectID == "" {
-		return result, fmt.Errorf("failed to list clusters in project: no projectID specified")
+		return nil, fmt.Errorf("failed to list clusters in project: no projectID specified")
 	}
 
 	requestURL := fmt.Sprintf("%s/%s/%s", projectPath, projectID, clusterPath)
 	clusters := make([]models.Cluster, 0)
 	_, err := c.Get(requestURL, &clusters, V2API)
 	if err != nil {
-		return result, errors.Wrapf(err, "failed to list clusters in project %s", projectID)
+		return nil, errors.Wrapf(err, "failed to list clusters in project %s", projectID)
 	}
 
+	projectCluster := make([]model.ProjectCluster, 0)
 	for _, cluster := range clusters {
-		result = append(result, *model.NewProjectCluster(projectID, cluster))
+		projectCluster = append(projectCluster, *model.NewProjectCluster(projectID, cluster))
 	}
 
-	return result, nil
+	return projectCluster, nil
 }
 
 // GetClusterByID gets a clusters from any project
@@ -117,24 +115,23 @@ func (c *Client) GetCluster(id string, projectID string) (*model.ProjectCluster,
 }
 
 // CreateCluster creates a new cluster
-func (c *Client) CreateCluster(newCluster *models.CreateClusterSpec, projectID string) (models.Cluster, error) {
-	result := models.Cluster{}
-
+func (c *Client) CreateCluster(newCluster *models.CreateClusterSpec, projectID string) (*models.Cluster, error) {
 	if newCluster == nil {
-		return result, fmt.Errorf("failed to create cluster: cluster object is nil")
+		return nil, fmt.Errorf("failed to create cluster: cluster object is nil")
 	}
 
 	if projectID == "" {
-		return result, fmt.Errorf("failed to create cluster: no projectID given")
+		return nil, fmt.Errorf("failed to create cluster: no projectID given")
 	}
 
 	requestURL := fmt.Sprintf("%s/%s/%s", projectPath, projectID, clusterPath)
-	_, err := c.Post(requestURL, contentTypeJSON, newCluster, &result, V2API)
+	cluster := &models.Cluster{}
+	_, err := c.Post(requestURL, contentTypeJSON, newCluster, cluster, V2API)
 	if err != nil {
-		return result, errors.Wrapf(err, "failed to create cluster %s in project %s", newCluster.Cluster.Name, projectID)
+		return cluster, errors.Wrapf(err, "failed to create cluster %s in project %s", newCluster.Cluster.Name, projectID)
 	}
 
-	return result, nil
+	return cluster, nil
 }
 
 // DeleteCluster deletes a cluster identified by id
@@ -191,14 +188,12 @@ func (c *Client) GetKubeConfig(clusterID string, projectID string) (string, erro
 
 // GetClusterHealth returns the health status of a cluster
 func (c *Client) GetClusterHealth(clusterID string, projectID string) (*models.ClusterHealth, error) {
-	result := &models.ClusterHealth{}
-
 	if clusterID == "" {
-		return result, fmt.Errorf("failed to get cluster health: no clusterID given")
+		return nil, fmt.Errorf("failed to get cluster health: no clusterID given")
 	}
 
 	if projectID == "" {
-		return result, fmt.Errorf("failed to get cluster health: no projectID given")
+		return nil, fmt.Errorf("failed to get cluster health: no projectID given")
 	}
 
 	requestURL := fmt.Sprintf("%s/%s/%s/%s/%s",
@@ -208,20 +203,20 @@ func (c *Client) GetClusterHealth(clusterID string, projectID string) (*models.C
 		clusterID,
 		clusterHealthPath,
 	)
-	_, err := c.Get(requestURL, &result, V2API)
-	return result, errors.Wrapf(err, "failed to get cluster health for cluster %s in project %s", clusterID, projectID)
+
+	clusterHealdh := &models.ClusterHealth{}
+	_, err := c.Get(requestURL, &clusterHealdh, V2API)
+	return clusterHealdh, errors.Wrapf(err, "failed to get cluster health for cluster %s in project %s", clusterID, projectID)
 }
 
 // GetClusterUpgradeVersions upgrades a cluster to a specified version
 func (c *Client) GetClusterUpgradeVersions(clusterID string, projectID string) (model.VersionList, error) {
-	result := make(model.VersionList, 0)
-
 	if clusterID == "" {
-		return result, fmt.Errorf("failed to get upgradeable versions: no clusterID given")
+		return nil, fmt.Errorf("failed to get upgradeable versions: no clusterID given")
 	}
 
 	if projectID == "" {
-		return result, fmt.Errorf("failed to get upgradeable versions: no projectID given")
+		return nil, fmt.Errorf("failed to get upgradeable versions: no projectID given")
 	}
 
 	requestURL := fmt.Sprintf("%s/%s/%s/%s/%s",
@@ -231,13 +226,14 @@ func (c *Client) GetClusterUpgradeVersions(clusterID string, projectID string) (
 		clusterID,
 		upgradesPath,
 	)
-	_, err := c.Get(requestURL, &result, V2API)
-	return result, errors.Wrapf(err, "failed to get upgradeable versions for cluster %s project %s", clusterID, projectID)
+
+	versionList := make(model.VersionList, 0)
+	_, err := c.Get(requestURL, &versionList, V2API)
+	return versionList, errors.Wrapf(err, "failed to get upgradeable versions for cluster %s project %s", clusterID, projectID)
 }
 
 // UpgradeCluster upgrades a cluster to a specified version
 func (c *Client) UpgradeCluster(toVersion string, clusterID string, projectID string) (*model.ProjectCluster, error) {
-
 	if clusterID == "" {
 		return nil, fmt.Errorf("failed to upgrade cluster: no clusterID given")
 	}
