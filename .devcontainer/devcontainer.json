@@ -9,8 +9,8 @@
 
 	// Set *default* container specific settings.json values on container create.
 	"settings": {
-		"go.toolsManagement.autoUpdate": true,
-		"go.toolsManagement.checkForUpdates": "proxy",
+		"go.toolsManagement.autoUpdate": false,
+		"go.toolsManagement.checkForUpdates": "off",
 		"go.gopath": "/go",
 		"go.lintOnSave": "package",
 		"go.vetOnSave": "package",
@@ -40,30 +40,20 @@
 			"references": true,
 			"runtest": true
 		},
-		"[go]":{
-			"editor.insertSpaces": false,
-			"editor.formatOnSave": true,
-			"editor.codeActionsOnSave": {
-				"source.organizeImports": true
-			},
-            "editor.snippetSuggestions": "none"
-		},
-		"[go.mod]": {
-            "editor.formatOnSave": true,
-            "editor.codeActionsOnSave": {
-                "source.organizeImports": true,
-            },
-        },
-        "gopls": {
-            "usePlaceholders": false,
-            "staticcheck": true
-        },
 		"codeQL.telemetry.enableTelemetry": false,
 		"codeQL.runningQueries.memory": 2048,
         "codeQL.runningQueries.debug": true,
 		"git.autofetch": true,
 		"editor.renderFinalNewline": true,
 		"editor.codeLens": true,
+		"editor.insertSpaces": true,
+		"editor.formatOnSave": true,
+		"editor.formatOnPaste": true,
+		"editor.snippetSuggestions": "none",
+		"editor.codeActionsOnSave": {
+			"source.organizeImports": true,
+			"source.fixAll": true,
+		},
 		"workbench.iconTheme": "vscode-icons",
 		"terminal.integrated.defaultProfile.linux": "zsh",
 	},
