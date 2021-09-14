@@ -35,12 +35,12 @@ var describeClusterCmd = &cobra.Command{
 			machineDeployments = make([]models.NodeDeployment, 0)
 		}
 
-		clusterHealth, err := kkp.GetClusterHealth(cluster.ID, projectID)
+		clusterHealth, err := kkp.GetClusterHealth(cluster.ID, cluster.ProjectID)
 		if err != nil {
-			return errors.Wrapf(err, "failed to get health status for cluster %s in project %s", clusterID, projectID)
+			return errors.Wrapf(err, "failed to get health status for cluster %s in project %s", cluster.ID, cluster.ProjectID)
 		}
 
-		clusterEvents, err := kkp.GetEvents(cluster.ID, projectID)
+		clusterEvents, err := kkp.GetEvents(cluster.ID, cluster.ProjectID)
 		if err != nil {
 			// If we couldn't fetch the Events that shouldn't bother us, just use a empty array instead
 			clusterEvents = make([]models.Event, 0)
@@ -56,7 +56,7 @@ var describeClusterCmd = &cobra.Command{
 
 		parsed, err := describe.Object(&meta)
 		if err != nil {
-			return errors.Wrapf(err, "failed to describe cluster %s in project %s", clusterID, projectID)
+			return errors.Wrapf(err, "failed to describe cluster %s in project %s", cluster.ID, cluster.ProjectID)
 		}
 		fmt.Println(parsed)
 
