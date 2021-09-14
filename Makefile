@@ -64,15 +64,14 @@ lint:
 cyclo:
 	gocyclo -avg -over 15 -ignore "_test|Godeps|vendor/" -total .
 
-dep:
-	go get -u .
-
-tools: dep
+tools:
 	go install github.com/cweill/gotests/...
 	go install golang.org/x/tools/cmd/benchcmp
 	go install golang.org/x/lint/golint
 	go install github.com/fzipp/gocyclo/cmd/gocyclo
 	go install github.com/amitbet/gorename
+	go install github.com/go-delve/delve/cmd/dlv@master
+	go install honnef.co/go/tools/cmd/staticcheck
 
 build_dir:
 	mkdir -p ./build/

@@ -28,6 +28,10 @@ func (c *Client) ListAllClusters(all bool) ([]model.ProjectCluster, error) {
 	}
 
 	for _, project := range projects {
+		if project.ClustersNumber == 0 {
+			continue
+		}
+
 		clusters, err := c.ListClusters(project.ID)
 		if err != nil {
 			return result, errors.Wrap(err, "failed to list all clusters")
