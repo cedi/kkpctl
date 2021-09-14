@@ -10,13 +10,15 @@
 	// Set *default* container specific settings.json values on container create.
 	"settings": {
 
-		"terminal.integrated.defaultProfile.linux": "bash",
+		"terminal.integrated.defaultProfile.linux": "zsh",
 		"go.toolsManagement.checkForUpdates": "off",
 		"go.gopath": "/go",
 		"go.lintOnSave": "package",
 		"go.formatTool": "goimports",
 		"go.useLanguageServer": true,
 		"go.autocompleteUnimportedPackages": true,
+        "go.gotoSymbol.includeImports": true,
+        "go.gotoSymbol.includeGoroot": true,
 		"go.vetOnSave": "package",
 		"go.editorContextMenuCommands": {
 			"toggleTestFile": true,
@@ -45,13 +47,45 @@
 			"editor.formatOnSave": true,
 			"editor.codeActionsOnSave": {
 				"source.organizeImports": true
-			}
+			},
+			// Optional: Disable snippets, as they conflict with completion ranking.
+            "editor.snippetSuggestions": "none"
 		},
+		"[go.mod]": {
+            "editor.formatOnSave": true,
+            "editor.codeActionsOnSave": {
+                "source.organizeImports": true,
+            },
+        },
+        "gopls": {
+            "usePlaceholders": false,
+            "staticcheck": true
+        },
+		"go.toolsEnvVars": {
+            "GOFLAGS": "-tags=",
+            "CGO_ENABLED": 1 // for the race detector
+        },
+        "gopls.env": {
+            "GOFLAGS": "-tags="
+        },
+        "go.testEnvVars": {
+            "": "",
+        },
+        "go.testFlags": [
+            "-v",
+            "-race"
+        ],
+        "go.testTimeout": "10s",
+        "go.coverOnSingleTest": true,
+        "go.coverOnSingleTestFile": true,
+        "go.coverOnTestPackage": true,
 		"codeQL.runningQueries.memory": 2048,
         "codeQL.runningQueries.debug": true,
 		"git.autofetch": true,
 		"editor.renderFinalNewline": true,
-		"editor.codeLens": true
+		"editor.codeLens": true,
+		"workbench.iconTheme": "vscode-icons",
+		"codeQL.telemetry.enableTelemetry": false,
 	},
 
 	// Add the IDs of extensions you want installed when the container is created.
@@ -61,9 +95,13 @@
 		"github.vscode-codeql",
 		"davidanson.vscode-markdownlint",
         "shardulm94.trailing-spaces",
-		"Tabnine.tabnine-vscode",
 		"github.vscode-pull-request-github",
-		"eamodio.gitlens"
+		"eamodio.gitlens",
+		"Gruntfuggly.todo-tree",
+		"bierner.emojisense",
+		"vscode-icons-team.vscode-icons",
+		"redhat.vscode-yaml",
+		"IBM.output-colorizer"
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
