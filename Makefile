@@ -9,16 +9,21 @@ LDFLAGS=-X main.version=${VERSION} \
 	-X main.date=${BUILD} \
 	-X main.commit=${COMMIT} \
 	-X main.builtBy=Makefile
+
 LDFLAGS_BUILD=-ldflags "${LDFLAGS}"
 LDFLAGS_RELEASE=-ldflags "-s -w ${LDFLAGS}"
+
+OUTPUT_OBJ=-o build/kkpctl
+
+MAIN_GO=./main.go
 
 all: build
 
 build: build_dir tidy analyze
-	go build ${LDFLAGS_BUILD} -race -o build/kkpctl ./main.go
+	go build ${LDFLAGS_BUILD} ${OUTPUT_OBJ} ${MAIN_GO}
 
 release: clean build_dir analyze
-	go build ${LDFLAGS_RELEASE} -o build/kkpctl ./main.go
+	go build ${LDFLAGS_RELEASE} ${OUTPUT_OBJ} ${MAIN_GO}
 
 test: build_dir tidy analyze
 	go test -covermode=count -coverprofile=./build/profile.out ./...
@@ -63,15 +68,14 @@ lint:
 cyclo:
 	gocyclo -avg -over 15 -ignore "_test|Godeps|vendor/" -total .
 
-dep:
-	go get -u .
-
-tools: dep
-	go install github.com/cweill/gotests/...
-	go install golang.org/x/tools/cmd/benchcmp
-	go install golang.org/x/lint/golint
-	go install github.com/fzipp/gocyclo/cmd/gocyclo
-	go install github.com/amitbet/gorename
+tools:
+	go get -u github.com/go-delve/delve/cmd/dlv@master
+	go get -u honnef.co/go/tools/cmd/staticcheck
+	go get -u github.com/cweill/gotests/...
+	go get -u golang.org/x/lint/golint
+	go get -u github.com/fzipp/gocyclo/cmd/gocyclo
+	go get -u github.com/amitbet/gorename
+	go get -u golang.org/x/tools/cmd/benchcmp
 
 build_dir:
 	mkdir -p ./build/

@@ -9,17 +9,16 @@
 
 	// Set *default* container specific settings.json values on container create.
 	"settings": {
-
-		"terminal.integrated.defaultProfile.linux": "zsh",
+		"go.toolsManagement.autoUpdate": false,
 		"go.toolsManagement.checkForUpdates": "off",
 		"go.gopath": "/go",
 		"go.lintOnSave": "package",
+		"go.vetOnSave": "package",
 		"go.formatTool": "goimports",
 		"go.useLanguageServer": true,
 		"go.autocompleteUnimportedPackages": true,
         "go.gotoSymbol.includeImports": true,
         "go.gotoSymbol.includeGoroot": true,
-		"go.vetOnSave": "package",
 		"go.editorContextMenuCommands": {
 			"toggleTestFile": true,
 			"addTags": true,
@@ -37,55 +36,26 @@
 			"debugTestAtCursor": true,
 			"benchmarkAtCursor": false
 		},
-		"go.toolsManagement.autoUpdate": true,
 		"go.enableCodeLens": {
 			"references": true,
 			"runtest": true
 		},
-		"[go]":{
-			"editor.insertSpaces": false,
-			"editor.formatOnSave": true,
-			"editor.codeActionsOnSave": {
-				"source.organizeImports": true
-			},
-			// Optional: Disable snippets, as they conflict with completion ranking.
-            "editor.snippetSuggestions": "none"
-		},
-		"[go.mod]": {
-            "editor.formatOnSave": true,
-            "editor.codeActionsOnSave": {
-                "source.organizeImports": true,
-            },
-        },
-        "gopls": {
-            "usePlaceholders": false,
-            "staticcheck": true
-        },
-		"go.toolsEnvVars": {
-            "GOFLAGS": "-tags=",
-            "CGO_ENABLED": 1 // for the race detector
-        },
-        "gopls.env": {
-            "GOFLAGS": "-tags="
-        },
-        "go.testEnvVars": {
-            "": "",
-        },
-        "go.testFlags": [
-            "-v",
-            "-race"
-        ],
-        "go.testTimeout": "10s",
-        "go.coverOnSingleTest": true,
-        "go.coverOnSingleTestFile": true,
-        "go.coverOnTestPackage": true,
+		"codeQL.telemetry.enableTelemetry": false,
 		"codeQL.runningQueries.memory": 2048,
         "codeQL.runningQueries.debug": true,
 		"git.autofetch": true,
 		"editor.renderFinalNewline": true,
 		"editor.codeLens": true,
+		"editor.insertSpaces": true,
+		"editor.formatOnSave": true,
+		"editor.formatOnPaste": true,
+		"editor.snippetSuggestions": "none",
+		"editor.codeActionsOnSave": {
+			"source.organizeImports": true,
+			"source.fixAll": true,
+		},
 		"workbench.iconTheme": "vscode-icons",
-		"codeQL.telemetry.enableTelemetry": false,
+		"terminal.integrated.defaultProfile.linux": "zsh",
 	},
 
 	// Add the IDs of extensions you want installed when the container is created.
@@ -108,7 +78,7 @@
 	// "forwardPorts": [9000],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "go version",
+	"postCreateCommand": "make tools",
 
 	// Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
 	//"remoteUser": "vscode"

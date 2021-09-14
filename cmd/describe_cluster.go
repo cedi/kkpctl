@@ -25,7 +25,7 @@ var describeClusterCmd = &cobra.Command{
 		}
 
 		cluster, err := kkp.GetCluster(clusterID, projectID)
-		if err != nil || cluster.Spec == nil || cluster.Spec.Cloud == nil {
+		if err != nil || cluster.Cluster.Spec == nil || cluster.Cluster.Spec.Cloud == nil {
 			return errors.Wrapf(err, "failed to get cluster %s in project %s", clusterID, projectID)
 		}
 
@@ -35,12 +35,12 @@ var describeClusterCmd = &cobra.Command{
 			machineDeployments = make([]models.NodeDeployment, 0)
 		}
 
-		clusterHealth, err := kkp.GetClusterHealth(cluster.ID, projectID)
+		clusterHealth, err := kkp.GetClusterHealth(cluster.ID, cluster.ProjectID)
 		if err != nil {
-			return errors.Wrapf(err, "failed to get health status for cluster %s in project %s", clusterID, projectID)
+			return errors.Wrapf(err, "failed to get health status for cluster %s in project %s", cluster.ID, cluster.ProjectID)
 		}
 
-		clusterEvents, err := kkp.GetEvents(cluster.ID, projectID)
+		clusterEvents, err := kkp.GetEvents(cluster.ID, cluster.ProjectID)
 		if err != nil {
 			// If we couldn't fetch the Events that shouldn't bother us, just use a empty array instead
 			clusterEvents = make([]models.Event, 0)
@@ -56,7 +56,7 @@ var describeClusterCmd = &cobra.Command{
 
 		parsed, err := describe.Object(&meta)
 		if err != nil {
-			return errors.Wrapf(err, "failed to describe cluster %s in project %s", clusterID, projectID)
+			return errors.Wrapf(err, "failed to describe cluster %s in project %s", cluster.ID, cluster.ProjectID)
 		}
 		fmt.Println(parsed)
 
@@ -68,6 +68,4 @@ func init() {
 	describeCmd.AddCommand(describeClusterCmd)
 
 	AddProjectFlag(describeClusterCmd)
-
-	describeClusterCmd.Flags().BoolVarP(&listAll, "all", "a", false, "To list all clusters in all projects if the users is allowed to see.")
 }

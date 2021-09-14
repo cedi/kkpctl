@@ -53,5 +53,5 @@ var getProjectsCmd = &cobra.Command{
 
 func init() {
 	getCmd.AddCommand(getProjectsCmd)
-	getProjectsCmd.Flags().BoolVarP(&listAll, "all", "a", false, "Display all projects if the users is allowed to see.")
+	getProjectsCmd.Flags().BoolVarP(&listAll, "all", "A", false, "Display all projects if the users is allowed to see.")
 }

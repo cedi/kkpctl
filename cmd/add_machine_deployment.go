@@ -36,7 +36,7 @@ var createMachineDeploymentCmd = &cobra.Command{
 			return errors.Wrapf(err, "unable to create machine deployment %s for cluster %s in project %s", machineDeploymentName, clusterID, projectID)
 		}
 
-		clusterVersion, ok := cluster.Spec.Version.(string)
+		clusterVersion, ok := cluster.Cluster.Spec.Version.(string)
 		if !ok {
 			return fmt.Errorf("fatal: cluster version does not appear to be a string")
 		}
@@ -51,7 +51,7 @@ var createMachineDeploymentCmd = &cobra.Command{
 			utils.SplitLabelString(labels),
 		)
 
-		nodeDp, err := kkp.CreateMachineDeployment(newNodeDp, clusterID, projectID)
+		nodeDp, err := kkp.CreateMachineDeployment(newNodeDp, cluster.ID, cluster.ProjectID)
 		if err != nil {
 			return errors.Wrapf(err, "unable to create machine deployment %s for cluster %s in project %s", machineDeploymentName, clusterID, projectID)
 		}

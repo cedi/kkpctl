@@ -39,7 +39,7 @@ var getClustersCmd = &cobra.Command{
 		} else if clusterID == "" && projectID != "" {
 			result, err = kkp.ListClusters(projectID)
 		} else if clusterID != "" && projectID == "" {
-			result, err = kkp.GetClusterByID(clusterID)
+			result, err = kkp.GetClusterByID(clusterID, listAll)
 		} else {
 			result, err = kkp.GetCluster(clusterID, projectID)
 		}
@@ -62,6 +62,7 @@ func init() {
 	getCmd.AddCommand(getClustersCmd)
 
 	AddProjectFlag(getClustersCmd)
+	getClustersCmd.Flags().SetAnnotation("project", cobra.BashCompOneRequiredFlag, []string{"false"}) // not required anymore ;)
 
-	getClustersCmd.Flags().BoolVarP(&listAll, "all", "a", false, "To list all clusters in all projects if the users is allowed to see.")
+	getClustersCmd.Flags().BoolVarP(&listAll, "all", "A", false, "To list all clusters in all projects if the users is allowed to see. Note: Using this flag will make kkpctl slow!")
 }

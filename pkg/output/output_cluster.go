@@ -76,7 +76,7 @@ func (r clusterRender) ParseCollection(inputObj interface{}, output string, sort
 
 		sort.Slice(rendered, func(i, j int) bool {
 			if sortBy == Date {
-				return rendered[j].CreationTimestamp < rendered[i].CreationTimestamp
+				return rendered[j].CreationTimestamp > rendered[i].CreationTimestamp
 			}
 
 			return rendered[j].Name > rendered[i].Name
