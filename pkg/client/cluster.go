@@ -73,26 +73,29 @@ func (c *Client) GetClusterByID(clusterID string, all bool) (*model.ProjectClust
 		return nil, fmt.Errorf("failed to get cluster: no clusterID specified")
 	}
 
-	clusters, err := c.ListAllClusters(all)
+	projects, err := c.ListProjects(all)
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to get cluster %s", clusterID)
+		return nil, errors.Wrap(err, "failed to list all clusters: failed to list all projects")
 	}
 
-	found := false
-	result := &model.ProjectCluster{}
-	for _, cluster := range clusters {
-		if cluster.Cluster.ID == clusterID {
-			result = &cluster
-			found = true
-			break
+	for _, project := range projects {
+		if project.ClustersNumber == 0 {
+			continue
+		}
+
+		clusters, err := c.ListClusters(project.ID)
+		if err != nil {
+			return nil, errors.Wrap(err, "failed to list all clusters")
+		}
+
+		for _, cluster := range clusters {
+			if cluster.Cluster.ID == clusterID {
+				return &cluster, nil
+			}
 		}
 	}
 
-	if !found {
-		return nil, fmt.Errorf("failed to get cluster %s: not found", clusterID)
-	}
-
-	return result, nil
+	return nil, fmt.Errorf("failed to get cluster %s: not found", clusterID)
 }
 
 // GetCluster gets a clusters in a given Project
