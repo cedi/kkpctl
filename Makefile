@@ -15,6 +15,7 @@ LDFLAGS_RELEASE=-ldflags "-s -w ${LDFLAGS}"
 all: build
 
 build: build_dir tidy analyze
+	export CGO_ENABLED=1
 	go build ${LDFLAGS_BUILD} -race -o build/kkpctl ./main.go
 
 release: clean build_dir analyze

@@ -6,6 +6,7 @@ import (
 	"sort"
 
 	"github.com/cedi/kkpctl/pkg/config"
+	"github.com/cedi/kkpctl/pkg/model"
 	"github.com/kubermatic/go-kubermatic/models"
 	"github.com/spf13/cobra"
 )
@@ -73,8 +74,10 @@ func GetValidClusterArgs(cmd *cobra.Command, args []string, toComplete string) (
 	clusters := make([]models.Cluster, 0)
 
 	for _, projectTmp := range projects {
-		clusterTmp, _ := kkp.ListClusters(projectTmp.ID)
-		clusters = append(clusters, clusterTmp...)
+		clusterTmps, _ := kkp.ListClusters(projectTmp.ID)
+		for _, clusterTmp := range clusterTmps {
+			clusters = append(clusters, clusterTmp.Cluster)
+		}
 	}
 
 	toCompleteRegexp := regexp.MustCompile(fmt.Sprintf("^%s.*$", toComplete))
@@ -105,7 +108,7 @@ func GetValidDatacenterArgs(cmd *cobra.Command, args []string, toComplete string
 		} else {
 			cluster, err := kkp.GetCluster(args[0], projectStr)
 			if err == nil {
-				datacenter, _ := kkp.GetDatacenter(cluster.Spec.Cloud.DatacenterName)
+				datacenter, _ := kkp.GetDatacenter(cluster.Cluster.Spec.Cloud.DatacenterName)
 				datacenters = append(datacenters, *datacenter)
 			}
 		}
@@ -236,7 +239,7 @@ func GetValidMachineDeploymentArgs(cmd *cobra.Command, args []string, toComplete
 		return completions, cobra.ShellCompDirectiveNoFileComp
 	}
 
-	var cluster *models.Cluster
+	var cluster *model.ProjectCluster
 	cluster, err = kkp.GetCluster(clusterID, projectID)
 
 	if err != nil {

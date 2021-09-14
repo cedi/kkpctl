@@ -4,6 +4,27 @@ import (
 	"github.com/kubermatic/go-kubermatic/models"
 )
 
+// ProjectCluster is a combination of both, the projectID of a cluster and the cluster object itself
+type ProjectCluster struct {
+	// ID is the ClusterID from models.Cluster.ID
+	ID string
+
+	// ProjectID is the ProjectID from models.Project.ID
+	ProjectID string
+
+	// Cluster is the actual models.Cluster Object
+	Cluster models.Cluster
+}
+
+// NewProjectCluster creates a new model.ProjectCluster object
+func NewProjectCluster(projectID string, cluster models.Cluster) *ProjectCluster {
+	return &ProjectCluster{
+		ID:        cluster.ID,
+		ProjectID: projectID,
+		Cluster:   cluster,
+	}
+}
+
 // NewCluster creates a new Cluster Object
 func NewCluster(name string, datacenter string, version string, labels map[string]string) *models.Cluster {
 	return &models.Cluster{

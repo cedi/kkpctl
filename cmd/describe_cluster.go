@@ -25,7 +25,7 @@ var describeClusterCmd = &cobra.Command{
 		}
 
 		cluster, err := kkp.GetCluster(clusterID, projectID)
-		if err != nil || cluster.Spec == nil || cluster.Spec.Cloud == nil {
+		if err != nil || cluster.Cluster.Spec == nil || cluster.Cluster.Spec.Cloud == nil {
 			return errors.Wrapf(err, "failed to get cluster %s in project %s", clusterID, projectID)
 		}
 
@@ -68,6 +68,4 @@ func init() {
 	describeCmd.AddCommand(describeClusterCmd)
 
 	AddProjectFlag(describeClusterCmd)
-
-	describeClusterCmd.Flags().BoolVarP(&listAll, "all", "a", false, "To list all clusters in all projects if the users is allowed to see.")
 }

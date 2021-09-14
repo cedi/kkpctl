@@ -3,6 +3,7 @@ package describe
 import (
 	"fmt"
 
+	"github.com/cedi/kkpctl/pkg/model"
 	"github.com/cedi/kkpctl/pkg/output"
 	"github.com/cedi/kkpctl/pkg/utils"
 	"github.com/kubermatic/go-kubermatic/models"
@@ -10,7 +11,7 @@ import (
 
 // ClusterDescribeMeta contains all the necessary fields to describe a cluster
 type ClusterDescribeMeta struct {
-	Cluster            *models.Cluster
+	Cluster            *model.ProjectCluster
 	MachineDeployments []models.NodeDeployment
 	ClusterHealth      *models.ClusterHealth
 	ClusterEvents      []models.Event
@@ -63,8 +64,8 @@ Events:
 		clusterTable,
 		clusterHealthTable,
 		machineDeploymentTable,
-		utils.MergeLabels(cluster.InheritedLabels),
-		utils.MergeLabels(cluster.Labels),
+		utils.MergeLabels(cluster.Cluster.InheritedLabels),
+		utils.MergeLabels(cluster.Cluster.Labels),
 		clusterEventTable,
 	)
 

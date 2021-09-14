@@ -82,7 +82,7 @@ func (r nodeRender) ParseCollection(inputObj interface{}, output string, sortBy 
 
 		sort.Slice(rendered, func(i, j int) bool {
 			if sortBy == Date {
-				return rendered[j].CreationTimestamp < rendered[i].CreationTimestamp
+				return rendered[j].CreationTimestamp > rendered[i].CreationTimestamp
 			}
 
 			return rendered[j].Name > rendered[i].Name

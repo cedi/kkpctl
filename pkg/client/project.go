@@ -82,7 +82,7 @@ func (c *Client) GetProjectIDForCluster(clusterID string) (string, error) {
 		}
 
 		for _, cluster := range clusters {
-			if cluster.ID == clusterID {
+			if cluster.Cluster.ID == clusterID {
 				return project.ID, nil
 			}
 		}
