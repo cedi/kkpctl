@@ -37,22 +37,9 @@ changelog:
       - "^test:"
 announce:
   slack:
-    # Wether its enabled or not.
-    # Defaults to false.
     enabled: true
-
-    # Message template to use while publishing.
-    # Defaults to `{{ .ProjectName }} {{ .Tag }} is out! Check it out at {{ .GitURL }}/releases/tag/{{ .Tag }}`
-    message_template: "kkpctl {{.Tag}} is out!"
-
-    # The name of the channel that the user selected as a destination for webhook messages.
+    message_template: "{{ .ProjectName }} {{ .Tag }} is out! Check it out at {{ .GitURL }}/releases/tag/{{ .Tag }}"
     channel: "#team_k8s_internal"
-
-    # Set your Webhook's user name.
     username: "cedi"
-
-    # Emoji to use as the icon for this message. Overrides icon_url.
     icon_emoji: ""
-
-    # URL to an image to use as the icon for this message.
-    icon_url: ""
+    icon_url: "https://avatars.githubusercontent.com/u/17001193?s=200&v=4"
