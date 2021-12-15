@@ -22,7 +22,7 @@ type eventRender struct {
 	Count             int32  `header:"Count"`
 }
 
-func (r eventRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
+func (r eventRender) ParseCollection(inputObj any, output string, sortBy string) (string, error) {
 	var err error
 	var parsedOutput []byte
 

@@ -19,7 +19,7 @@ type configCloudRender struct {
 	URL  string `header:"Url"`
 }
 
-func (r configCloudRender) ParseObject(inputObj interface{}, output string) (string, error) {
+func (r configCloudRender) ParseObject(inputObj any, output string) (string, error) {
 	var err error
 	var parsedOutput []byte
 	var cfg config.CloudConfig

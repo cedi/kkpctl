@@ -25,7 +25,7 @@ type nodeRender struct {
 	ErrorMessage            string   `header:"ErrorMessage"`
 }
 
-func (r nodeRender) ParseObject(inputObj interface{}, output string) (string, error) {
+func (r nodeRender) ParseObject(inputObj any, output string) (string, error) {
 	switch object := inputObj.(type) {
 	case models.Node:
 		return r.ParseCollection([]models.Node{object}, output, Name)
@@ -38,7 +38,7 @@ func (r nodeRender) ParseObject(inputObj interface{}, output string) (string, er
 	}
 }
 
-func (r nodeRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
+func (r nodeRender) ParseCollection(inputObj any, output string, sortBy string) (string, error) {
 	var err error
 	var parsedOutput []byte
 

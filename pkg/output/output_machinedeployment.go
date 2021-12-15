@@ -26,7 +26,7 @@ type machineDeploymentRender struct {
 	CreationTimestamp string `header:"Created"`
 }
 
-func (r machineDeploymentRender) ParseObject(inputObj interface{}, output string) (string, error) {
+func (r machineDeploymentRender) ParseObject(inputObj any, output string) (string, error) {
 	switch object := inputObj.(type) {
 	case models.NodeDeployment:
 		return r.ParseCollection([]models.NodeDeployment{object}, output, Name)
@@ -39,7 +39,7 @@ func (r machineDeploymentRender) ParseObject(inputObj interface{}, output string
 	}
 }
 
-func (r machineDeploymentRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
+func (r machineDeploymentRender) ParseCollection(inputObj any, output string, sortBy string) (string, error) {
 	var err error
 	var parsedOutput []byte
 

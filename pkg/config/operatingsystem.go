@@ -40,7 +40,7 @@ func NewOSSpecConfig() *OperatingSystemConfig {
 }
 
 // SetOperatingSystemSpec sets the OperatingSystemType type to the OperatingSystemConfig
-func (o *OperatingSystemConfig) SetOperatingSystemSpec(osType OperatingSystemType, osSpec interface{}) error {
+func (o *OperatingSystemConfig) SetOperatingSystemSpec(osType OperatingSystemType, osSpec any) error {
 	ok := false
 
 	switch osType {

@@ -23,7 +23,7 @@ type VersionRender struct {
 }
 
 // ParseCollection parses the version of KKPCTL
-func (r VersionRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
+func (r VersionRender) ParseCollection(inputObj any, output string, sortBy string) (string, error) {
 	var err error
 	var parsedOutput []byte
 

@@ -117,7 +117,7 @@ func (c *CloudNodeConfig) GetAllNodeSpecNames() []string {
 
 // AddCloudNodeSpec adds a new CloudNodeSpec to the configuration
 //gocyclo:ignore
-func (c *CloudNodeConfig) AddCloudNodeSpec(name string, nodeSpec interface{}) error {
+func (c *CloudNodeConfig) AddCloudNodeSpec(name string, nodeSpec any) error {
 	if utils.IsOneOf(name, c.GetAllNodeSpecNames()) {
 		return fmt.Errorf("the nodespec name '%s' is already used", name)
 	}

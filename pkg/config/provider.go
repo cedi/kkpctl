@@ -197,7 +197,7 @@ func (p *ProviderConfig) GetAllProviderNames() []string {
 //	Note: Name must be unique
 //	Returns an error, if the name is already in use to avoid ambigous naming.
 //gocyclo:ignore
-func (p *ProviderConfig) AddProviderConfig(name string, provider interface{}) error {
+func (p *ProviderConfig) AddProviderConfig(name string, provider any) error {
 	if utils.IsOneOf(name, p.GetAllProviderNames()) {
 		return fmt.Errorf("the provider name '%s' is already used", name)
 	}

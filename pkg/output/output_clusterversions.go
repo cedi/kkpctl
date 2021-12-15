@@ -19,7 +19,7 @@ type clusterVersionRender struct {
 	Version string `header:"Version"`
 }
 
-func (r clusterVersionRender) ParseObject(inputObj interface{}, output string) (string, error) {
+func (r clusterVersionRender) ParseObject(inputObj any, output string) (string, error) {
 
 	switch clusterVersion := inputObj.(type) {
 	case model.Version:
@@ -33,7 +33,7 @@ func (r clusterVersionRender) ParseObject(inputObj interface{}, output string) (
 	}
 }
 
-func (r clusterVersionRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
+func (r clusterVersionRender) ParseCollection(inputObj any, output string, sortBy string) (string, error) {
 	var err error
 	var parsedOutput []byte
 

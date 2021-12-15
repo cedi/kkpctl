@@ -21,7 +21,7 @@ type datacenterRender struct {
 	Country  string `header:"Country"`
 }
 
-func (r datacenterRender) ParseObject(inputObject interface{}, output string) (string, error) {
+func (r datacenterRender) ParseObject(inputObject any, output string) (string, error) {
 	switch object := inputObject.(type) {
 	case models.Datacenter:
 		return r.ParseCollection([]models.Datacenter{object}, output, Name)
@@ -34,7 +34,7 @@ func (r datacenterRender) ParseObject(inputObject interface{}, output string) (s
 	}
 }
 
-func (r datacenterRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
+func (r datacenterRender) ParseCollection(inputObj any, output string, sortBy string) (string, error) {
 	var err error
 	var parsedOutput []byte
 

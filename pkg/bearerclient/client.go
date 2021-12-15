@@ -12,7 +12,7 @@ import (
 
 // BearerClient is a simple http.Client that always injects a Bearer Auth token to an Request
 type BearerClient interface {
-	Do(req *http.Request, out interface{}) (*http.Response, error)
+	Do(req *http.Request, out any) (*http.Response, error)
 }
 
 // Client holds all config and the http.Client needed to talk to the Kubermatic API
@@ -32,7 +32,7 @@ func NewClient(baseURL string, bearer string) *Client {
 // Do injects the stored token into the provided request then sends it
 // req is the http.Request to execute
 // out can be a pointer to any object to which the result should be de-serialised.
-func (c *Client) Do(req *http.Request, out interface{}) (*http.Response, error) {
+func (c *Client) Do(req *http.Request, out any) (*http.Response, error) {
 	req.Header.Set("Authorization", "Bearer "+c.bearer)
 
 	resp, err := c.httpClient.Do(req)

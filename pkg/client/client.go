@@ -52,13 +52,13 @@ func NewClient(baseURL string, bc bearerclient.BearerClient) (*Client, error) {
 }
 
 // Do injects the correct API Version Path into the request and executes then bearerclient.Do
-func (c *Client) Do(req *http.Request, out interface{}, apiVersion APIVersion) (*http.Response, error) {
+func (c *Client) Do(req *http.Request, out any, apiVersion APIVersion) (*http.Response, error) {
 	req.URL.Path = "/api/" + string(apiVersion) + req.URL.Path
 	return c.bc.Do(req, out)
 }
 
 // Get functions the same as http.Client.Get but injects a stored token into ty header
-func (c *Client) Get(requestURL string, out interface{}, apiVersion APIVersion) (*http.Response, error) {
+func (c *Client) Get(requestURL string, out any, apiVersion APIVersion) (*http.Response, error) {
 	req, err := http.NewRequest("GET", c.formatURL(requestURL), nil)
 	if err != nil {
 		return nil, err
@@ -68,7 +68,7 @@ func (c *Client) Get(requestURL string, out interface{}, apiVersion APIVersion) 
 }
 
 // GetWithQueryParams functions the same as http.Client.Get but injects a stored token into ty header
-func (c *Client) GetWithQueryParams(requestURL string, queryParams URLParams, out interface{}, apiVersion APIVersion) (*http.Response, error) {
+func (c *Client) GetWithQueryParams(requestURL string, queryParams URLParams, out any, apiVersion APIVersion) (*http.Response, error) {
 	req, err := http.NewRequest("GET", c.formatURL(requestURL), nil)
 	if err != nil {
 		return nil, err
@@ -84,7 +84,7 @@ func (c *Client) GetWithQueryParams(requestURL string, queryParams URLParams, ou
 }
 
 // Post functions the same as http.Client.Post but injects a stored token into the header
-func (c *Client) Post(requestURL string, contentType string, body interface{}, out interface{}, apiVersion APIVersion) (*http.Response, error) {
+func (c *Client) Post(requestURL string, contentType string, body any, out any, apiVersion APIVersion) (*http.Response, error) {
 	var bodyBuf io.ReadWriter
 
 	if body != nil {
@@ -104,7 +104,7 @@ func (c *Client) Post(requestURL string, contentType string, body interface{}, o
 }
 
 // Patch functions the same as http.Client.Post but injects a stored token into the header
-func (c *Client) Patch(requestURL string, contentType string, body interface{}, out interface{}, apiVersion APIVersion) (*http.Response, error) {
+func (c *Client) Patch(requestURL string, contentType string, body any, out any, apiVersion APIVersion) (*http.Response, error) {
 	var bodyBuf io.ReadWriter
 
 	if body != nil {
@@ -124,7 +124,7 @@ func (c *Client) Patch(requestURL string, contentType string, body interface{}, 
 }
 
 // Put functions the same as http.Client.Put but injects a stored token into the header
-func (c *Client) Put(requestURL string, contentType string, body interface{}, out interface{}, apiVersion APIVersion) (*http.Response, error) {
+func (c *Client) Put(requestURL string, contentType string, body any, out any, apiVersion APIVersion) (*http.Response, error) {
 	var bodyBuf io.ReadWriter
 
 	if body != nil {

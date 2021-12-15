@@ -7,7 +7,7 @@ import (
 )
 
 // Object takes any KKP Object as an input and then describes it
-func Object(object interface{}) (string, error) {
+func Object(object any) (string, error) {
 	switch describeObj := object.(type) {
 	case *models.Project:
 		return describeProject(describeObj)

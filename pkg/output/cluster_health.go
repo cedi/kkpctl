@@ -24,7 +24,7 @@ type clusterHealthRender struct {
 	UserClusterControllerManager string `header:"userClusterControllerManager"`
 }
 
-func (rendered clusterHealthRender) ParseObject(inputObj interface{}, output string) (string, error) {
+func (rendered clusterHealthRender) ParseObject(inputObj any, output string) (string, error) {
 	var err error
 	var parsedOutput []byte
 

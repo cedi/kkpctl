@@ -4,12 +4,12 @@ import "reflect"
 
 // CollectionsParser is the interface used to parse a collection of items
 type CollectionsParser interface {
-	ParseCollection(interface{}, string, string) (string, error)
+	ParseCollection(any, string, string) (string, error)
 }
 
 // ObjectParser is the interface used to parse a single item
 type ObjectParser interface {
-	ParseObject(interface{}, string) (string, error)
+	ParseObject(any, string) (string, error)
 }
 
 // ParserFactory is the factory to keep track of all parsers

@@ -25,7 +25,7 @@ type clusterRender struct {
 	Provider          string `header:"Provider"`
 }
 
-func (r clusterRender) ParseObject(inputObj interface{}, output string) (string, error) {
+func (r clusterRender) ParseObject(inputObj any, output string) (string, error) {
 	switch cluster := inputObj.(type) {
 	case models.Cluster:
 		return r.ParseCollection([]models.Cluster{cluster}, output, Name)
@@ -38,7 +38,7 @@ func (r clusterRender) ParseObject(inputObj interface{}, output string) (string,
 	}
 }
 
-func (r clusterRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
+func (r clusterRender) ParseCollection(inputObj any, output string, sortBy string) (string, error) {
 	var err error
 	var parsedOutput []byte
 

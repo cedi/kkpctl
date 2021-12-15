@@ -28,7 +28,7 @@ var getMachineDeploymentCmd = &cobra.Command{
 			return err
 		}
 
-		var machineDeployments interface{}
+		var machineDeployments any
 		if len(args) == 0 {
 			machineDeployments, err = kkp.GetMachineDeployments(clusterID, projectID)
 		} else {

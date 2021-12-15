@@ -20,7 +20,7 @@ type taintRender struct {
 	Effect string `header:"effect"`
 }
 
-func (r taintRender) ParseObject(inputObj interface{}, output string) (string, error) {
+func (r taintRender) ParseObject(inputObj any, output string) (string, error) {
 	switch object := inputObj.(type) {
 	case models.TaintSpec:
 		return r.ParseCollection([]models.TaintSpec{object}, output, Name)
@@ -33,7 +33,7 @@ func (r taintRender) ParseObject(inputObj interface{}, output string) (string, e
 	}
 }
 
-func (r taintRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
+func (r taintRender) ParseCollection(inputObj any, output string, sortBy string) (string, error) {
 	var err error
 	var parsedOutput []byte
 

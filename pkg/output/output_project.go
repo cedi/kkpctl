@@ -25,7 +25,7 @@ type projectRender struct {
 	Clusters          int64  `header:"Clusters"`
 }
 
-func (r projectRender) ParseObject(inputObj interface{}, output string) (string, error) {
+func (r projectRender) ParseObject(inputObj any, output string) (string, error) {
 	switch object := inputObj.(type) {
 	case models.Project:
 		return r.ParseCollection([]models.Project{object}, output, Name)
@@ -38,7 +38,7 @@ func (r projectRender) ParseObject(inputObj interface{}, output string) (string,
 	}
 }
 
-func (r projectRender) ParseCollection(inputObj interface{}, output string, sortBy string) (string, error) {
+func (r projectRender) ParseCollection(inputObj any, output string, sortBy string) (string, error) {
 	var err error
 	var parsedOutput []byte
 

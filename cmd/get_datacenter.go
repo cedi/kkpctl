@@ -28,7 +28,7 @@ var getDatacenterCmd = &cobra.Command{
 			return err
 		}
 
-		var result interface{}
+		var result any
 		if dc == "" {
 			result, err = kkp.ListDatacenter()
 		} else {

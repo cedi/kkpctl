@@ -37,7 +37,7 @@ func GetParserFactory() *ParserFactory {
 }
 
 // ParseOutput takes any KKP Object as an input and then parses it to the appropriate output format
-func ParseOutput(object interface{}, output string, sortBy string) (string, error) {
+func ParseOutput(object any, output string, sortBy string) (string, error) {
 
 	err := validateOutput(output)
 	if err != nil {

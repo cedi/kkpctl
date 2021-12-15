@@ -4,9 +4,16 @@
 	"name": "Go",
 	"build": {
 		"dockerfile": "Dockerfile",
+		"args": {
+			"GO_VERSION": "1.18beta1",
+			"ALPINE_VERSION": "3.15"
+		}
 	},
-	"runArgs": [ "--cap-add=SYS_PTRACE", "--security-opt", "seccomp=unconfined" ],
-
+	"runArgs": [
+		"--cap-add=SYS_PTRACE",
+		"--security-opt",
+		"seccomp=unconfined"
+	],
 	// Set *default* container specific settings.json values on container create.
 	"settings": {
 		"go.toolsManagement.autoUpdate": false,
@@ -17,8 +24,8 @@
 		"go.formatTool": "goimports",
 		"go.useLanguageServer": true,
 		"go.autocompleteUnimportedPackages": true,
-        "go.gotoSymbol.includeImports": true,
-        "go.gotoSymbol.includeGoroot": true,
+		"go.gotoSymbol.includeImports": true,
+		"go.gotoSymbol.includeGoroot": true,
 		"go.editorContextMenuCommands": {
 			"toggleTestFile": true,
 			"addTags": true,
@@ -42,7 +49,7 @@
 		},
 		"codeQL.telemetry.enableTelemetry": false,
 		"codeQL.runningQueries.memory": 2048,
-        "codeQL.runningQueries.debug": true,
+		"codeQL.runningQueries.debug": true,
 		"git.autofetch": true,
 		"editor.renderFinalNewline": true,
 		"editor.codeLens": true,
@@ -54,32 +61,26 @@
 			"source.organizeImports": true,
 			"source.fixAll": true,
 		},
-		"workbench.iconTheme": "vscode-icons",
 		"terminal.integrated.defaultProfile.linux": "zsh",
 	},
-
 	// Add the IDs of extensions you want installed when the container is created.
 	"extensions": [
 		"golang.Go",
 		"ms-azuretools.vscode-docker",
 		"github.vscode-codeql",
 		"davidanson.vscode-markdownlint",
-        "shardulm94.trailing-spaces",
+		"shardulm94.trailing-spaces",
 		"github.vscode-pull-request-github",
 		"eamodio.gitlens",
 		"Gruntfuggly.todo-tree",
-		"bierner.emojisense",
-		"vscode-icons-team.vscode-icons",
 		"redhat.vscode-yaml",
-		"IBM.output-colorizer"
+		"IBM.output-colorizer",
+		"ms-vscode.test-adapter-converter"
 	],
-
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [9000],
-
 	// Use 'postCreateCommand' to run commands after the container is created.
 	"postCreateCommand": "make tools",
-
 	// Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
 	//"remoteUser": "vscode"
 }

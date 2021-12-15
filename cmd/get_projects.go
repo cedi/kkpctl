@@ -30,7 +30,7 @@ var getProjectsCmd = &cobra.Command{
 			return err
 		}
 
-		var result interface{}
+		var result any
 		if projectID == "" || listAll {
 			result, err = kkp.ListProjects(listAll)
 		} else {

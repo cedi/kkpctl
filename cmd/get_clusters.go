@@ -33,7 +33,7 @@ var getClustersCmd = &cobra.Command{
 			return err
 		}
 
-		var result interface{}
+		var result any
 		if clusterID == "" && projectID == "" {
 			result, err = kkp.ListAllClusters(listAll)
 		} else if clusterID == "" && projectID != "" {
