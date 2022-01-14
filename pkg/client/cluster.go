@@ -247,7 +247,7 @@ func (c *Client) UpgradeCluster(toVersion string, clusterID string, projectID st
 		return nil, errors.Wrapf(err, "failed to upgrade cluster %s in project %s", clusterID, projectID)
 	}
 
-	clusterProject.Cluster.Spec.Version = toVersion
+	clusterProject.Cluster.Spec.Version = models.Semver(toVersion)
 
 	requestURL := fmt.Sprintf("%s/%s/%s/%s", projectPath, projectID, clusterPath, clusterID)
 	result := &models.Cluster{}
