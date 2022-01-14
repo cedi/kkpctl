@@ -61,7 +61,7 @@ func NewCluster(name string, datacenter string, version string, labels map[strin
 				Packet:         &models.PacketCloudSpec{},
 				Vsphere:        &models.VSphereCloudSpec{},
 			},
-			Version: version,
+			Version: models.Semver(version),
 		},
 	}
 }
@@ -80,7 +80,7 @@ func NewCreateClusterSpec(clusterName string, clusterType string, k8sVersion str
 					Enabled: enableAuditLogging,
 				},
 				Cloud:   cloudSpec,
-				Version: k8sVersion,
+				Version: models.Semver(k8sVersion),
 			},
 		},
 	}
