@@ -58,13 +58,7 @@ func (r clusterProjectRender) ParseCollection(inputObj interface{}, output strin
 				Provider:          model.GetProviderNameFromCloudSpec(object.Cluster.Spec.Cloud),
 			}
 
-			version, ok := object.Cluster.Status.Version.(string)
-			if !ok {
-				// Honestly, I don't know what to do here^^
-				continue
-			}
-
-			rendered[idx].Version = version
+			rendered[idx].Version = fmt.Sprintf("%v", object.Cluster.Status.Version)
 		}
 
 		sort.Slice(rendered, func(i, j int) bool {

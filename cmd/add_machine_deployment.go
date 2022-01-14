@@ -36,10 +36,7 @@ var createMachineDeploymentCmd = &cobra.Command{
 			return errors.Wrapf(err, "unable to create machine deployment %s for cluster %s in project %s", machineDeploymentName, clusterID, projectID)
 		}
 
-		clusterVersion, ok := cluster.Cluster.Spec.Version.(string)
-		if !ok {
-			return fmt.Errorf("fatal: cluster version does not appear to be a string")
-		}
+		clusterVersion := fmt.Sprintf("%v", cluster.Cluster.Spec.Version)
 
 		newNodeDp := model.NewMachineDeployment(
 			machineDeploymentName,
