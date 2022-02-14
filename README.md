@@ -1,3 +1,12 @@
+# Deprecation notice
+
+Since I do no longer work for a company uses [KKP](https://github.com/kubermatic/kubermatic) - nor do I personally run my own instance of KKP - I suspend all activity on this project.
+I do not have the resources (A KKP Platform to test against nor the time necessary) to maintain this project any longer.
+
+If you consider using KKP and want to use it via CLI I highly recomment you fork this project.
+
+I won't provide any updates to this repository in the future!
+
 # kkpctl
 
 [![GitHub license](https://img.shields.io/github/license/cedi/kkpctl.svg)](https://github.com/cedi/kkpctl/blob/main/LICENSE)

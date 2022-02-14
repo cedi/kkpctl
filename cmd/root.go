@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/cedi/kkpctl/cmd/completion"
 	"github.com/cedi/kkpctl/pkg/config"
@@ -26,9 +27,10 @@ var (
 	// BuiltBy represents who build the binary, should be set via ldflags -X
 	BuiltBy string
 
-	configPath string
-	outputType string
-	sortBy     string
+	configPath        string
+	outputType        string
+	sortBy            string
+	ignoreDeprecation bool
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -58,6 +60,21 @@ func Execute(version, commit, date, builtBy string) {
 
 	completion.Config = Config
 
+	if !ignoreDeprecation {
+		fmt.Println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+		fmt.Println("!!                              IMPORTANT NOTICE                              !!")
+		fmt.Println("!!                                                                            !!")
+		fmt.Println("!!                      KKPCTL is officially deprecated!                      !!")
+		fmt.Println("!!                           USE AT YOUR OWN RISK!                            !!")
+		fmt.Println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
+		for i := 10; i > 0; i-- {
+			fmt.Printf("\rWaiting %d seconds until continue ", i)
+			time.Sleep(1 * time.Second)
+		}
+		fmt.Printf("\r                                  \n")
+	}
+
 	err = rootCmd.Execute()
 	if err != nil {
 		fmt.Println(err)
@@ -83,4 +100,6 @@ func init() {
 	rootCmd.RegisterFlagCompletionFunc("sort", func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
 		return []string{"name", "date"}, cobra.ShellCompDirectiveDefault
 	})
+
+	rootCmd.PersistentFlags().BoolVar(&ignoreDeprecation, "ignore-deprecation-notice", false, "Ignore the deprecation notice")
 }
